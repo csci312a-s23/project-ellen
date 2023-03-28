@@ -1,10 +1,15 @@
 {
-  "name": "project-skeleton",
+  "name": "student-direct",
   "version": "0.1.0",
   "private": true,
   "contributors": [
-    "Team Member 1 <member1@middlebury.edu>",
-    "Team Member 2 <member2@middlebury.edu>"
+    "Johnny Kantaros <jkantaros@middlebury.edu>",
+    "Matt Daily <mdaily@middlebury.edu>",
+    "Luke Lorenz <llorenz@middlebury.edu>",
+    "Liam Patty <wpatty@middlebury.edu>",
+    "Alexis Ballo <aballo@middlebury.edu>",
+    "Alec Gironda <agironda@middlebury.edu>",
+    "Rohan Datar <rdatar@middlebury.edu>"
   ],
   "scripts": {
     "dev": "next dev",
