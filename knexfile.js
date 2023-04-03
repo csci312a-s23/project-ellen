@@ -22,6 +22,14 @@ module.exports = {
     },
     useNullAsDefault: true,
   },
+  test: {
+    ...defaultSettings,
+    client: "sqlite3",
+    connection: {
+      filename: "./ellen.db",
+    },
+    useNullAsDefault: true,
+  },
 
   production: {
     ...defaultSettings,
