@@ -1,13 +1,17 @@
 import { knex } from "../../../../knex/knex";
+import nc from "next-connect";
 
 // function to handle returning all posts
-export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const posts = await knex("testTable");
+const handler = nc().get(async (req, res) => {
+  const { category } = req.query;
+  let posts;
 
-    res.status(200).json(posts);
+  if (!!category) {
+    posts = await knex("posts").where({ category: category });
   } else {
-    // invalid method
-    res.status(405).send("Method Not Allowed");
+    posts = await knex("posts");
   }
-}
+  res.status(200).json(posts);
+});
+
+export default handler;
