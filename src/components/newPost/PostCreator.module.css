@@ -1,0 +1,15 @@
+.openCreator {
+  width: 100px;
+  height: 100px;
+}
+
+.modal {
+  width: 500px;
+  height: 700px;
+  background-color: white;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+}
