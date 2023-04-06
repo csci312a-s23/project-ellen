@@ -6,9 +6,9 @@ import nc from "next-connect";
 const handler = nc()
   .get(async (req, res) => {
     // return [id] post
-    console.log("paraps", req.params.id);
+    console.log("paraps", req.query.id);
 
-    const post = await knex("posts").where({ id: req.params.id });
+    const post = await knex("posts").where({ id: parseInt(req.query.id) });
 
     console.log("post outcome", post);
     res.status(200).json(post);
