@@ -1,21 +1,21 @@
 import { Model } from "objection";
 import BaseModel from "./BaseModel";
 
-export default class Post extends BaseModel {
+export default class Comment extends BaseModel {
   static get tableName() {
-    return "posts";
+    return "comments";
   }
 
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["posterID", "title", "content", "category"],
+      required: ["posterID", "postID", "content"],
+
       properties: {
         id: { type: "integer" },
         posterID: { type: "string" },
-        title: { type: "string" },
+        postID: { type: "string" },
         content: { type: "string" },
-        category: { type: "string" },
         created_at: { type: "string" },
       },
     };
@@ -23,23 +23,23 @@ export default class Post extends BaseModel {
 
   static get relationMappings() {
     const User = require("./Users");
-    const Comment = require("./Comments");
+    const Post = require("./Posts");
 
     return {
       poster: {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: "posts.posterID",
+          from: "comments.posterID",
           to: "users.id",
         },
       },
-      comments: {
-        relation: Model.HasManyRelation,
-        modelClass: Comment,
+      post: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Post,
         join: {
-          from: "posts.id",
-          to: "comments.postID",
+          from: "comments.postID",
+          to: "posts.id",
         },
       },
     };

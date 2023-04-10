@@ -5,10 +5,10 @@
 exports.up = function (knex) {
   return knex.schema.createTable("comments", (table) => {
     table.increments("id").primary();
-    table.foreign("commenterID").references("id").inTable("users");
-    table.foreign("postID").references("id").inTable("posts");
+    table.uuid("commenterID").references("id").inTable("users");
+    table.integer("postID").references("id").inTable("posts");
     table.text("content");
-    table.increment("likes");
+    table.integer("likes");
     table.timestamp("created_at");
   });
 };

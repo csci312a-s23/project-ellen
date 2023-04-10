@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("posts", (table) => {
     table.increments("id").primary();
-    table.foreign("posterID").references("id").inTable("users");
+    table.uuid("posterID").references("id").inTable("users");
     table.string("title");
     table.text("content");
     table.string("category");
