@@ -1,12 +1,16 @@
 import { knex } from "../../../../knex/knex";
 import nc from "next-connect";
+
 // interaciton with post based on id
 
 const handler = nc()
   .get(async (req, res) => {
     // return [id] post
-    const post = await knex("testTable").where({ id: query.id });
+    console.log("paraps", req.query.id);
 
+    const post = await knex("posts").where({ id: parseInt(req.query.id) });
+
+    console.log("post outcome", post);
     res.status(200).json(post);
   })
   .put(async (req, res) => {
