@@ -15,6 +15,14 @@ function PostList() {
       {posts.map((post) => {
         console.log(post);
         {
+          return (
+            <div key={post.id}>
+              <h2>{post.title}</h2>
+              <p>{post.content}</p>
+              {/* <p>{post.created_at}</p> */}
+              <p>{post.comments}</p>
+            </div>
+          );
           return <div key={post.id}> {post.title} </div>;
         }
       })}

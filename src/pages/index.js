@@ -2,7 +2,9 @@
 // import Image from "next/image";
 // import { Inter } from "next/font/google";
 // import styles from "@/styles/Home.module.css";
-// import PostList from "../../public/components/postsList";
+//import PostList from "../../public/components/postsList";
+
+import IndexBar from "../../public/components/indexBar";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -10,7 +12,8 @@ export default function Home() {
   return (
     <>
       Index
-      {/* <PostList /> */}
+      <IndexBar />
+      {/**/}
     </>
   );
 }
