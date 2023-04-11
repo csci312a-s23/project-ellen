@@ -3,7 +3,7 @@ import posts_endpoint from "../pages/api/posts/index.js";
 import individualPost_endpoint from "../pages/api/posts/[id].js";
 import { knex } from "../../knex/knex";
 
-describe("API tests", () => {
+describe("API Post tests", () => {
   beforeAll(() => {
     // Ensure test database is initialized before an tests
     return knex.migrate.rollback().then(() => knex.migrate.latest());
