@@ -6,11 +6,14 @@
 
 // const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+import NavBar from "@/components/Navbar";
+
+export default function Home({ handleClick }) {
   return (
     <>
       Index
       {/* <PostList /> */}
+      <NavBar handleClick={handleClick} />
     </>
   );
 }
