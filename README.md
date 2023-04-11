@@ -6,24 +6,28 @@ Student Direct is web application that allows optionally anonymous users to post
 
 [Link to application](https://student-direct.fly.dev/)
 
-## Creation
+## Running the Database
 
-This project skeleton has been setup similar to our assignments and practicals. It is a Next.JS application, created with create-next-app `💻 npx create-next-app@latest`, which uses Jest and Testing Library for testing, ESLint for static analysis, Prettier for styling, and is configured to use GitHub actions for testing pull requests.
+Make sure that Knex, SQLite3, and PostgreSQL are installed. Run
 
-Development dependencies installed with:
-
-```
-💻 npm install -D jest jest-environment-jsdom husky lint-staged prettier eslint-config-prettier @testing-library/react @testing-library/jest-dom
+```sh
+npm install --save knex sqlite pg
 ```
 
-### Additional tools you might need
+if needed.
 
-#### Mocking fetch
+Run
 
-Tools for mocking fetch can be installed with
-
-```
-💻 npm install -D fetch-mock-jest node-fetch@2.6.7
+```sh
+npx knex migrate:latest --env development
 ```
 
-Note we need to pin the `node-fetch` version due to breaking changes when used with Jest in newer versions.
+to set up the database for loading data.
+To load in the testing data run
+
+```sh
+npx knex seed:run --env development
+```
+
+to load the testing data into the database
+Please update the seed data fornd in the `./knex/seeds/` directory as needed for testing purposes.
