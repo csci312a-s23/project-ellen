@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import styles from "./PostCreator.module.css";
+import ReactSwitch from "react-switch";
 
 export default function PostCreator() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
 
-  // eslint-disable-next-line no-unused-vars
   const [title, setTitle] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [description, setDescription] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [myID, setMyID] = useState("");
+  const [checked, setChecked] = useState(false);
 
-  // eslint-disable-next-line no-unused-vars
+  // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/
+  const handleChange = (val) => {
+    setChecked(val);
+  };
+
   const submitPost = () => {
+    closeModal();
     fetch("/api/posts/new", {
       method: "POST",
       headers: {
@@ -23,8 +28,7 @@ export default function PostCreator() {
       body: JSON.stringify({
         title: title,
         content: description,
-        // TODO need to conditionally give ID depending on anonomous check. If anonomous, pass null instead.
-        posterID: myID,
+        posterID: checked ? "0000" : myID,
       }),
     });
   };
@@ -40,11 +44,34 @@ export default function PostCreator() {
       </button>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className={styles.modal}>
-          <a className="close" onClick={closeModal}>
+          <a className={styles.close} onClick={closeModal}>
             &times;
           </a>
           <div className={styles.content}>
-            <h2>New Post</h2>
+            <h1>New Post</h1>
+            <div className={styles.titleHolder}>
+              <h2 className={styles.title}>Title:</h2>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={styles.titleInput}
+              />
+            </div>
+            <h2>Describe your issue:</h2>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={styles.description}
+            />
+          </div>
+          <div className={styles.actions}>
+            <div className={styles.anonomousHolder}>
+              <h3>Anonomous</h3>
+              <ReactSwitch checked={checked} onChange={handleChange} />
+            </div>
+            <div className={styles.submitButton} onClick={() => submitPost()}>
+              Submit
+            </div>
           </div>
         </div>
       </Popup>
