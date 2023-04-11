@@ -13,6 +13,14 @@ export default function PostCreator() {
   const [myID, setMyID] = useState("");
   const [checked, setChecked] = useState(false);
 
+  // const options = [
+  // { label: "Food"},
+  // { label: "Registration"},
+  // { label: "Professors"},
+  // { label: "Teachers"},
+  // { label: "Other"},
+  // ]
+
   // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/
   const handleChange = (val) => {
     setChecked(val);

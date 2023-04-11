@@ -1,26 +1,25 @@
-import { knex } from "../../../../../knex/knex.js";
 import nc from "next-connect";
-
+import Posts from "../../../../../models/Posts.js";
 // creating a new post
-const handler = nc().post((req, res) => {
+const handler = nc().post(async (req, res) => {
   // handle the creation of a new post
 
   console.log("trig");
-  const {body} = req;
+  const { body } = req;
 
   console.log("incomming new post request", body);
   console.log("incomming new post request", body?.posterID);
 
-  knex("posts")
-    .insert({
+  const post = await Posts.query()
+    .insertAndFetch({
       posterID: body.posterID,
       title: body?.title,
       content: body?.content,
       category: body?.category,
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     })
     .then(() => {
-      res.json({ success: true, message: "ok" }); // respond back to request
+      res.status(200).json(post);
     });
 });
 
