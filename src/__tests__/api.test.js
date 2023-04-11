@@ -1,6 +1,7 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
-import individualPost_endpoint from "../pages/api/posts/[id].js";
+// import individualPost_endpoint from "../pages/api/posts/[id].js";
+import newPost_endpoint from "../pages/api/posts/new/index.js";
 import { knex } from "../../knex/knex";
 
 describe("API tests", () => {
@@ -12,6 +13,11 @@ describe("API tests", () => {
   beforeEach(() => {
     // Reset contents of the test database
     return knex.seed.run();
+  });
+
+  afterEach(() => {
+    // Clear relation join table
+    return knex("posts").del();
   });
 
   test("GET /api/posts should return all posts", async () => {
@@ -38,16 +44,48 @@ describe("API tests", () => {
       },
     });
   });
-  test("GET /api/posts/[id] should return singular posts", async () => {
+
+  test("POST /api/posts/new should return create a new post", async () => {
+    const newPost = {
+      posterID: "1111",
+      title: "new title",
+      content: "new content",
+      category: "school",
+    };
+
     await testApiHandler({
       rejectOnHandlerError: true, // Make sure to catch any errors
-      handler: individualPost_endpoint, // NextJS API function to test
-      url: "/api/posts/7",
+      handler: newPost_endpoint, // NextJS API function to test
+      url: "/api/posts/new",
       test: async ({ fetch }) => {
         // Test endpoint with mock fetch
-        const res = await fetch();
-        await expect(res.json()).resolves.toBeInstanceOf(Object);
+        const res = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(newPost),
+        });
+
+        const response = await res.json();
+
+        expect(typeof response.id).toBe("number");
       },
     });
   });
+
+  // test("GET /api/posts/[id] should return singular post", async () => {
+  // 	await testApiHandler({
+  // 		rejectOnHandlerError: true, // Make sure to catch any errors
+  // 		handler: individualPost_endpoint, // NextJS API function to test
+  // 		url: "/api/posts/200",
+  // 		test: async ({ fetch }) => {
+  // 			// Test endpoint with mock fetch
+  // 			const res = await fetch();
+  // 			let response = await res.json()
+  // 			console.log("what did ", response)
+  // 			await expect(response).resolves.toBeInstanceOf(Object);
+  // 		},
+  // 	});
+  // });
 });

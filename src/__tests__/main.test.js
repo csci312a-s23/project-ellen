@@ -15,3 +15,5 @@ describe("End-to-end testing", () => {
     render(<Home />);
   });
 });
+
+describe("Create new Post", () => {});

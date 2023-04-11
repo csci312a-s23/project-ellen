@@ -9,7 +9,7 @@ const handler = nc().get(async (req, res) => {
     // posts = await knex("posts").where({ category: category });
     posts = await Posts.query().where({ category: category }).throwIfNotFound();
   } else {
-    posts = await Posts.query().where({ category: category });
+    posts = await Posts.query();
   }
   res.status(200).json(posts);
 });

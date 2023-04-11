@@ -12,14 +12,15 @@ export default function PostCreator() {
   // eslint-disable-next-line no-unused-vars
   const [myID, setMyID] = useState("");
   const [checked, setChecked] = useState(false);
+  const [category, setCategory] = useState(" ");
 
-  // const options = [
-  // { label: "Food"},
-  // { label: "Registration"},
-  // { label: "Professors"},
-  // { label: "Teachers"},
-  // { label: "Other"},
-  // ]
+  const options = [
+    { label: "Food" },
+    { label: "Registration" },
+    { label: "Professors" },
+    { label: "Teachers" },
+    { label: "Other" },
+  ];
 
   // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/
   const handleChange = (val) => {
@@ -37,6 +38,7 @@ export default function PostCreator() {
         title: title,
         content: description,
         posterID: checked ? "0000" : myID,
+        category: category,
       }),
     });
   };
@@ -71,7 +73,22 @@ export default function PostCreator() {
               onChange={(e) => setDescription(e.target.value)}
               className={styles.description}
             />
+            <h2>Select a category</h2>
+            <select
+              className={styles.select}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {options.map((option) => {
+                return (
+                  <option value={option.label} key={option.label}>
+                    {option.label}
+                  </option>
+                );
+              })}
+            </select>
           </div>
+
           <div className={styles.actions}>
             <div className={styles.anonomousHolder}>
               <h3>Anonomous</h3>
