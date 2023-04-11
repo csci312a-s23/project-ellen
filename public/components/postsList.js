@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function PostList() {
+function PostList({ currentFilter }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -10,10 +10,23 @@ function PostList() {
         setPosts(response);
       });
   }, []);
+
+  const filteredPosts = posts.filter((post) => {
+    if (currentFilter === "new") {
+      return true; //returns all posts
+    } else if (currentFilter === "hot") {
+      return post.title === "title1";
+      return post.votes > 5; //need to implement this eventually
+    } else if (currentFilter === "recent") {
+      const cutOff = new Date();
+      cutOff.setDate(cutOff.getDate() - 7); //set to a week ago
+      return post.created_at >= cutOff;
+    }
+  });
+
   return (
     <>
-      {posts.map((post) => {
-        console.log(post);
+      {filteredPosts.map((post) => {
         {
           return (
             <div key={post.id}>
