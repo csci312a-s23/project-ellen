@@ -6,6 +6,9 @@ const handler = nc().post(async (req, res) => {
 
   const { body } = req;
 
+  if (!body) {
+    res.status(500).die("Need Body");
+  }
   const newPost = await Posts.query().insertAndFetch({
     posterID: body.posterID,
     title: body?.title,

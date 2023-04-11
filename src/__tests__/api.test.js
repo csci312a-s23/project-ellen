@@ -35,10 +35,26 @@ describe("API tests", () => {
       test: async ({ fetch }) => {
         // Test endpoint with mock fetch
         const res = await fetch();
-        await expect(res.json()).resolves.toBeInstanceOf(Array);
+        const response = await res.json();
+        expect(response[0].category).toBe("school");
       },
     });
   });
+
+  // test("GET /api/posts/[id] should return singular post", async () => {
+  // 	await testApiHandler({
+  // 		rejectOnHandlerError: true, // Make sure to catch any errors
+  // 		handler: individualPost_endpoint, // NextJS API function to test
+  // 		url: "/api/posts/200",
+  // 		test: async ({ fetch }) => {
+  // 			// Test endpoint with mock fetch
+  // 			const res = await fetch();
+  // 			let response = await res.json()
+  // 			console.log("what did ", response)
+  // 			await expect(response).resolves.toBeInstanceOf(Object);
+  // 		},
+  // 	});
+  // });
 
   test("POST /api/posts/new should return create a new post", async () => {
     const newPost = {
@@ -68,19 +84,4 @@ describe("API tests", () => {
       },
     });
   });
-
-  // test("GET /api/posts/[id] should return singular post", async () => {
-  // 	await testApiHandler({
-  // 		rejectOnHandlerError: true, // Make sure to catch any errors
-  // 		handler: individualPost_endpoint, // NextJS API function to test
-  // 		url: "/api/posts/200",
-  // 		test: async ({ fetch }) => {
-  // 			// Test endpoint with mock fetch
-  // 			const res = await fetch();
-  // 			let response = await res.json()
-  // 			console.log("what did ", response)
-  // 			await expect(response).resolves.toBeInstanceOf(Object);
-  // 		},
-  // 	});
-  // });
 });
