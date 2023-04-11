@@ -15,11 +15,6 @@ describe("API tests", () => {
     return knex.seed.run();
   });
 
-  afterEach(() => {
-    // Clear relation join table
-    return knex("posts").del();
-  });
-
   test("GET /api/posts should return all posts", async () => {
     await testApiHandler({
       rejectOnHandlerError: true, // Make sure to catch any errors
