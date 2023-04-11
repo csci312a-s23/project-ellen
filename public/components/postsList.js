@@ -20,7 +20,7 @@ function PostList({ currentFilter }) {
     } else if (currentFilter === "recent") {
       const cutOff = new Date();
       cutOff.setDate(cutOff.getDate() - 7); //set to a week ago
-      return post.created_at >= cutOff;
+      return post.created_at <= cutOff;
     }
   });
 

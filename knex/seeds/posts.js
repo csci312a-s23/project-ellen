@@ -8,13 +8,14 @@ exports.seed = async function (knex) {
   await knex("posts").insert([
     {
       title: "title1",
+      posterID: 1,
       content: "content1",
       category: "school",
       created_at: new Date(),
-      comments: "[1]",
     },
     {
       title: "title2",
+      posterID: 2,
       content: "content2",
       category: "food",
       created_at: new Date(),
