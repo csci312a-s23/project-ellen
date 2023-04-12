@@ -5,9 +5,9 @@ import Post from "../../../../models/Posts.js";
 
 const handler = nc()
   .get(async (req, res) => {
-    const article = await Post.query().findById(parseInt(req.query.id)).first();
+    const post = await Post.query().findById(parseInt(req.query.id)).first();
 
-    res.status(200).json(article);
+    res.status(200).json(post);
   })
   .put(async (req, res) => {
     console.log(req, res);
