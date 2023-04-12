@@ -25,10 +25,11 @@ module.exports = {
   test: {
     ...defaultSettings,
     client: "sqlite3",
-    connection: {
-      filename: "./ellen.db",
-    },
+    connection: ":memory:",
     useNullAsDefault: true,
+    seeds: {
+      directory: "./knex/seeds/test",
+    },
   },
 
   production: {
