@@ -11,14 +11,14 @@ exports.seed = async function (knex) {
       posterID: 1,
       content: "content1",
       category: "school",
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     },
     {
       title: "title2",
       posterID: 2,
       content: "content2",
       category: "food",
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     },
   ]);
 };
