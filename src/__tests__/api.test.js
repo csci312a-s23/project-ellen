@@ -1,8 +1,12 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
-// import individualPost_endpoint from "../pages/api/posts/[id].js";
+import individualPost_endpoint from "../pages/api/posts/[id].js";
 import newPost_endpoint from "../pages/api/posts/new/index.js";
 import { knex } from "../../knex/knex";
+
+const fs = require("fs");
+const contents = fs.readFileSync("./data/SeedData.json");
+const data = JSON.parse(contents);
 
 describe("API tests", () => {
   beforeAll(() => {
@@ -10,7 +14,7 @@ describe("API tests", () => {
     return knex.migrate.rollback().then(() => knex.migrate.latest());
   });
 
-  beforeEach(() => {
+  beforeAll(() => {
     // Reset contents of the test database
     return knex.seed.run();
   });
@@ -31,30 +35,30 @@ describe("API tests", () => {
     await testApiHandler({
       rejectOnHandlerError: true, // Make sure to catch any errors
       handler: posts_endpoint, // NextJS API function to test
-      url: "/api/posts?category=school",
+      url: `/api/posts?category=${data.PostSeedData[0].category}`,
       test: async ({ fetch }) => {
         // Test endpoint with mock fetch
         const res = await fetch();
         const response = await res.json();
-        expect(response[0].category).toBe("school");
+        expect(response[0].category).toBe(data.PostSeedData[0].category);
       },
     });
   });
 
-  // test("GET /api/posts/[id] should return singular post", async () => {
-  // 	await testApiHandler({
-  // 		rejectOnHandlerError: true, // Make sure to catch any errors
-  // 		handler: individualPost_endpoint, // NextJS API function to test
-  // 		url: "/api/posts/200",
-  // 		test: async ({ fetch }) => {
-  // 			// Test endpoint with mock fetch
-  // 			const res = await fetch();
-  // 			let response = await res.json()
-  // 			console.log("what did ", response)
-  // 			await expect(response).resolves.toBeInstanceOf(Object);
-  // 		},
-  // 	});
-  // });
+  test("GET /api/posts/[id] should return singular post", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: individualPost_endpoint, // NextJS API function to test
+      url: "/api/posts/1",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+      test: async ({ fetch }) => {
+        // Test indiv
+        const res = await fetch();
+        const response = await res.json();
+        expect(response.content).toBe(data.PostSeedData[0].content);
+      },
+    });
+  });
 
   test("POST /api/posts/new should return create a new post", async () => {
     const newPost = {
@@ -62,6 +66,7 @@ describe("API tests", () => {
       title: "new title",
       content: "new content",
       category: "school",
+      created_at: new Date().toISOString(),
     };
 
     await testApiHandler({
@@ -79,7 +84,6 @@ describe("API tests", () => {
         });
 
         const response = await res.json();
-
         expect(typeof response.id).toBe("number");
       },
     });

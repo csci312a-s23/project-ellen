@@ -5,17 +5,9 @@ import Post from "../../../../models/Posts.js";
 
 const handler = nc()
   .get(async (req, res) => {
-    // return [id] post
-    console.log("paraps", req.query.id);
+    const article = await Post.query().findById(parseInt(req.query.id)).first();
 
-    // const post = await knex("posts").where({ id: parseInt(req.query.id) });
-    const article = await Post.query()
-      .where({ id: parseInt(req.query.id) })
-      .first();
-
-    console.log("git article:", article);
     res.status(200).json(article);
-    // res.status(200).json(post);
   })
   .put(async (req, res) => {
     console.log(req, res);
