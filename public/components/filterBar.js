@@ -11,7 +11,7 @@
     -setCurrentFilter: sets current filter based on button click
 */
 
-//import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 
 function filterBar({ currentFilter, setCurrentFilter }) {
   return (
@@ -41,4 +41,7 @@ function filterBar({ currentFilter, setCurrentFilter }) {
 
 export default filterBar;
 
-//WRITE PROP TYPES
+filterBar.propTypes = {
+  currentFilter: PropTypes.oneOf(["new", "hot", "recent"]).isRequired,
+  setCurrentFilter: PropTypes.func.isRequired,
+};
