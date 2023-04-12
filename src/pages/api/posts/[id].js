@@ -1,5 +1,5 @@
 import nc from "next-connect";
-import Posts from "../../../../models/Posts.js";
+import Post from "../../../../models/Posts.js";
 // import { knex } from "../../../../knex/knex.js";
 // interaciton with post based on id
 
@@ -9,7 +9,7 @@ const handler = nc()
     console.log("paraps", req.query.id);
 
     // const post = await knex("posts").where({ id: parseInt(req.query.id) });
-    const article = await Posts.query()
+    const article = await Post.query()
       .where({ id: parseInt(req.query.id) })
       .first();
 
