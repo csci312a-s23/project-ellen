@@ -9,12 +9,12 @@ export default class Comment extends BaseModel {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["posterID", "postID", "content"],
+      required: ["commenterID", "postID", "content"],
 
       properties: {
         id: { type: "integer" },
-        posterID: { type: "string" },
-        postID: { type: "string" },
+        commenterID: { type: "string" },
+        postID: { type: "integer" },
         content: { type: "string" },
         created_at: { type: "string" },
       },
@@ -30,7 +30,7 @@ export default class Comment extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: "comments.posterID",
+          from: "comments.commenterID",
           to: "users.id",
         },
       },

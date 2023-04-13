@@ -2,7 +2,6 @@ import nc from "next-connect";
 import Comment from "../../../../models/Comments";
 
 const handler = nc().get(async (req, res) => {
-  console.log("function call");
   const comment = await Comment.query()
     .findById(req.query.id)
     .throwIfNotFound();
@@ -20,4 +19,6 @@ const handler = nc().get(async (req, res) => {
       .updateAndFetchById(req.query.id, updatedComment)
       .throwIfNotFound();
     res.status(200).json(comment);
-  })*/ export default handler;
+  })*/
+
+export default handler;
