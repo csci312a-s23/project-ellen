@@ -1,5 +1,6 @@
 import Home from "@/pages/index";
-import { render } from "@testing-library/react";
+import PostCreator from "@/components/newPost/PostCreator";
+import { render, screen, fireEvent } from "@testing-library/react";
 // import fetchMock from "jest-fetch-mock"
 // const originalFetch = global.fetch;
 // global.fetch = (url, ...params) => {
@@ -53,5 +54,15 @@ describe("End-to-end testing", () => {
   test("Render index.js component", () => {
     mockRouter.push("/initial-path");
     render(<Home />);
+  });
+});
+
+describe("Create new Post", () => {
+  test("Render index.js component", () => {
+    render(<PostCreator />);
+    expect(screen.queryByText("New Post")).toBeInTheDocument();
+    const newPostButton = screen.queryByText("New Post");
+    fireEvent.click(newPostButton);
+    expect(screen.queryByText("Describe your issue:")).toBeInTheDocument();
   });
 });

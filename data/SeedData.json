@@ -1,0 +1,64 @@
+{
+  "PostSeedData": [
+    {
+      "title": "title1",
+      "posterID": 1,
+      "content": "content1",
+      "category": "school"
+    },
+    {
+      "title": "title2",
+      "posterID": 2,
+      "content": "content2",
+      "category": "food"
+    }
+  ],
+  "UserSeedData": [
+    {
+      "id": 1,
+      "username": "test1",
+      "email": "test1@test.com",
+      "firstName": "test1",
+      "lastName": "test1",
+      "type": "student",
+      "classYear": 2024,
+      "major": "Computer Science"
+    },
+    {
+      "id": 2,
+      "username": "test2",
+      "email": "test2@test.com",
+      "firstName": "test2",
+      "lastName": "test2",
+      "type": "student",
+      "classYear": 2024,
+      "major": "Computer Science"
+    },
+    {
+      "id": 3,
+      "username": "test3",
+      "email": "test3@test.com",
+      "firstName": "test3",
+      "lastName": "test3",
+      "type": "student",
+      "classYear": 2024,
+      "major": "Computer Science"
+    }
+  ],
+  "CommentSeedData": [
+    {
+      "id": 1,
+      "commenterID": 1,
+      "postID": 1,
+      "content": "content1",
+      "likes": 0
+    },
+    {
+      "id": 2,
+      "commenterID": 2,
+      "postID": 2,
+      "content": "content2",
+      "likes": 3
+    }
+  ]
+}
