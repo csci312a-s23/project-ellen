@@ -1,7 +1,7 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
-import individualPost_endpoint from "../pages/api/posts/[id].js";
-import newPost_endpoint from "../pages/api/posts/new/index.js";
+import individualPost_endpoint from "../pages/api/posts/[[id]].js";
+import newPost_endpoint from "../pages/api/posts/new.js";
 import { knex } from "../../knex/knex";
 
 const fs = require("fs");
