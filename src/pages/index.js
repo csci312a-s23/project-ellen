@@ -21,10 +21,6 @@ export default function Home() {
     setCurrentFilter(newFilter);
   };
 
-  const createPostClick = () => {
-    router.push("/createPost"); // or something
-  };
-
   const profileClick = () => {
     router.push("/profile"); // or something
   };
@@ -36,9 +32,8 @@ export default function Home() {
         setCurrentFilter={changeFilter}
       />
       <PostList currentFilter={currentFilter} />
-      <button onClick={createPostClick}>Make Post</button>
-      <button onClick={profileClick}>Profile</button>
       <PostCreator />
+      <button onClick={profileClick}>Profile</button>
     </>
   );
 }
