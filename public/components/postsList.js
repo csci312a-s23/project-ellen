@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { act } from "react-dom/test-utils";
+
 function PostList({ currentFilter }) {
   const [posts, setPosts] = useState([]);
 
@@ -7,7 +9,9 @@ function PostList({ currentFilter }) {
     fetch("/api/posts")
       .then((res) => res.json())
       .then((response) => {
-        setPosts(response);
+        act(() => {
+          setPosts(response);
+        });
       });
   }, []);
 
@@ -18,9 +22,9 @@ function PostList({ currentFilter }) {
       return post.title === "title1";
       return post.votes > 5; //need to implement this eventually
     } else if (currentFilter === "recent") {
-      const cutOff = new Date();
-      cutOff.setDate(cutOff.getDate() - 7); //set to a week ago
-      return post.created_at <= cutOff;
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      return post.created_at >= oneWeekAgo;
     }
   });
 
@@ -29,11 +33,11 @@ function PostList({ currentFilter }) {
       {filteredPosts.map((post) => {
         {
           return (
-            <div key={post.id}>
+            <div key={post.title}>
               <h2>{post.title}</h2>
               <p>{post.content}</p>
-              {/* <p>{post.created_at}</p> */}
-              <p>{post.comments}</p>
+              <p>{post.created_at}</p>
+              <p>{post.category}</p>
             </div>
           );
           return <div key={post.id}> {post.title} </div>;
