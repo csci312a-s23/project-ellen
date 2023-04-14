@@ -1,7 +1,7 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
-import individualPost_endpoint from "../pages/api/posts/[[id]].js";
-import newPost_endpoint from "../pages/api/posts/new.js";
+import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
+import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 import { knex } from "../../knex/knex";
 
@@ -61,7 +61,7 @@ describe("API tests", () => {
     });
   });
 
-  test("POST /api/posts/new should return create a new post", async () => {
+  test("POST /api/posts should return create a new post", async () => {
     const newPost = {
       posterID: "1111",
       title: "new title",
@@ -73,7 +73,7 @@ describe("API tests", () => {
     await testApiHandler({
       rejectOnHandlerError: true, // Make sure to catch any errors
       handler: newPost_endpoint, // NextJS API function to test
-      url: "/api/posts/new",
+      url: "/api/posts",
       test: async ({ fetch }) => {
         // Test endpoint with mock fetch
         const res = await fetch({
