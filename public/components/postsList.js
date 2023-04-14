@@ -24,6 +24,8 @@ function PostList({ sortingFilter }) {
     }
   });
 
+  console.log(posts);
+
   return (
     <>
       {filteredPosts.map((post) => {

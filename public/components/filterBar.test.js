@@ -21,14 +21,14 @@ describe("filterBar: filterBar tests", () => {
   });
 
   test("Current button is disabled when selected", () => {
-    const { getByText } = render(<FilterBar currentFilter="hot" />);
+    const { getByText } = render(<FilterBar currentSortFilter="hot" />);
     const currentButton = getByText("Hot");
     expect(currentButton).toBeDisabled();
   });
 
   test("Correctly calls setCurrentFilter with correct button", () => {
     const { getByText } = render(
-      <FilterBar currentFilter="new" setCurrentFilter={handler} />
+      <FilterBar currentSortFilter="new" setCurrentSortFilter={handler} />
     );
     const currentButton = getByText("Hot");
     fireEvent.click(currentButton);

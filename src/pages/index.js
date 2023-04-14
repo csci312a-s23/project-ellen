@@ -31,7 +31,7 @@ export default function Home() {
         currentSortFilter={currentSortFilter}
         setCurrentSortFilter={changeSortFilter}
       />
-      <PostList currentSortFilter={currentSortFilter} />
+      <PostList sortingFilter={currentSortFilter} />
       <PostCreator />
       <button onClick={profileClick}>Profile</button>
     </>

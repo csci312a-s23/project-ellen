@@ -39,11 +39,11 @@ describe("postList: postList tests", () => {
   });
 
   test("Smoke test", () => {
-    render(<PostList currentFilter={"new"} />);
+    render(<PostList sortingFilter={"new"} />);
   });
 
   test("When currentFilter is new, should render three posts", async () => {
-    render(<PostList currentFilter="new" />);
+    render(<PostList sortingFilter="new" />);
     const post1 = await screen.findByText("title1");
     const post2 = await screen.findByText("title2");
     const post3 = await screen.findByText("title3");
@@ -53,7 +53,7 @@ describe("postList: postList tests", () => {
   });
 
   test("When currentFilter is hot, should render one post", async () => {
-    render(<PostList currentFilter="hot" />);
+    render(<PostList sortingFilter="hot" />);
     const post1 = await screen.findByText("title1");
     const post2 = await screen.queryByText("title2");
     const post3 = await screen.queryByText("title3");

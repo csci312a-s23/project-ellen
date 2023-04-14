@@ -7,25 +7,25 @@
   This component provides the user to select the option of Top, New, Hot to filter posts
 
    props:
-    -currentFilter: current filter selected
-    -setCurrentFilter: sets current filter based on button click
+    -currentSortFilter: current filter selected
+    -setCurrentSortFilter: sets current filter based on button click
 */
 
 import PropTypes from "prop-types";
 
-function filterBar({ currentFilter, setCurrentFilter }) {
+function filterBar({ currentSortFilter, setCurrentSortFilter }) {
   return (
     <div>
       {/* Maybe want some sort of sections view / titles view combo? */}
       <button
-        onClick={() => setCurrentFilter("new")}
-        disabled={currentFilter === "new"}
+        onClick={() => setCurrentSortFilter("new")}
+        disabled={currentSortFilter === "new"}
       >
         New
       </button>
       <button
-        onClick={() => setCurrentFilter("hot")}
-        disabled={currentFilter === "hot"}
+        onClick={() => setCurrentSortFilter("hot")}
+        disabled={currentSortFilter === "hot"}
       >
         Hot
       </button>
@@ -36,6 +36,6 @@ function filterBar({ currentFilter, setCurrentFilter }) {
 export default filterBar;
 
 filterBar.propTypes = {
-  currentFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
-  setCurrentFilter: PropTypes.func.isRequired,
+  currentSortFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
+  setCurrentSortFilter: PropTypes.func.isRequired,
 };
