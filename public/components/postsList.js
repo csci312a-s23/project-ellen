@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { act } from "react-dom/test-utils";
 
-function PostList({ currentFilter }) {
+function PostList({ sortingFilter }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -16,15 +16,11 @@ function PostList({ currentFilter }) {
   }, []);
 
   const filteredPosts = posts.filter((post) => {
-    if (currentFilter === "new") {
+    if (sortingFilter === "new") {
       return true; //returns all posts
-    } else if (currentFilter === "hot") {
+    } else if (sortingFilter === "hot") {
       return post.title === "title1";
-      return post.votes > 5; //need to implement this eventually
-    } else if (currentFilter === "recent") {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      return post.created_at >= oneWeekAgo;
+      return post.votes > 5; //need to implement this once we start scoring posts
     }
   });
 

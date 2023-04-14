@@ -17,7 +17,7 @@ describe("filterBar: filterBar tests", () => {
     const { getAllByRole } = render(<FilterBar />);
     console.log(getAllByRole);
     const buttons = getAllByRole("button");
-    expect(buttons).toHaveLength(3);
+    expect(buttons).toHaveLength(2);
   });
 
   test("Current button is disabled when selected", () => {

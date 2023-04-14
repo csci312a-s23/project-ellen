@@ -14,11 +14,11 @@ import PostList from "../../public/components/postsList";
 
 export default function Home() {
   const router = useRouter();
-  const [currentFilter, setCurrentFilter] = useState("new");
+  const [currentSortFilter, setCurrentSortFilter] = useState("new");
 
   //handles filter change
-  const changeFilter = (newFilter) => {
-    setCurrentFilter(newFilter);
+  const changeSortFilter = (newFilter) => {
+    setCurrentSortFilter(newFilter);
   };
 
   const profileClick = () => {
@@ -28,10 +28,10 @@ export default function Home() {
   return (
     <>
       <FilterBar
-        currentFilter={currentFilter}
-        setCurrentFilter={changeFilter}
+        currentSortFilter={currentSortFilter}
+        setCurrentSortFilter={changeSortFilter}
       />
-      <PostList currentFilter={currentFilter} />
+      <PostList currentSortFilter={currentSortFilter} />
       <PostCreator />
       <button onClick={profileClick}>Profile</button>
     </>

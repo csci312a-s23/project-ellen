@@ -64,15 +64,5 @@ describe("postList: postList tests", () => {
 
   //Currently not working due to some odd date formatting
 
-  // test("When currentFilter is recent, should render two posts", async () => {
-  //   render(<PostList currentFilter="recent"/>);
-  //   const post1 = await screen.queryByText("title1");
-  //   const post2 = await screen.queryByText("title2");
-  //   const post3 = await screen.findByText("title3");
-  //   expect(post1).not.toBeInTheDocument();
-  //   expect(post2).not.toBeInTheDocument();
-  //   expect(post3).toBeInTheDocument();
-  // });
-
-  //NEED MORE TESTS
+  //more tests?
 });

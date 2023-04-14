@@ -29,12 +29,6 @@ function filterBar({ currentFilter, setCurrentFilter }) {
       >
         Hot
       </button>
-      <button
-        onClick={() => setCurrentFilter("recent")}
-        disabled={currentFilter === "recent"}
-      >
-        Recent
-      </button>
     </div>
   );
 }
@@ -42,6 +36,6 @@ function filterBar({ currentFilter, setCurrentFilter }) {
 export default filterBar;
 
 filterBar.propTypes = {
-  currentFilter: PropTypes.oneOf(["new", "hot", "recent"]).isRequired,
+  currentFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
   setCurrentFilter: PropTypes.func.isRequired,
 };
