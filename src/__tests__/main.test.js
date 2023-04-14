@@ -1,13 +1,12 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/newPost/PostCreator";
 import App from "../pages/_app.js";
-import ShowPost from "../pages/posts/[id].js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
-
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
+import ShowPost from "../pages/posts/[id].js";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
@@ -24,6 +23,9 @@ mockRouter.useParser(
 );
 
 const simulatedPostData = data.PostSeedData.map((post, i) => {
+  return { ...post, id: i };
+});
+const simulatedCommentsData = data.CommentSeedData.map((post, i) => {
   return { ...post, id: i };
 });
 
@@ -138,6 +140,15 @@ describe("General Tests", () => {
 
       expect(
         await screen.findByText(simulatedPostData[0].title)
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe("comments testing", () => {
+    test("comments are showing", async () => {
+      render(<ShowPost currentPost={simulatedPostData[0]} />);
+      expect(
+        await screen.findByText(simulatedCommentsData[0].content)
       ).toBeInTheDocument();
     });
   });

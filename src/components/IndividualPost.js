@@ -3,10 +3,11 @@ export default function IndividualPost({ post }) {
 
   return (
     <>
-      <h1>{post.title}</h1>
+      <p>{post.title}</p>
       <p>{post.content}</p>
-      <p>{post.category}</p>
-      <p>{post.created_at}</p>
+      <p>category: {post.category}</p>
+      <p>created at: {post.created_at}</p>
+      <p>votes: {post.votes}</p>
     </>
   );
 }

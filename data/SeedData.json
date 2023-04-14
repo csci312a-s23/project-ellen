@@ -59,14 +59,14 @@
       "id": 1,
       "commenterID": 1,
       "postID": 1,
-      "content": "content1",
+      "content": "commentContent1",
       "likes": 0
     },
     {
       "id": 2,
       "commenterID": 2,
       "postID": 2,
-      "content": "content2",
+      "content": "commentContent2",
       "likes": 3
     }
   ]
