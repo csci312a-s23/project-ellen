@@ -1,5 +1,5 @@
 import nc from "next-connect";
-import Post from "../../../../../models/Posts.js";
+import Post from "../../../../models/Posts.js";
 // creating a new post
 const handler = nc().post(async (req, res) => {
   // handle the creation of a new post

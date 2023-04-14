@@ -1,7 +1,8 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
-import individualPost_endpoint from "../pages/api/posts/[id].js";
-import newPost_endpoint from "../pages/api/posts/new/index.js";
+import individualPost_endpoint from "../pages/api/posts/[[id]].js";
+import newPost_endpoint from "../pages/api/posts/new.js";
+import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 import { knex } from "../../knex/knex";
 
 const fs = require("fs");
@@ -85,6 +86,63 @@ describe("API tests", () => {
 
         const response = await res.json();
         expect(typeof response.id).toBe("number");
+      },
+    });
+  });
+
+  test("PATCH /api/posts/[id]/vote should return upvoted post on upvote", async () => {
+    const upvote = {
+      vote: "upvote",
+      userID: "2",
+    };
+
+    const post = data.PostSeedData[0];
+
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: vote_endpoint, // NextJS API function to test
+      url: "/api/posts/1/vote",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+      test: async ({ fetch }) => {
+        // Test endpoint with mock fetch
+        const res = await fetch({
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(upvote),
+        });
+
+        const response = await res.json();
+        expect(response.votes).toBe(post.votes + 1);
+      },
+    });
+  });
+
+  test("PATCH /api/posts/[id]/vote should return downvoted post on downvote", async () => {
+    const downvote = {
+      vote: "downvote",
+      userID: "1",
+    };
+    const post = data.PostSeedData[1];
+
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: vote_endpoint, // NextJS API function to test
+      url: "/api/posts/2/vote",
+      paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
+      test: async ({ fetch }) => {
+        // Test endpoint with mock fetch
+        const res = await fetch({
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(downvote),
+        });
+
+        const response = await res.json();
+        expect(response.votes).toBe(post.votes - 1);
       },
     });
   });

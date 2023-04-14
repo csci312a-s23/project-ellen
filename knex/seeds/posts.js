@@ -12,6 +12,7 @@ exports.seed = async function (knex) {
       content: "content1",
       category: "school",
       created_at: new Date().toISOString(),
+      votes: 0,
     },
     {
       title: "title2",
@@ -19,6 +20,7 @@ exports.seed = async function (knex) {
       content: "content2",
       category: "food",
       created_at: new Date().toISOString(),
+      votes: 5,
     },
   ]);
 };
