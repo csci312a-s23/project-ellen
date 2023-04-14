@@ -7,6 +7,7 @@ import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/user/index.js";
 import individualUser_endpoint from "../pages/api/user/[id]/index.js";
 import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
+import userComments_endpoint from "../pages/api/user/[id]/comments.js";
 import { knex } from "../../knex/knex";
 
 const fs = require("fs");
