@@ -1,6 +1,6 @@
 import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
-import { onError } from "../../../../../lib/middleware.js";
+import { onError } from "../../../../lib/middleware.js";
 // interaciton with post based on id
 
 const handler = nc({ onError })

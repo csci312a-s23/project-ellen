@@ -1,6 +1,6 @@
 import nc from "next-connect";
 import Post from "../../../../../models/Posts.js";
-import { onError } from "../../../../../lib/middleware.js";
+import { onError } from "../../../../lib/middleware.js";
 
 const handler = nc({ onError }).patch(async (req, res) => {
   // handle the upvote or downvote of a post
