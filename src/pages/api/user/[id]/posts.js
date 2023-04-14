@@ -1,18 +1,18 @@
 import nc from "next-connect";
 import { onError } from "../../../../lib/middleware";
-import User from "../../../../../models/Users";
+import Posts from "../../../../../models/Posts";
 
 const handler = nc({ onError })
   //return this user's posts
   .get(async (req, res) => {
-    const {id} = req.query;
-    console.log(id);
-    const user = await User.query()
-      .findById(id)
-      .withGraphFetched("posts")
-      .throwIfNotFound();
-    console.log(user);
-    res.status(200).json(user.posts);
+    const { id } = req.query;
+    //validate id
+    if (!id) {
+      res.status(400).end("Invalid User ID");
+      return;
+    }
+    const posts = await Posts.query().where("posterID", id).throwIfNotFound();
+    res.status(200).json(posts);
   });
 
 export default handler;
