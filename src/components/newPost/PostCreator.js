@@ -65,6 +65,7 @@ export default function PostCreator() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className={styles.titleInput}
+                data-testid="title-input"
               />
             </div>
             <h2>Describe your issue:</h2>
@@ -72,12 +73,14 @@ export default function PostCreator() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={styles.description}
+              data-testid="description-input"
             />
             <h2>Select a category</h2>
             <select
               className={styles.select}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              data-testid="cat-input"
             >
               {options.map((option) => {
                 return (
@@ -91,8 +94,13 @@ export default function PostCreator() {
 
           <div className={styles.actions}>
             <div className={styles.anonomousHolder}>
-              <h3>Anonomous</h3>
-              <ReactSwitch checked={checked} onChange={handleChange} />
+              <h3>Anonymous</h3>
+
+              <ReactSwitch
+                checked={checked}
+                onChange={handleChange}
+                data-testid="anon-input"
+              />
             </div>
             <div className={styles.submitButton} onClick={() => submitPost()}>
               Submit

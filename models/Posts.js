@@ -9,7 +9,7 @@ export default class Post extends BaseModel {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["posterID", "title", "content", "category"],
+      required: ["posterID", "title", "content", "category", "votes"],
       properties: {
         id: { type: "integer" },
         posterID: { type: "string" },
@@ -17,6 +17,7 @@ export default class Post extends BaseModel {
         content: { type: "string" },
         category: { type: "string" },
         created_at: { type: "string" },
+        votes: { type: "integer", default: 0 },
       },
     };
   }
