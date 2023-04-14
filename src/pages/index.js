@@ -7,11 +7,14 @@
 import PostCreator from "../components/newPost/PostCreator.js";
 // const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+import NavBar from "@/components/NavBar.js";
+
+export default function Home({ handleClick }) {
   return (
     <>
       Index
       <PostCreator />
+      <NavBar handleClick={handleClick} />
       {/* <PostList /> */}
     </>
   );
