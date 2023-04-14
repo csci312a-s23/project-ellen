@@ -18,15 +18,11 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     if (!id) {
-      console.log("no id");
       setCurrentPostState(null);
     } else if (!currentPost || currentPost.id !== parseInt(id)) {
-      console.log("id", id);
-      console.log("url:", `/api/posts/${parseInt(id)}`);
       fetch(`/api/posts/${parseInt(id)}`)
         .then((res) => res.json())
         .then((response) => {
-          console.log("respo", response);
           setCurrentPostState(response);
         })
         .catch((error) => console.log(error));

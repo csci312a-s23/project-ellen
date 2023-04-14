@@ -1,5 +1,5 @@
 export default function IndividualPost({ post }) {
-  console.log("rendering", post);
+  // console.log("rendering", post);
 
   return (
     <>
