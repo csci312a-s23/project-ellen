@@ -1,7 +1,8 @@
 import nc from "next-connect";
-import User from "../../../../models/Users";
+import User from "../../../../../models/Users";
+import { onError } from "../../../../lib/middleware";
 
-const handler = nc()
+const handler = nc({ onError })
   //return user by id
   .get(async (req, res) => {
     const { id } = req.query;
@@ -17,15 +18,15 @@ const handler = nc()
 
     //validate body
     if (!body) {
-      res.status(500).end("Need Body");
+      res.status(400).end("Need Body");
       return;
     }
     if (!body.username) {
-      res.status(500).end("Need Username");
+      res.status(400).end("Need Username");
       return;
     }
     if (!body.email) {
-      res.status(500).end("Need Email");
+      res.status(400).end("Need Email");
       return;
     }
 

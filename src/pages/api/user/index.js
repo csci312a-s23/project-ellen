@@ -3,16 +3,10 @@ import { onError } from "../../../lib/middleware";
 import User from "../../../../models/Users";
 
 const handler = nc({ onError })
-  //return this user's posts
+  //return all users
   .get(async (req, res) => {
-    const {id} = req.query;
-
-    const user = await User.query()
-      .findById(id)
-      .withGraphFetched("posts")
-      .throwIfNotFound();
-
-    res.status(200).json(user.posts);
+    const users = await User.query();
+    res.status(200).json(users);
   });
 
 export default handler;
