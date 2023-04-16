@@ -19,12 +19,9 @@ function PostList({ sortingFilter }) {
     if (sortingFilter === "new") {
       return true; //returns all posts
     } else if (sortingFilter === "hot") {
-      return post.title === "title1";
       return post.votes > 5; //need to implement this once we start scoring posts
     }
   });
-
-  console.log(posts);
 
   return (
     <>
