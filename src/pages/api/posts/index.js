@@ -1,7 +1,9 @@
 import nc from "next-connect";
 import Post from "../../../../models/Posts.js";
+import { onError } from "../../../lib/middleware.js";
+
 // function to handle returning all posts
-const handler = nc()
+const handler = nc({ onError })
   .get(async (req, res) => {
     const { category } = req.query;
 

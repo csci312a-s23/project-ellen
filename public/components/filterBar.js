@@ -36,6 +36,6 @@ function filterBar({ currentSortFilter, setCurrentSortFilter }) {
 export default filterBar;
 
 filterBar.propTypes = {
-  currentSortFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
-  setCurrentSortFilter: PropTypes.func.isRequired,
+  currentSortFilter: PropTypes.oneOf(["new", "hot"]),
+  setCurrentSortFilter: PropTypes.func,
 };
