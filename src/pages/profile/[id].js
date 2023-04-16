@@ -2,12 +2,9 @@
 import ProfileInfo from "../../components/ProfileInfo";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-// import { useState } from "react";
+
 export default function Profile() {
   const router = useRouter();
-
-  // actually want to get from api to set all of these things
-  // only take from the api if there isn't currently a user
 
   const [currentUser, updateUser] = useState();
 
@@ -32,6 +29,5 @@ export default function Profile() {
     }
   }, [id, currentUser]);
 
-  // conditionally render?
   return <ProfileInfo user={currentUser} />;
 }
