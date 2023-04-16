@@ -42,8 +42,8 @@ describe("ProfileInfo tests", () => {
     });
 
     test("ProfileInfo: User Data isn't mutated", () => {
-      const originalData = [sampleUsers[0]];
-      const inputData = [...originalData];
+      const originalData = sampleUsers[0];
+      const inputData = { ...originalData };
       render(<ProfileInfo user={inputData} />);
 
       expect(inputData).toEqual(originalData);
