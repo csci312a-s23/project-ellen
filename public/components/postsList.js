@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { act } from "react-dom/test-utils";
+import { act } from "@testing-library/react";
 
 function PostList({ sortingFilter }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/posts")
+    fetch("/api/posts/")
       .then((res) => res.json())
       .then((response) => {
         act(() => {
@@ -19,7 +19,7 @@ function PostList({ sortingFilter }) {
     if (sortingFilter === "new") {
       return true; //returns all posts
     } else if (sortingFilter === "hot") {
-      return post.votes > 5; //need to implement this once we start scoring posts
+      return post.votes > 5;
     }
   });
 
@@ -33,9 +33,9 @@ function PostList({ sortingFilter }) {
               <p>{post.content}</p>
               <p>{post.created_at}</p>
               <p>{post.category}</p>
+              <p>{post.votes}</p>
             </div>
           );
-          return <div key={post.id}> {post.title} </div>;
         }
       })}
     </>

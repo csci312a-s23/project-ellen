@@ -125,7 +125,7 @@ describe("General Tests", () => {
   describe("/posts/[id] shows the post with id = [id]", () => {
     beforeEach(() => {
       // CANNOT be "/0", for some reason that registers as just "/"
-      fetchMock.get("begin:/api/posts/1", () => {
+      fetchMock.get("begin:/api/posts/", () => {
         return simulatedPostData[0];
       });
       mockRouter.setCurrentUrl("/");
