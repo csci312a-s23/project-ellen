@@ -1,4 +1,4 @@
-import ProfileInfo from "./profileInfo";
+import ProfileInfo from "./ProfileInfo";
 // import { screen, render, fireEvent, waitFor } from "@testing-library/react";
 
 describe("ProfileInfo: Basic ProfileInfo functionality", () => {

@@ -1,5 +1,5 @@
 // import PropTypes from "prop-types";
-import ProfileInfo from "../../../public/components/ProfileInfo";
+import ProfileInfo from "../../components/ProfileInfo";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 // import { useState } from "react";
