@@ -1,12 +1,13 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/newPost/PostCreator";
-import App from "../pages/_app.js";
+// import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
+import { act } from "react-dom/test-utils";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
@@ -18,6 +19,7 @@ mockRouter.useParser(
   createDynamicRouteParser([
     // These paths should match those found in the `/pages` folder:
     "/posts/[id]",
+    "/posts",
     "/",
   ])
 );
@@ -37,13 +39,22 @@ describe("General Tests", () => {
     return knex.seed.run();
   });
 
+  beforeEach(() => {
+    fetchMock.get("/api/posts/1", simulatedPostData[0]);
+    fetchMock.get("/api/posts", simulatedPostData);
+    mockRouter.setCurrentUrl("/");
+  });
+
   afterEach(() => {
     fetchMock.reset();
   });
+  beforeAll(() => {
+    mockRouter.setCurrentUrl("/");
+  });
 
   describe("End-to-end testing", () => {
-    test("Render index.js component", () => {
-      render(<Home />);
+    test("Render index.js component", async () => {
+      await act(async () => render(<Home />));
     });
   });
 
@@ -123,20 +134,9 @@ describe("General Tests", () => {
   });
 
   describe("/posts/[id] shows the post with id = [id]", () => {
-    beforeEach(() => {
-      // CANNOT be "/0", for some reason that registers as just "/"
-      fetchMock.get("begin:/api/posts/1", () => {
-        return simulatedPostData[0];
-      });
-      mockRouter.setCurrentUrl("/");
-    });
-    afterEach(() => {
-      fetchMock.reset();
-    });
-
     test("Render index.js component", async () => {
       mockRouter.setCurrentUrl(`/posts/1`);
-      render(<App Component={ShowPost} />);
+      render(<ShowPost currentPost={simulatedPostData[0]} />);
 
       expect(
         await screen.findByText(simulatedPostData[0].title)

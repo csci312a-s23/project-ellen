@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { act } from "react-dom/test-utils";
-
 function PostList({ sortingFilter }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/posts")
+    fetch(`/api/posts`)
       .then((res) => res.json())
       .then((response) => {
-        act(() => {
-          setPosts(response);
-        });
+        setPosts(response);
       });
   }, []);
 
@@ -19,7 +15,7 @@ function PostList({ sortingFilter }) {
     if (sortingFilter === "new") {
       return true; //returns all posts
     } else if (sortingFilter === "hot") {
-      return post.votes > 5; //need to implement this once we start scoring posts
+      return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
     }
   });
 
