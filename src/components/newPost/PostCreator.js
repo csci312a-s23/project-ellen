@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import styles from "./PostCreator.module.css";
 import ReactSwitch from "react-switch";
 
-export default function PostCreator() {
+export default function PostCreator({ refresh }) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
 
@@ -29,7 +29,7 @@ export default function PostCreator() {
 
   const submitPost = () => {
     closeModal();
-    fetch("/api/posts/new", {
+    fetch("/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,6 +41,10 @@ export default function PostCreator() {
         category: category,
       }),
     });
+    setCategory(" ");
+    setDescription(" ");
+    setTitle(" ");
+    refresh();
   };
 
   return (

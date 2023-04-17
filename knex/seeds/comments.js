@@ -8,19 +8,19 @@ exports.seed = async function (knex) {
   await knex("comments").insert([
     {
       id: 1,
-      commenterID: 1,
+      commenterID: "1",
       postID: 1,
-      content: "content1",
+      content: "content_1",
       likes: 0,
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     },
     {
       id: 2,
       commenterID: 2,
       postID: 2,
-      content: "content2",
+      content: "content_2",
       likes: 0,
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     },
   ]);
 };
