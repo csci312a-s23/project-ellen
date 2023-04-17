@@ -4,13 +4,22 @@
       "title": "title1",
       "posterID": 1,
       "content": "content1",
-      "category": "school"
+      "category": "school",
+      "votes": 0
     },
     {
       "title": "title2",
       "posterID": 2,
       "content": "content2",
-      "category": "food"
+      "category": "food",
+      "votes": 3
+    },
+    {
+      "title": "title3",
+      "posterID": 3,
+      "content": "content3",
+      "category": "school",
+      "votes": -2
     }
   ],
   "UserSeedData": [
@@ -50,14 +59,14 @@
       "id": 1,
       "commenterID": 1,
       "postID": 1,
-      "content": "content1",
+      "content": "commentContent1",
       "likes": 0
     },
     {
       "id": 2,
       "commenterID": 2,
       "postID": 2,
-      "content": "content2",
+      "content": "commentContent2",
       "likes": 3
     }
   ]
