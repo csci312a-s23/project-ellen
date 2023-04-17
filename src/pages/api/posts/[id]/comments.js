@@ -1,8 +1,9 @@
 import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
+import { onError } from "../../../../lib/middleware.js";
 
-const handler = nc()
+const handler = nc({ onError })
   .get(async (req, res) => {
     // get all comments associated with a given post
 
