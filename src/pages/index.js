@@ -10,9 +10,11 @@ import { useState } from "react";
 import FilterBar from "../../public/components/filterBar";
 import PostList from "../../public/components/postsList";
 
+import PropTypes from "prop-types";
+
 // const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home({ posts }) {
   const router = useRouter();
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
 
@@ -31,9 +33,13 @@ export default function Home() {
         currentSortFilter={currentSortFilter}
         setCurrentSortFilter={changeSortFilter}
       />
-      <PostList sortingFilter={currentSortFilter} />
+      <PostList posts={posts} sortingFilter={currentSortFilter} />
       <PostCreator />
       <button onClick={profileClick}>Profile</button>
     </>
   );
 }
+
+PostList.propTypes = {
+  posts: PropTypes.array,
+};

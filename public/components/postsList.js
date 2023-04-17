@@ -1,27 +1,18 @@
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+function PostList({ posts, sortingFilter }) {
+  let filteredPosts;
 
-import { act } from "@testing-library/react";
-
-function PostList({ sortingFilter }) {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/posts/")
-      .then((res) => res.json())
-      .then((response) => {
-        act(() => {
-          setPosts(response);
-        });
-      });
-  }, []);
-
-  const filteredPosts = posts.filter((post) => {
-    if (sortingFilter === "new") {
-      return true; //returns all posts
-    } else if (sortingFilter === "hot") {
-      return post.votes > 5;
-    }
-  });
+  if (posts) {
+    filteredPosts = posts.filter((post) => {
+      if (sortingFilter === "new") {
+        return true; //returns all posts
+      } else if (sortingFilter === "hot") {
+        return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
+      }
+    });
+  } else {
+    filteredPosts = [];
+  }
 
   return (
     <>
@@ -43,3 +34,8 @@ function PostList({ sortingFilter }) {
 }
 
 export default PostList;
+
+PostList.propTypes = {
+  posts: PropTypes.array,
+  sortingFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
+};

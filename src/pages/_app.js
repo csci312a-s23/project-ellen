@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
   const [currentPost, setCurrentPostState] = useState(null);
+  const [posts, setPosts] = useState([]);
   const router = useRouter();
   const id = +router.query.id;
 
@@ -30,10 +31,20 @@ export default function App({ Component, pageProps }) {
     }
   }, [id, currentPost]);
 
+  useEffect(() => {
+    fetch(`/api/posts`)
+      .then((res) => res.json())
+      .then((response) => {
+        setPosts(response);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   const props = {
     ...pageProps,
     currentPost,
     setCurrentPost,
+    posts,
   };
 
   return <Component {...props} />;

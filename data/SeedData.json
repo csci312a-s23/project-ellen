@@ -12,14 +12,14 @@
       "posterID": 2,
       "content": "content2",
       "category": "food",
-      "votes": 3
+      "votes": 2
     },
     {
       "title": "title3",
       "posterID": 3,
       "content": "content3",
       "category": "school",
-      "votes": -2
+      "votes": 8
     }
   ],
   "UserSeedData": [

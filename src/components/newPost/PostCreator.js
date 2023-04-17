@@ -29,7 +29,7 @@ export default function PostCreator() {
 
   const submitPost = () => {
     closeModal();
-    fetch("/api/posts/new", {
+    fetch("/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
