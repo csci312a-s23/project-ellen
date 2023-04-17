@@ -10,7 +10,7 @@ import PostCreator from "../components/newPost/PostCreator.js";
 export default function Home() {
   return (
     <>
-      Index
+      HOME
       <PostCreator />
       {/* <PostList /> */}
     </>
