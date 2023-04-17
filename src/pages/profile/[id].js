@@ -41,7 +41,7 @@ export default function Profile() {
 
   return (
     <div>
-      <ProfileInfo user={currentUser} />
+      {currentUser && <ProfileInfo user={currentUser} />}
       {/* <ProfilePosts posts = {userPosts}/> */}
     </div>
   );
