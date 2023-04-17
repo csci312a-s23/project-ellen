@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("comments", (table) => {
     table.increments("id").primary();
-    table.string("commenterID").references("id").inTable("users");
+    table.uuid("commenterID").references("id").inTable("users");
     table.integer("postID").references("id").inTable("posts");
     table.text("content");
     table.integer("likes");

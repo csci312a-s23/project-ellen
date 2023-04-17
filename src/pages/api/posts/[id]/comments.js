@@ -20,9 +20,8 @@ const handler = nc()
       const comments = await Comments.query()
         .where({ postID: parseInt(id) })
         .throwIfNotFound({ message: "No comments associated with this post" });
-      if (!!comments) {
-        res.status(200).json(comments);
-      }
+
+      res.status(200).json(comments);
     }
     res.status(404).end(`${id} is not valid`);
   })
@@ -31,15 +30,20 @@ const handler = nc()
     const { id } = req.query;
     const newComment = req.body;
 
-    const comment = await Comment.query().insertAndFetch({
-      id: newComment?.id,
-      commenterID: newComment.commenterID,
-      postID: id,
-      title: newComment?.title,
-      content: newComment.content,
-      created_at: new Date().toISOString(),
-    });
-    res.status(200).json(comment);
+    try {
+      const comment = await Comments.query().insertAndFetch({
+        id: newComment?.id,
+        commenterID: newComment.commenterID,
+        postID: parseInt(id),
+        title: newComment?.title,
+        content: newComment.content,
+        created_at: new Date().toISOString(),
+      });
+
+      res.status(200).json(comment);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
 export default handler;
