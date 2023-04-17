@@ -9,7 +9,7 @@ exports.up = function (knex) {
     table.integer("postID").references("id").inTable("posts");
     table.text("content");
     table.integer("likes");
-    table.timestamp("created_at");
+    table.string("created_at");
   });
 };
 

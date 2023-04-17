@@ -1,6 +1,7 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
 import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
+import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 import { knex } from "../../knex/knex";
@@ -9,7 +10,7 @@ const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
-describe("API tests", () => {
+describe("API Post tests", () => {
   beforeAll(() => {
     // Ensure test database is initialized before an tests
     return knex.migrate.rollback().then(() => knex.migrate.latest());
@@ -143,6 +144,69 @@ describe("API tests", () => {
 
         const response = await res.json();
         expect(response.votes).toBe(post.votes - 1);
+      },
+    });
+  });
+});
+describe("API Comment tests", () => {
+  beforeAll(() => {
+    // Ensure test database is initialized before an tests
+    return knex.migrate.rollback().then(() => knex.migrate.latest());
+  });
+
+  beforeEach(() => {
+    // Reset contents of the test database
+    return knex.seed.run();
+  });
+
+  test("GET /api/post/[id]/comments should return all comments for a post", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: postComments_endpoint, // NextJS API function to test
+      url: "/api/posts/1/comments",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+      test: async ({ fetch }) => {
+        // test endpoint
+        const res = await fetch();
+        const response = await res.json();
+        expect(response.content).toBe(
+          data.CommentSeedData.filter((c) => {
+            c.postID === 1;
+          }).content
+        );
+      },
+    });
+  });
+  test("POST new to /api/posts/[id]/comments", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+
+      // post the new comment
+      handler: postComments_endpoint, // NextJS API function to test
+      url: "/api/posts/1/comments",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+      test: async ({ fetch }) => {
+        // Test endpoint with mock fetch
+        const res = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify({
+            commenterID: "2",
+            content: "new comment content",
+          }),
+        });
+
+        const response = await res.json();
+        console.log(response);
+
+        expect(response).toHaveProperty("commenterID", "2");
+        expect(response).toHaveProperty("postID", 1);
+        expect(response).toHaveProperty("content", "new comment content");
+        expect(response).toHaveProperty("created_at");
+        expect(response).toHaveProperty("id");
+        expect(response).toHaveProperty("likes");
       },
     });
   });
