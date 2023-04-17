@@ -1,19 +1,24 @@
-.NavBar {
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #333;
   color: #fff;
-  padding: 10px;
+  padding: 1rem;
+  list-style: none;
 }
-.NavBar button {
-  background-color: #4caf50;
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  margin-right: 1rem; /* add some space between list items */
+}
+
+.navbar a {
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
-.NavBar button:hover {
-  background-color: #3e8e41;
+  text-decoration: none;
 }

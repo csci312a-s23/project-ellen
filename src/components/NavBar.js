@@ -1,15 +1,23 @@
-import styles from "../styles/Navbar.module.css";
-export default function NavBar({ handleClick }) {
+import styles from "../styles/NavBar.module.css";
+import Link from "next/link";
+export default function NavBar() {
   return (
-    <div className={styles.NavBar}>
-      <input type={"button"} value="Home" onClick={() => handleClick("Home")} />
-      <input type={"button"} value="Post" onClick={() => handleClick("Post")} />
-      <input
-        type={"button"}
-        value="Profile"
-        onClick={() => handleClick("Profile")}
-      />
-      <input type={"button"} value="Feed" onClick={() => handleClick("Feed")} />
-    </div>
+    <ul className={styles.navbar}>
+      <li>
+        <Link href="/">Home</Link>
+      </li>
+
+      <li>
+        <Link href="/profile">Profile</Link>
+      </li>
+
+      <li>
+        <Link href="/post">Post</Link>
+      </li>
+
+      <li>
+        <Link href="/posts">Feed</Link>
+      </li>
+    </ul>
   );
 }
