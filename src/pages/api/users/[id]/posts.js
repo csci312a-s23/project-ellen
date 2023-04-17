@@ -22,8 +22,9 @@ const handler = nc().get(async (req, res) => {
     if (!!comments) {
       res.status(200).json(comments);
     }
+  } else {
+    res.status(404).end(`${id} is not valid`);
   }
-  res.status(404).end(`${id} is not valid`);
 });
 
 export default handler;

@@ -1,7 +1,11 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
 import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
+import users_endpoint from "../pages/api/users/index.js";
+import individualUser_endpoint from "../pages/api/users/[id]/index.js";
 import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
+import userPosts_endpoint from "../pages/api/users/[id]/posts.js";
+import userComments_endpoint from "../pages/api/users/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 import { knex } from "../../knex/knex";
@@ -148,7 +152,6 @@ describe("API Post tests", () => {
     });
   });
 });
-
 describe("API Comment tests", () => {
   beforeAll(() => {
     // Ensure test database is initialized before an tests
@@ -211,19 +214,82 @@ describe("API Comment tests", () => {
       },
     });
   });
+});
 
-  /*test("GET /api/comments/[id] should return a specific comment", async () => {
+describe("API User tests", () => {
+  beforeAll(() => {
+    // Ensure test database is initialized before an tests
+    return knex.migrate.rollback().then(() => knex.migrate.latest());
+  });
+
+  beforeEach(() => {
+    // Reset contents of the test database
+    return knex.seed.run();
+  });
+
+  test("GET /api/users should return all users", async () => {
     await testApiHandler({
       rejectOnHandlerError: true, // Make sure to catch any errors
-      handler: individualComment_endpoint, // NextJS API function to test
-      url: "/api/comments/1",
-      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+      handler: users_endpoint, // NextJS API function to test
       test: async ({ fetch }) => {
-        // Test indiv
+        // test endpoint
         const res = await fetch();
         const response = await res.json();
-        expect(response.content).toBe("content1");
+        expect(response.content).toBe(data.UserSeedData.content);
       },
     });
-  });*/
+  });
+
+  test("GET /api/users/[id] should return the specified user", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: individualUser_endpoint, // NextJS API function to test
+      url: "/api/users/1",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+      test: async ({ fetch }) => {
+        // test endpoint
+        const res = await fetch();
+        const response = await res.json();
+        expect(response.content).toBe(data.UserSeedData[0].content);
+      },
+    });
+  });
+
+  test("GET /api/users/[id]/posts should return all posts for a user", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: userPosts_endpoint, // NextJS API function to test
+      url: "/api/users/1/posts",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+      test: async ({ fetch }) => {
+        // test endpoint
+        const res = await fetch();
+        const response = await res.json();
+        expect(response.content).toBe(
+          data.PostSeedData.filter((c) => {
+            c.posterID === 1;
+          }).content
+        );
+      },
+    });
+  });
+
+  test("GET /api/users/[id]/comments should return all comments for a user", async () => {
+    await testApiHandler({
+      rejectOnHandlerError: true, // Make sure to catch any errors
+      handler: userComments_endpoint, // NextJS API function to test
+      url: "/api/users/1/comments",
+      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+      test: async ({ fetch }) => {
+        // test endpoint
+        const res = await fetch();
+        const response = await res.json();
+        expect(response.content).toBe(
+          data.CommentSeedData.filter((c) => {
+            c.commenterID === 1;
+          }).content
+        );
+      },
+    });
+  });
 });
