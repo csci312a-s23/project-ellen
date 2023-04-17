@@ -10,17 +10,17 @@ exports.seed = async function (knex) {
       title: "title1",
       posterID: 1,
       content: "content1",
+      votes: 0,
       category: "school",
       created_at: new Date().toISOString(),
-      votes: 0,
     },
     {
       title: "title2",
       posterID: 2,
       content: "content2",
+      votes: 10,
       category: "food",
       created_at: new Date().toISOString(),
-      votes: 5,
     },
   ]);
 };

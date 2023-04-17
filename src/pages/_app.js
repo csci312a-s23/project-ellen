@@ -5,8 +5,18 @@ import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
   const [currentPost, setCurrentPostState] = useState(null);
+  const [posts, setPosts] = useState([]);
   const router = useRouter();
   const id = +router.query.id;
+
+  const refreshPosts = () => {
+    fetch(`/api/posts`)
+      .then((res) => res.json())
+      .then((response) => {
+        setPosts(response);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const setCurrentPost = (post) => {
     if (post != null) {
@@ -31,10 +41,16 @@ export default function App({ Component, pageProps }) {
     }
   }, [id, currentPost]);
 
+  useEffect(() => {
+    refreshPosts();
+  }, []);
+
   const props = {
     ...pageProps,
     currentPost,
     setCurrentPost,
+    refreshPosts,
+    posts,
   };
 
   return (
