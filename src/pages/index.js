@@ -42,4 +42,5 @@ export default function Home({ posts, refreshPosts }) {
 
 PostList.propTypes = {
   posts: PropTypes.array,
+  refreshPosts: PropTypes.func,
 };
