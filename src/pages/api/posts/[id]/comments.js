@@ -22,28 +22,27 @@ const handler = nc()
         .throwIfNotFound({ message: "No comments associated with this post" });
 
       res.status(200).json(comments);
+    } else {
+      res.status(404).end(`${id} is not valid`);
     }
-    res.status(404).end(`${id} is not valid`);
   })
   .post(async (req, res) => {
     // post a new comment to a given post
     const { id } = req.query;
     const newComment = req.body;
+    // we want to automatically assign a new comment ID
+    const maxId = await Comments.query().max("id");
 
-    try {
-      const comment = await Comments.query().insertAndFetch({
-        id: newComment?.id,
-        commenterID: newComment.commenterID,
-        postID: parseInt(id),
-        title: newComment?.title,
-        content: newComment.content,
-        created_at: new Date().toISOString(),
-      });
+    const comment = await Comments.query().insertAndFetch({
+      id: parseInt(maxId[0]["max(`id`)"]) + 1,
+      postID: parseInt(id),
+      commenterID: newComment.commenterID,
+      content: newComment.content,
 
-      res.status(200).json(comment);
-    } catch (e) {
-      console.log(e);
-    }
+      likes: 0,
+      created_at: new Date().toISOString(),
+    });
+    res.status(200).json(comment);
   });
 
 export default handler;
