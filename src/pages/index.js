@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 // const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ posts }) {
+export default function Home({ posts, refreshPosts }) {
   const router = useRouter();
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
 
@@ -34,7 +34,7 @@ export default function Home({ posts }) {
         setCurrentSortFilter={changeSortFilter}
       />
       <PostList posts={posts} sortingFilter={currentSortFilter} />
-      <PostCreator />
+      <PostCreator refresh={refreshPosts} />
       <button onClick={profileClick}>Profile</button>
     </>
   );

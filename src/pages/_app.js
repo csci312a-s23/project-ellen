@@ -8,6 +8,15 @@ export default function App({ Component, pageProps }) {
   const router = useRouter();
   const id = +router.query.id;
 
+  const refreshPosts = () => {
+    fetch(`/api/posts`)
+      .then((res) => res.json())
+      .then((response) => {
+        setPosts(response);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const setCurrentPost = (post) => {
     if (post != null) {
       router.push(`/posts/${post.id}`);
@@ -32,18 +41,14 @@ export default function App({ Component, pageProps }) {
   }, [id, currentPost]);
 
   useEffect(() => {
-    fetch(`/api/posts`)
-      .then((res) => res.json())
-      .then((response) => {
-        setPosts(response);
-      })
-      .catch((error) => console.log(error));
+    refreshPosts();
   }, []);
 
   const props = {
     ...pageProps,
     currentPost,
     setCurrentPost,
+    refreshPosts,
     posts,
   };
 
