@@ -1,6 +1,4 @@
 export default function IndividualPost({ post }) {
-  // console.log("rendering", post);
-
   return (
     <>
       <p>{post.title}</p>

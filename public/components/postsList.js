@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import IndividualPost from "@/components/IndividualPost";
 function PostList({ posts, sortingFilter }) {
   let filteredPosts;
 
@@ -7,6 +8,7 @@ function PostList({ posts, sortingFilter }) {
       if (sortingFilter === "new") {
         return true; //returns all posts
       } else if (sortingFilter === "hot") {
+        //sort by date
         return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
       }
     });
@@ -14,17 +16,17 @@ function PostList({ posts, sortingFilter }) {
     filteredPosts = [];
   }
 
+  filteredPosts.sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
   return (
     <>
       {filteredPosts.map((post) => {
         {
           return (
-            <div key={post.title}>
-              <h2>{post.title}</h2>
-              <p>{post.content}</p>
-              <p>{post.created_at}</p>
-              <p>{post.category}</p>
-              <p>{post.votes}</p>
+            <div key={post.id}>
+              <IndividualPost post={post} />
             </div>
           );
         }
