@@ -22,14 +22,13 @@ function PostList({ posts, sortingFilter }) {
 
   return (
     <>
+      {/* WE need a post id */}
       {filteredPosts.map((post) => {
-        {
-          return (
-            <div key={post.id}>
-              <IndividualPost post={post} />
-            </div>
-          );
-        }
+        return (
+          <div key={post.id}>
+            <IndividualPost post={post} />
+          </div>
+        );
       })}
     </>
   );
