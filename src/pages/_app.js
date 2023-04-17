@@ -31,7 +31,7 @@ export default function App({ Component, pageProps }) {
         })
         .catch((error) => console.log(error));
     }
-  }, [id, currentPost]);
+  }, [id, currentPost, router.pathname]);
 
   const props = {
     ...pageProps,

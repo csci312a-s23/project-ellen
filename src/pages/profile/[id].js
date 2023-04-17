@@ -1,11 +1,13 @@
 import ProfileInfo from "../../components/ProfileInfo";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+// import ProfilePosts from "@/components/ProfilePosts";
 
 export default function Profile() {
   const router = useRouter();
 
   const [currentUser, updateUser] = useState();
+  // const [userPosts, setUserPosts] = useState();
 
   const { id } = router.query;
 
@@ -13,20 +15,34 @@ export default function Profile() {
     if (id) {
       const numberId = parseInt(id);
       const getUserInfo = async () => {
-        const response = await fetch(`/api/user/${numberId}`);
-        if (response.ok) {
-          const fetchedUserInfo = await response.json();
-          updateUser(fetchedUserInfo);
+        const detailsResponse = await fetch(`/api/user/${numberId}`);
+        if (detailsResponse.ok) {
+          const fetchedUserDetails = await detailsResponse.json();
+          updateUser(fetchedUserDetails);
         }
+        // const postsResponse = await fetch(`/api/user/${numberId}/posts`);
+        // if (postsResponse.ok) {
+        //   const fetchedUserPosts = await postsResponse.json();
+        //   setUserPosts(fetchedUserPosts);
+        // }
       };
 
-      if (!currentUser || numberId !== parseInt(currentUser.id)) {
+      if (
+        (!currentUser || numberId !== parseInt(currentUser.id)) &&
+        router.pathname.includes("profile")
+      ) {
         getUserInfo();
       }
     } else {
       updateUser(undefined);
+      // setUserPosts(undefined);
     }
-  }, [id, currentUser]);
+  }, [id, currentUser, router.pathname]);
 
-  return <ProfileInfo user={currentUser} />;
+  return (
+    <div>
+      <ProfileInfo user={currentUser} />
+      {/* <ProfilePosts posts = {userPosts}/> */}
+    </div>
+  );
 }
