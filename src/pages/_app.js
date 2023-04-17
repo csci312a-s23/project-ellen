@@ -1,3 +1,4 @@
+import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -52,5 +53,11 @@ export default function App({ Component, pageProps }) {
     posts,
   };
 
-  return <Component {...props} />;
+  return (
+    <div>
+      <NavBar />
+
+      <Component {...props} />
+    </div>
+  );
 }
