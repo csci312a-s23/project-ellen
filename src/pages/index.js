@@ -22,14 +22,22 @@ export default function Home({ posts, refreshPosts }) {
   };
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        width: "40%",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: "2%",
+      }}
+    >
       <FilterBar
         currentSortFilter={currentSortFilter}
         setCurrentSortFilter={changeSortFilter}
       />
       <PostList posts={posts} sortingFilter={currentSortFilter} />
       <PostCreator refresh={refreshPosts} />
-    </>
+    </div>
   );
 }
 

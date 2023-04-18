@@ -58,7 +58,7 @@ describe("postList: postList tests", () => {
 
     const items = await screen.findAllByTestId("post");
     const dates = items.map(
-      (item) => new Date(item.children[3].innerHTML.slice(12))
+      (item) => new Date(item.children[0].children[2].innerHTML.slice(12))
     );
     console.log(dates);
     let sorted = true;

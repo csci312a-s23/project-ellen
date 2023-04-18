@@ -11,24 +11,28 @@
     -setCurrentSortFilter: sets current filter based on button click
 */
 
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 
 function filterBar({ currentSortFilter, setCurrentSortFilter }) {
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "row" }}>
       {/* Maybe want some sort of sections view / titles view combo? */}
-      <button
+      <Button
+        variant="outlined"
         onClick={() => setCurrentSortFilter("new")}
         disabled={currentSortFilter === "new"}
       >
         New
-      </button>
-      <button
+      </Button>
+      <Button
+        style={{ marginLeft: "5%" }}
+        variant="outlined"
         onClick={() => setCurrentSortFilter("hot")}
         disabled={currentSortFilter === "hot"}
       >
         Hot
-      </button>
+      </Button>
     </div>
   );
 }
