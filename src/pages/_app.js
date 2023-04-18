@@ -30,7 +30,10 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if (!id) {
       setCurrentPostState(null);
-    } else if (!currentPost || currentPost.id !== parseInt(id)) {
+    } else if (
+      (!currentPost || currentPost.id !== parseInt(id)) &&
+      router.pathname.includes("posts")
+    ) {
       fetch(`/api/posts/${parseInt(id)}`)
         .then((res) => res.json())
         .then((response) => {
@@ -39,7 +42,7 @@ export default function App({ Component, pageProps }) {
         })
         .catch((error) => console.log(error));
     }
-  }, [id, currentPost]);
+  }, [id, currentPost, router.pathname]);
 
   useEffect(() => {
     refreshPosts();

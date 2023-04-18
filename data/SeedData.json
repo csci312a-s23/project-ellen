@@ -58,6 +58,25 @@
       "type": "student",
       "classYear": 2024,
       "major": "Computer Science"
+    },
+    {
+      "id": 4,
+      "username": "test4",
+      "email": "test4@test.com",
+      "firstName": "test4",
+      "lastName": "test4",
+      "type": "faculty",
+      "department": "Computer Science",
+      "title": "Professor2"
+    },
+    {
+      "id": 5,
+      "username": "test5",
+      "email": "test5@test.com",
+      "firstName": "test5",
+      "lastName": "test5",
+      "type": "administration",
+      "title": "Dean1"
     }
   ],
   "CommentSeedData": [
