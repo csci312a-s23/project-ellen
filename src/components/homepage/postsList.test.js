@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import PostList from "./postsList";
+import PostList from "./postsList.js";
 import fetchMock from "fetch-mock-jest";
-import { PostSeedData } from "../../data/SeedData.json";
+import { PostSeedData } from "../../../data/SeedData.json";
 import { act } from "react-dom/test-utils";
 
 describe("postList: postList tests", () => {

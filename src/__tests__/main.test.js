@@ -1,5 +1,5 @@
 import Home from "@/pages/index";
-import PostCreator from "@/components/newPost/PostCreator";
+import PostCreator from "@/components/post/PostCreator";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
