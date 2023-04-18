@@ -24,13 +24,6 @@ mockRouter.useParser(
   ])
 );
 
-const simulatedPostData = data.PostSeedData.map((post, i) => {
-  return { ...post, id: i };
-});
-const simulatedCommentsData = data.CommentSeedData.map((post, i) => {
-  return { ...post, id: i };
-});
-
 describe("General Tests", () => {
   beforeAll(() => {
     return knex.migrate.rollback().then(() => knex.migrate.latest());
@@ -40,8 +33,9 @@ describe("General Tests", () => {
   });
 
   beforeEach(() => {
-    fetchMock.get("/api/posts/1", simulatedPostData[0]);
-    fetchMock.get("/api/posts", simulatedPostData);
+    fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
+    fetchMock.get("/api/posts/1", data.PostSeedData[0]);
+    fetchMock.get("/api/posts", data.PostSeedData);
     mockRouter.setCurrentUrl("/");
   });
 
@@ -136,19 +130,19 @@ describe("General Tests", () => {
   describe("/posts/[id] shows the post with id = [id]", () => {
     test("Render index.js component", async () => {
       mockRouter.setCurrentUrl(`/posts/1`);
-      render(<ShowPost currentPost={simulatedPostData[0]} />);
+      render(<ShowPost currentPost={data.PostSeedData[0]} />);
 
       expect(
-        await screen.findByText(simulatedPostData[0].title)
+        await screen.findByText(data.PostSeedData[0].title)
       ).toBeInTheDocument();
     });
   });
 
   describe("comments testing", () => {
     test("comments are showing", async () => {
-      render(<ShowPost currentPost={simulatedPostData[0]} />);
+      render(<ShowPost currentPost={data.PostSeedData[0]} />);
       expect(
-        await screen.findByText(simulatedCommentsData[0].content)
+        await screen.findByText(data.CommentSeedData[0].content)
       ).toBeInTheDocument();
     });
   });

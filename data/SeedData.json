@@ -89,6 +89,13 @@
     },
     {
       "id": 2,
+      "commenterID": 1,
+      "postID": 1,
+      "content": "commentContent1",
+      "likes": 0
+    },
+    {
+      "id": 3,
       "commenterID": 2,
       "postID": 2,
       "content": "commentContent2",
