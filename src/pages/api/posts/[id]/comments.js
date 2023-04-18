@@ -37,7 +37,7 @@ const handler = nc({ onError })
     const comment = await Comments.query().insertAndFetch({
       id: parseInt(maxId[0]["max(`id`)"]) + 1,
       postID: parseInt(id),
-      commenterID: newComment.commenterID,
+      commenterID: newComment?.commenterID,
       content: newComment.content,
 
       likes: 0,

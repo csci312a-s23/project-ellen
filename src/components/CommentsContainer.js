@@ -1,27 +1,32 @@
 import Comment from "./Comment";
 import NewComment from "./NewComment";
 
-export default function CommentsList({ comments, setComments }) {
+export default function CommentsList({ postID, comments, getComments }) {
   const addComment = (comment) => {
-    const newComments = [
-      ...comments,
-      {
-        id: comments[comments.length - 1].id + 1,
-        commenterID: 2,
-        content: comment,
-        likes: 0,
+    fetch(`/api/posts/${postID}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    ];
-
-    setComments(newComments);
+      body: JSON.stringify({
+        id: postID,
+        commenterID: "1",
+        content: comment,
+      }),
+    });
+    getComments();
   };
-  const commentBlocks = comments.map((comment) => {
-    return (
-      <div key={comment.id}>
-        <Comment data={comment} />
-      </div>
-    );
-  });
+
+  let commentBlocks = <div> NO comments </div>;
+  if (comments.length > 0) {
+    commentBlocks = comments.map((comment) => {
+      return (
+        <div key={comment.id}>
+          <Comment data={comment} />
+        </div>
+      );
+    });
+  }
 
   return (
     <div>
