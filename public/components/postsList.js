@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import IndividualPost from "@/components/IndividualPost";
+import Post from "./post";
+
 function PostList({ posts, sortingFilter }) {
   let filteredPosts;
 
@@ -21,16 +22,16 @@ function PostList({ posts, sortingFilter }) {
   });
 
   return (
-    <>
+    <div style={{ width: "100%", margin: "5% 0 5% 0" }}>
       {/* WE need a post id */}
       {filteredPosts.map((post) => {
         return (
-          <div key={post.id}>
-            <IndividualPost post={post} />
+          <div key={post.id} style={{ marginBottom: "2%" }}>
+            <Post postInfo={post} />
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
 
