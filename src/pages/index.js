@@ -4,10 +4,10 @@
 // import styles from "@/styles/Home.module.css";
 //import PostList from "../../public/components/postsList";
 
-import PostCreator from "@/components/newPost/PostCreator";
 import { useState } from "react";
-import FilterBar from "../../public/components/filterBar";
-import PostList from "../../public/components/postsList";
+import PostCreator from "@/components/post/PostCreator";
+import FilterBar from "@/components/homepage/filterBar";
+import PostList from "@/components/homepage/postsList";
 
 import PropTypes from "prop-types";
 
