@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import IndividualPost from "@/components/IndividualPost";
-import CommentsContainer from "@/components/CommentsContainer";
+import IndividualPost from "@/components/post/IndividualPost";
+import CommentsContainer from "@/components/comment/CommentsContainer";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);

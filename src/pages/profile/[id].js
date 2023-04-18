@@ -1,4 +1,4 @@
-import ProfileInfo from "../../components/ProfileInfo";
+import ProfileInfo from "@/components/profile/ProfileInfo";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 // import ProfilePosts from "@/components/ProfilePosts";
