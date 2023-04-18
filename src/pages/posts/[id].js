@@ -7,11 +7,11 @@ export default function ShowPost({ currentPost }) {
 
   const getComments = () => {
     if (!!currentPost) {
-      console.log("curr", currentPost);
+      console.log("currentPost:", currentPost);
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
-          console.log("resy", response);
+          console.log("comments Response:", response);
           setComments(response);
         });
     }
@@ -42,7 +42,7 @@ export default function ShowPost({ currentPost }) {
       <h1>Post:</h1>
       {currentPost && <IndividualPost post={currentPost} />}
       <h2>Comments:</h2>
-      {comments && (
+      {!!comments && (
         <CommentsContainer
           postID={currentPost.id}
           comments={comments}
