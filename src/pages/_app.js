@@ -56,9 +56,12 @@ export default function App({ Component, pageProps }) {
     posts,
   };
 
+  // TO TEST, I PUT USERID = 1 BELOW
+  // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
+
   return (
     <div>
-      <NavBar />
+      <NavBar userID={1} />
 
       <Component {...props} />
     </div>

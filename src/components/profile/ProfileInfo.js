@@ -1,27 +1,62 @@
 import PropTypes from "prop-types";
-
+import styles from "./profile.module.css";
 export default function ProfileInfo(user) {
   const currentUser = user.user;
 
   return (
-    <div>
-      <p data-testid="profile">{currentUser.username}</p>
-      <p data-testid="profile">{currentUser.firstName}</p>
-      <p data-testid="profile">{currentUser.lastName}</p>
-      {currentUser.type === "student" && (
-        <p data-testid="profile">{currentUser.major}</p>
-      )}
-      {currentUser.type === "student" && (
-        <p data-testid="profile">{currentUser.classYear}</p>
-      )}
-      {currentUser.type === "faculty" && (
-        <p data-testid="profile">{currentUser.department}</p>
-      )}
-      {(currentUser.type === "faculty" ||
-        currentUser.type === "administration") && (
-        <p data-testid="profile">{currentUser.title}</p>
-      )}
-      <p data-testid="profile">{currentUser.type}</p>
+    <div className={styles.profile}>
+      <h1>About me </h1>
+
+      <ul className={styles.infolist}>
+        <li>
+          <p data-testid="profile">
+            <span>&#128205;</span> Username: {currentUser.username}
+          </p>
+        </li>
+        <li>
+          <p data-testid="profile">
+            <span>&#x1F3F7;</span> First Name: {currentUser.firstName}
+          </p>
+        </li>
+        <li>
+          <p data-testid="profile">
+            <span>&#x1F46A;</span> Last Name: {currentUser.lastName}
+          </p>
+        </li>
+        <li>
+          <p data-testid="profile">
+            <span>&#x1F4CC;</span> Type: {currentUser.type}
+          </p>
+        </li>
+        <li>
+          {currentUser.type === "student" && (
+            <p data-testid="profile">
+              <span>&#x1F4DA;&#xFE0F;</span> Major: {currentUser.major}
+            </p>
+          )}
+        </li>
+
+        <li>
+          {currentUser.type === "student" && (
+            <p data-testid="profile">
+              <span>&#127891;</span> Class Year: {currentUser.classYear}
+            </p>
+          )}
+        </li>
+
+        <li>
+          {currentUser.type === "faculty" && (
+            <p data-testid="profile">Department: {currentUser.department}</p>
+          )}
+        </li>
+
+        <li>
+          {(currentUser.type === "faculty" ||
+            currentUser.type === "administration") && (
+            <p data-testid="profile">Title: {currentUser.title}</p>
+          )}
+        </li>
+      </ul>
     </div>
   );
 }
