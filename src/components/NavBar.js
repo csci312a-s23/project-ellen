@@ -1,4 +1,5 @@
 import styles from "../styles/NavBar.module.css";
+import LoginButton from "./LoginButon";
 import Link from "next/link";
 export default function NavBar() {
   return (
@@ -17,6 +18,9 @@ export default function NavBar() {
 
       <li>
         <Link href="/posts">Feed</Link>
+      </li>
+      <li>
+        <LoginButton />
       </li>
     </ul>
   );
