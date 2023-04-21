@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
+import NewComment from "@/components/comment/NewComment";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
@@ -18,37 +19,32 @@ export default function ShowPost({ currentPost }) {
   };
 
   useEffect(() => {
-    // setComments([
-    //   {
-    //     id: 1,
-    //     commenterID: 1,
-    //     postID: 1,
-    //     content: "commentContent1",
-    //     likes: 0,
-    //   },
-    //   {
-    //     id: 2,
-    //     commenterID: 2,
-    //     postID: 2,
-    //     content: "commentContent2",
-    //     likes: 3,
-    //   },
-    // ]);
     getComments();
-  }, [currentPost]);
+  }, [currentPost, getComments]);
+
+  const addComment = (comment) => {
+    fetch(`/api/posts/${currentPost.id}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: currentPost.id,
+        // change this once we've got user id from auth
+        commenterID: "1",
+        content: comment,
+      }),
+    });
+    getComments();
+  };
 
   return (
     <>
       <h1>Post:</h1>
       {currentPost && <IndividualPost post={currentPost} />}
       <h2>Comments:</h2>
-      {!!comments && (
-        <CommentsContainer
-          postID={currentPost.id}
-          comments={comments}
-          getComments={getComments}
-        />
-      )}
+      {!!comments && <CommentsContainer comments={comments} />}
+      <NewComment addComment={addComment} />
     </>
   );
 }

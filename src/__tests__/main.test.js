@@ -43,6 +43,12 @@ describe("General Tests", () => {
       "/api/user/1/posts",
       data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
     );
+    fetchMock.get(
+      "/api/user/1/comments",
+      data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 1
+      )
+    );
     mockRouter.setCurrentUrl("/");
   });
 
@@ -166,6 +172,17 @@ describe("General Tests", () => {
       render(<Profile />);
       expect(await screen.findAllByTestId("post")).toHaveLength(
         expectedPosts.length
+      );
+    });
+
+    test("all of user's comments are showing", async () => {
+      mockRouter.setCurrentUrl(`/profile/1`);
+      const expectedComments = data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 1
+      );
+      render(<Profile />);
+      expect(await screen.findAllByTestId("comment")).toHaveLength(
+        expectedComments.length
       );
     });
   });

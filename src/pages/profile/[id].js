@@ -1,5 +1,6 @@
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
+import CommentsList from "@/components/comment/CommentsContainer";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
@@ -8,6 +9,7 @@ export default function Profile() {
 
   const [currentUser, updateUser] = useState();
   const [userPosts, setUserPosts] = useState();
+  const [userComments, setUserComments] = useState();
 
   const { id } = router.query;
 
@@ -25,6 +27,12 @@ export default function Profile() {
           const fetchedUserPosts = await postsResponse.json();
           setUserPosts(fetchedUserPosts);
         }
+
+        const commentsResponse = await fetch(`/api/user/${numberId}/comments`);
+        if (commentsResponse.ok) {
+          const fetchedUserComments = await commentsResponse.json();
+          setUserComments(fetchedUserComments);
+        }
       };
 
       if (
@@ -36,6 +44,7 @@ export default function Profile() {
     } else {
       updateUser(undefined);
       setUserPosts(undefined);
+      setUserComments(undefined);
     }
   }, [id, currentUser, router.pathname]);
 
@@ -43,6 +52,7 @@ export default function Profile() {
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
       {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
+      {userComments && <CommentsList comments={userComments} />}
     </div>
   );
 }
