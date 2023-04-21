@@ -1,13 +1,13 @@
 import ProfileInfo from "@/components/profile/ProfileInfo";
+import PostList from "@/components/homepage/postsList";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-// import ProfilePosts from "@/components/ProfilePosts";
 
 export default function Profile() {
   const router = useRouter();
 
   const [currentUser, updateUser] = useState();
-  // const [userPosts, setUserPosts] = useState();
+  const [userPosts, setUserPosts] = useState();
 
   const { id } = router.query;
 
@@ -20,11 +20,11 @@ export default function Profile() {
           const fetchedUserDetails = await detailsResponse.json();
           updateUser(fetchedUserDetails);
         }
-        // const postsResponse = await fetch(`/api/user/${numberId}/posts`);
-        // if (postsResponse.ok) {
-        //   const fetchedUserPosts = await postsResponse.json();
-        //   setUserPosts(fetchedUserPosts);
-        // }
+        const postsResponse = await fetch(`/api/user/${numberId}/posts`);
+        if (postsResponse.ok) {
+          const fetchedUserPosts = await postsResponse.json();
+          setUserPosts(fetchedUserPosts);
+        }
       };
 
       if (
@@ -35,14 +35,14 @@ export default function Profile() {
       }
     } else {
       updateUser(undefined);
-      // setUserPosts(undefined);
+      setUserPosts(undefined);
     }
   }, [id, currentUser, router.pathname]);
 
   return (
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
-      {/* <ProfilePosts posts = {userPosts}/> */}
+      {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
     </div>
   );
 }
