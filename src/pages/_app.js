@@ -1,7 +1,8 @@
-import NavBar from "@/components/NavBar";
+//import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function App({ Component, pageProps }) {
   const [currentPost, setCurrentPostState] = useState(null);
@@ -58,7 +59,12 @@ export default function App({ Component, pageProps }) {
 
   return (
     <div>
-      <NavBar />
+      <button>
+        <Link href="/profile">Profile</Link>
+      </button>
+      <button>
+        <Link href="">Analytics</Link>
+      </button>
 
       <Component {...props} />
     </div>
