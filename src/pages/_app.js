@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function App({ Component, pageProps }) {
   const [currentPost, setCurrentPostState] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [myID, setMyID] = useState(0);
   const router = useRouter();
   const id = +router.query.id;
 
@@ -34,7 +35,7 @@ export default function App({ Component, pageProps }) {
       (!currentPost || currentPost.id !== parseInt(id)) &&
       router.pathname.includes("posts")
     ) {
-      fetch(`/api/posts/${parseInt(id)}`)
+      fetch(`/api/posts/${parseInt(id)}?myID=${myID}`)
         .then((res) => res.json())
         .then((response) => {
           // console.log(response)
@@ -42,10 +43,11 @@ export default function App({ Component, pageProps }) {
         })
         .catch((error) => console.log(error));
     }
-  }, [id, currentPost, router.pathname]);
+  }, [id, currentPost, router.pathname, myID]);
 
   useEffect(() => {
     refreshPosts();
+    setMyID(2);
   }, []);
 
   const props = {
@@ -54,6 +56,7 @@ export default function App({ Component, pageProps }) {
     setCurrentPost,
     refreshPosts,
     posts,
+    myID,
   };
 
   return (

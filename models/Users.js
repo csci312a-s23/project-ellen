@@ -12,7 +12,7 @@ export default class User extends BaseModel {
       required: ["username", "email"],
 
       properties: {
-        id: { type: "string" },
+        id: { type: "integer" },
         username: { type: "string" },
         email: { type: "string" },
         firstName: { type: "string" },

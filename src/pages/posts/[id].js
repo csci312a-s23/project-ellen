@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 
-export default function ShowPost({ currentPost }) {
+export default function ShowPost({ currentPost, myID }) {
   const [comments, setComments] = useState(null);
 
   const getComments = () => {
@@ -18,29 +18,13 @@ export default function ShowPost({ currentPost }) {
   };
 
   useEffect(() => {
-    // setComments([
-    //   {
-    //     id: 1,
-    //     commenterID: 1,
-    //     postID: 1,
-    //     content: "commentContent1",
-    //     likes: 0,
-    //   },
-    //   {
-    //     id: 2,
-    //     commenterID: 2,
-    //     postID: 2,
-    //     content: "commentContent2",
-    //     likes: 3,
-    //   },
-    // ]);
     getComments();
   }, [currentPost]);
 
   return (
     <>
       <h1>Post:</h1>
-      {currentPost && <IndividualPost post={currentPost} />}
+      {currentPost && <IndividualPost post={currentPost} myID={myID} />}
       <h2>Comments:</h2>
       {!!comments && (
         <CommentsContainer

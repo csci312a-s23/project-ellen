@@ -1,11 +1,11 @@
 import nc from "next-connect";
-import Post from "../../../../../models/Posts.js";
+import Vote from "../../../../../models/Votes.js";
 import { onError } from "../../../../lib/middleware.js";
 
 const handler = nc({ onError }).patch(async (req, res) => {
   // handle the upvote or downvote of a post
 
-  const postID = req.query.id;
+  const postID = parseInt(req.query.id);
   //validate postID
   if (!postID) {
     res.status(400).end("Invalid Post ID");
@@ -18,10 +18,10 @@ const handler = nc({ onError }).patch(async (req, res) => {
     return;
   }
   //validate vote
-  if (body.vote !== "upvote" && body.vote !== "downvote") {
-    res.status(400).end("Invalid Vote");
-    return;
-  }
+  // if (body.vote !== "upvote" && body.vote !== "downvote") {
+  //   res.status(400).end("Invalid Vote");
+  //   return;
+  // }
   //validate user
   if (!body.userID) {
     res.status(400).end("Invalid User");
@@ -31,22 +31,18 @@ const handler = nc({ onError }).patch(async (req, res) => {
   //add after login is implemented
 
   //get post
-  const post = await Post.query().findById(postID).throwIfNotFound();
+  const userID = parseInt(req.body.userID);
+  const value = parseInt(req.body.value);
+  await Vote.query().delete().where("postID", postID).where("voterID", userID);
 
-  //update post
-  if (body.vote === "upvote") {
-    post.votes++;
-  }
-  if (body.vote === "downvote") {
-    post.votes--;
-  }
-  const updatedPost = await Post.query()
-    .patchAndFetchById(postID, {
-      votes: post.votes,
-    })
-    .throwIfNotFound();
+  await Vote.query().insert({ postID: postID, voterID: userID, value: value });
 
-  res.status(200).json(updatedPost);
+  const getVotes = await Vote.query().where("postID", postID).sum("value");
+
+  console.log(getVotes[0]["sum(`value`)"]);
+  res
+    .status(200)
+    .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
 });
 
 export default handler;

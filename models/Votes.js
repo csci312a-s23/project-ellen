@@ -1,22 +1,21 @@
 import { Model } from "objection";
 import BaseModel from "./BaseModel";
 
-export default class Comment extends BaseModel {
+export default class Vote extends BaseModel {
   static get tableName() {
-    return "comments";
+    return "votes";
   }
 
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["commenterID", "postID", "content"],
+      required: ["voterID", "postID", "value"],
 
       properties: {
         id: { type: "integer" },
-        commenterID: { type: "integer" },
+        voterID: { type: "integer" },
         postID: { type: "integer" },
-        content: { type: "string" },
-        created_at: { type: "string" },
+        value: { type: "integer" },
       },
     };
   }
@@ -30,7 +29,7 @@ export default class Comment extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: "comments.commenterID",
+          from: "votes.voterID",
           to: "users.id",
         },
       },
@@ -38,10 +37,12 @@ export default class Comment extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Post,
         join: {
-          from: "comments.postID",
+          from: "votes.postID",
           to: "posts.id",
         },
       },
     };
   }
 }
+
+module.exports = Vote;
