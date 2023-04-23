@@ -18,6 +18,23 @@ import userComments_endpoint from "../pages/api/user/[id]/comments.js";
 import { knex } from "../../knex/knex";
 import { getServerSession } from "next-auth/next";
 jest.mock("next-auth/next");
+jest.mock("directory.js", () => {
+  return {
+    Scraper: jest.fn().mockImplementation(() => {
+      return {
+        init: jest.fn().mockResolvedValue(),
+        person: {
+          id: 1,
+          firstName: "Test",
+          lastName: "User",
+          type: "Student",
+          gradYear: 2021,
+          department: "Computer Science",
+        },
+      };
+    }),
+  };
+});
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");

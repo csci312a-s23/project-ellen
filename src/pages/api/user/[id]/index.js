@@ -3,7 +3,7 @@ import User from "../../../../../models/Users";
 import { onError } from "../../../../lib/middleware";
 import { authenticated } from "../../../../lib/middleware";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "../../auth/[...nextauth]";
 
 const handler = nc({ onError })
   //return user by id
