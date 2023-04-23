@@ -20,7 +20,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@emotion/cache": "^11.10.7",
     "@emotion/react": "^11.10.6",
+    "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
     "@mui/material": "^5.12.1",
     "ajv-formats": "^2.1.1",
