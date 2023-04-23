@@ -31,6 +31,7 @@
   "UserSeedData": [
     {
       "id": 1,
+      "googleID": "3253415415415458",
       "username": "test1",
       "email": "test1@test.com",
       "firstName": "test1",
@@ -41,6 +42,7 @@
     },
     {
       "id": 2,
+      "googleID": "78964132184567",
       "username": "test2",
       "email": "test2@test.com",
       "firstName": "test2",
@@ -51,6 +53,7 @@
     },
     {
       "id": 3,
+      "googleID": "3454512786428577",
       "username": "test3",
       "email": "test3@test.com",
       "firstName": "test3",
@@ -71,6 +74,7 @@
     },
     {
       "id": 5,
+      "googleID": "54874867448732418",
       "username": "test5",
       "email": "test5@test.com",
       "firstName": "test5",

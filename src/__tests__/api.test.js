@@ -1,3 +1,9 @@
+/**
+ * @jest-environment node
+ *
+ * Use Node environment for server-side tests to avoid loading browser libraries
+ */
+
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
 import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
@@ -10,6 +16,8 @@ import individualUser_endpoint from "../pages/api/user/[id]/index.js";
 import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
 import userComments_endpoint from "../pages/api/user/[id]/comments.js";
 import { knex } from "../../knex/knex";
+import { getServerSession } from "next-auth/next";
+jest.mock("next-auth/next");
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
@@ -25,6 +33,25 @@ describe("API Post tests", () => {
     // Reset contents of the test database
     return knex.seed.run();
   });
+  afterAll(() => {
+    // Ensure database connection is cleaned up after all tests
+    return knex.destroy();
+  });
+
+  beforeEach(() => {
+    // Mock nex-auth getServerSession with id of test user
+    getServerSession.mockResolvedValue({
+      user: {
+        id: 1,
+      },
+    });
+    return knex.seed.run();
+  });
+
+  afterEach(() => {
+    getServerSession.mockReset();
+  });
+
   describe("Posts API tests", () => {
     test("GET /api/posts should return all posts", async () => {
       await testApiHandler({
