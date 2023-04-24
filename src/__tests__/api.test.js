@@ -1,21 +1,46 @@
+/**
+ * @jest-environment node
+ *
+ * Use Node environment for server-side tests to avoid loading browser libraries
+ */
+
 import { testApiHandler } from "next-test-api-route-handler";
 import posts_endpoint from "../pages/api/posts/index.js";
 import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
 import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
-import newUser_endpoint from "../pages/api/user/new.js";
+// import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/user/index.js";
 import individualUser_endpoint from "../pages/api/user/[id]/index.js";
 import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
 import userComments_endpoint from "../pages/api/user/[id]/comments.js";
 import { knex } from "../../knex/knex";
+import { getServerSession } from "next-auth/next";
+jest.mock("next-auth/next");
+jest.mock("directory.js", () => {
+  return {
+    Scraper: jest.fn().mockImplementation(() => {
+      return {
+        init: jest.fn().mockResolvedValue(),
+        person: {
+          id: 1,
+          firstName: "Test",
+          lastName: "User",
+          type: "Student",
+          gradYear: 2021,
+          department: "Computer Science",
+        },
+      };
+    }),
+  };
+});
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
-describe("API Post tests", () => {
+describe("API tests", () => {
   beforeAll(() => {
     // Ensure test database is initialized before an tests
     return knex.migrate.rollback().then(() => knex.migrate.latest());
@@ -25,6 +50,33 @@ describe("API Post tests", () => {
     // Reset contents of the test database
     return knex.seed.run();
   });
+  afterAll(() => {
+    // Ensure database connection is cleaned up after all tests
+    return knex.destroy();
+  });
+
+  beforeEach(() => {
+    // Mock nex-auth getServerSession with id of test user
+    getServerSession.mockResolvedValue({
+      user: {
+        id: "1",
+        googleID: "3253415415415458",
+        username: "test1",
+        email: "test1@middlebury.edu",
+        firstName: "test1",
+        lastName: "test1",
+        type: "Student",
+        classYear: 2024,
+        major: "Computer Science",
+      },
+    });
+    return knex.seed.run();
+  });
+
+  afterEach(() => {
+    getServerSession.mockReset();
+  });
+
   describe("Posts API tests", () => {
     test("GET /api/posts should return all posts", async () => {
       await testApiHandler({
@@ -182,44 +234,45 @@ describe("API Post tests", () => {
       });
     });
 
-    test("POST /api/users/new should return create a new user", async () => {
-      const newUser = {
-        username: "new user",
-        email: "new@email.com",
-        created_at: new Date().toISOString(),
-      };
+    //removing this test because feature has be deprecated and supplanted by auth
+    // test("POST /api/users/new should return create a new user", async () => {
+    //   const newUser = {
+    //     username: "new user",
+    //     email: "new@email.com",
+    //     created_at: new Date().toISOString(),
+    //   };
 
-      await testApiHandler({
-        rejectOnHandlerError: true, // Make sure to catch any errors
-        handler: newUser_endpoint, // NextJS API function to test
-        url: "/api/users/new",
-        test: async ({ fetch }) => {
-          // Test endpoint with mock fetch
-          const res = await fetch({
-            method: "POST",
-            headers: {
-              "content-type": "application/json", // Must use correct content type
-            },
-            body: JSON.stringify(newUser),
-          });
+    //   await testApiHandler({
+    //     rejectOnHandlerError: true, // Make sure to catch any errors
+    //     handler: newUser_endpoint, // NextJS API function to test
+    //     url: "/api/users/new",
+    //     test: async ({ fetch }) => {
+    //       // Test endpoint with mock fetch
+    //       const res = await fetch({
+    //         method: "POST",
+    //         headers: {
+    //           "content-type": "application/json", // Must use correct content type
+    //         },
+    //         body: JSON.stringify(newUser),
+    //       });
 
-          const response = await res.json();
-          expect(typeof response.id).toBe("number");
-        },
-      });
-    });
+    //       const response = await res.json();
+    //       expect(typeof response.id).toBe("number");
+    //     },
+    //   });
+    // });
 
     test("PUT /api/users/[id] should return updated user", async () => {
       const updatedUser = {
         username: "updated user",
         email: "updated@newemail.com",
-        id: 1,
+        classYear: 2023,
       };
 
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/users/1",
+        url: "/api/user/1",
         paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
@@ -267,67 +320,184 @@ describe("API Post tests", () => {
       });
     });
   });
-});
-describe("API Comment tests", () => {
-  beforeAll(() => {
-    // Ensure test database is initialized before an tests
-    return knex.migrate.rollback().then(() => knex.migrate.latest());
-  });
 
-  beforeEach(() => {
-    // Reset contents of the test database
-    return knex.seed.run();
-  });
+  describe("API Comment tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
 
-  test("GET /api/post/[id]/comments should return all comments for a post", async () => {
-    await testApiHandler({
-      rejectOnHandlerError: true, // Make sure to catch any errors
-      handler: postComments_endpoint, // NextJS API function to test
-      url: "/api/posts/1/comments",
-      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
-      test: async ({ fetch }) => {
-        // test endpoint
-        const res = await fetch();
-        const response = await res.json();
-        expect(response.content).toBe(
-          data.CommentSeedData.filter((c) => {
-            c.postID === 1;
-          }).content
-        );
-      },
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
+
+    test("GET /api/post/[id]/comments should return all comments for a post", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // test endpoint
+          const res = await fetch();
+          const response = await res.json();
+          expect(response.content).toBe(
+            data.CommentSeedData.filter((c) => {
+              c.postID === 1;
+            }).content
+          );
+        },
+      });
+    });
+    test("POST new to /api/posts/[id]/comments", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+
+        // post the new comment
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              commenterID: "2",
+              content: "new comment content",
+            }),
+          });
+
+          const response = await res.json();
+
+          expect(response).toHaveProperty("commenterID", "2");
+          expect(response).toHaveProperty("postID", 1);
+          expect(response).toHaveProperty("content", "new comment content");
+          expect(response).toHaveProperty("created_at");
+          expect(response).toHaveProperty("id");
+          expect(response).toHaveProperty("likes");
+        },
+      });
     });
   });
-  test("POST new to /api/posts/[id]/comments", async () => {
-    await testApiHandler({
-      rejectOnHandlerError: true, // Make sure to catch any errors
 
-      // post the new comment
-      handler: postComments_endpoint, // NextJS API function to test
-      url: "/api/posts/1/comments",
-      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
-      test: async ({ fetch }) => {
-        // Test endpoint with mock fetch
-        const res = await fetch({
-          method: "POST",
-          headers: {
-            "content-type": "application/json", // Must use correct content type
-          },
-          body: JSON.stringify({
-            commenterID: "2",
-            content: "new comment content",
-          }),
-        });
+  describe("Unauthenticated API calls are rejected", () => {
+    beforeEach(() => {
+      getServerSession.mockResolvedValue(undefined);
+    });
 
-        const response = await res.json();
-        console.log(response);
+    test("POST /api/posts/ should be rejected", async () => {
+      const newPost = {
+        posterID: "1111",
+        title: "new title",
+        content: "new content",
+        category: "school",
+        created_at: new Date().toISOString(),
+      };
 
-        expect(response).toHaveProperty("commenterID", "2");
-        expect(response).toHaveProperty("postID", 1);
-        expect(response).toHaveProperty("content", "new comment content");
-        expect(response).toHaveProperty("created_at");
-        expect(response).toHaveProperty("id");
-        expect(response).toHaveProperty("likes");
-      },
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: newPost_endpoint, // NextJS API function to test
+        url: "/api/posts",
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(newPost),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("POST /api/posts/[id]/comments should be rejected", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+
+        // post the new comment
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              commenterID: "2",
+              content: "new comment content",
+            }),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("PATCH /api/posts/[id] should be rejected", async () => {
+      const downvote = {
+        vote: "downvote",
+        userID: "1",
+      };
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: vote_endpoint, // NextJS API function to test
+        url: "/api/posts/2/vote",
+        paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(downvote),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("PUT /api/users/[id] should be rejected", async () => {
+      const updatedUser = {
+        username: "updated user",
+        email: "updated@newemail.com",
+        id: 1,
+      };
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: individualUser_endpoint, // NextJS API function to test
+        url: "/api/user/1",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "PUT",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(updatedUser),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
     });
   });
 });

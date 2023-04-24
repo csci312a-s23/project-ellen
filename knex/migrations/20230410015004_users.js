@@ -10,7 +10,7 @@ exports.up = function (knex) {
     table.string("firstName");
     table.string("lastName");
     table.timestamp("created_at");
-    table.enum("type", ["student", "faculty", "administration"]);
+    table.enum("type", ["Student", "Faculty", "Administration"]);
     table.integer("classYear");
     table.string("major");
     table.string("department");

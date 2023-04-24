@@ -8,17 +8,17 @@ export default function ProfileInfo(user) {
       <p data-testid="profile">{currentUser.username}</p>
       <p data-testid="profile">{currentUser.firstName}</p>
       <p data-testid="profile">{currentUser.lastName}</p>
-      {currentUser.type === "student" && (
+      {currentUser.type === "Student" && (
         <p data-testid="profile">{currentUser.major}</p>
       )}
-      {currentUser.type === "student" && (
+      {currentUser.type === "Student" && (
         <p data-testid="profile">{currentUser.classYear}</p>
       )}
-      {currentUser.type === "faculty" && (
+      {currentUser.type === "Faculty" && (
         <p data-testid="profile">{currentUser.department}</p>
       )}
-      {(currentUser.type === "faculty" ||
-        currentUser.type === "administration") && (
+      {(currentUser.type === "Faculty" ||
+        currentUser.type === "Administration") && (
         <p data-testid="profile">{currentUser.title}</p>
       )}
       <p data-testid="profile">{currentUser.type}</p>
