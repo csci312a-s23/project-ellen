@@ -2,8 +2,12 @@ import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   const [currentPost, setCurrentPostState] = useState(null);
   const [posts, setPosts] = useState([]);
   const [myID, setMyID] = useState(0);
@@ -60,10 +64,12 @@ export default function App({ Component, pageProps }) {
   };
 
   return (
-    <div>
-      <NavBar />
+    <SessionProvider session={session}>
+      <div>
+        <NavBar />
 
-      <Component {...props} />
-    </div>
+        <Component {...props} />
+      </div>
+    </SessionProvider>
   );
 }

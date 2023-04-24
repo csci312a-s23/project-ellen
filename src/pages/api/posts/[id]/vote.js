@@ -1,8 +1,9 @@
 import nc from "next-connect";
 import Vote from "../../../../../models/Votes.js";
 import { onError } from "../../../../lib/middleware.js";
+import { authenticated } from "../../../../lib/middleware.js";
 
-const handler = nc({ onError }).patch(async (req, res) => {
+const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   // handle the upvote or downvote of a post
 
   const postID = parseInt(req.query.id);

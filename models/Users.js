@@ -9,10 +9,11 @@ export default class User extends BaseModel {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["username", "email"],
+      required: ["username", "email", "googleID"],
 
       properties: {
-        id: { type: "integer" },
+        id: { type: "string" },
+        googleID: { type: "string" },
         username: { type: "string" },
         email: { type: "string" },
         firstName: { type: "string" },
@@ -49,5 +50,11 @@ export default class User extends BaseModel {
         },
       },
     };
+  }
+  // Override this method to exclude googleId
+  $formatJson(json) {
+    json = super.$formatJson(json);
+    delete json.googleId;
+    return json;
   }
 }
