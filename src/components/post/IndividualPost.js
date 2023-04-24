@@ -3,7 +3,7 @@ import VoteSlider from "./VoteSlider.js";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 
-export default function IndividualPost({ post, myID }) {
+export default function IndividualPost({ post }) {
   const [voteVal, setVoteVal] = useState(0);
   const [voteSum, setVoteSum] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
@@ -26,7 +26,6 @@ export default function IndividualPost({ post, myID }) {
           },
           body: JSON.stringify({
             value: vote,
-            userID: myID,
           }),
         })
           .then((res) => res.json())

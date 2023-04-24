@@ -10,7 +10,6 @@ export default function App({
 }) {
   const [currentPost, setCurrentPostState] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [myID, setMyID] = useState(0);
   const router = useRouter();
   const id = +router.query.id;
 
@@ -33,8 +32,6 @@ export default function App({
   };
 
   useEffect(() => {
-    console.log(id, currentPost, router.pathname, myID);
-
     if (!id) {
       setCurrentPostState(null);
     } else if (
@@ -49,11 +46,10 @@ export default function App({
         })
         .catch((error) => console.log(error));
     }
-  }, [id, currentPost, router.pathname, myID]);
+  }, [id, currentPost, router.pathname]);
 
   useEffect(() => {
     refreshPosts();
-    setMyID(2);
   }, []);
 
   const props = {
@@ -62,7 +58,6 @@ export default function App({
     setCurrentPost,
     refreshPosts,
     posts,
-    myID,
   };
 
   return (

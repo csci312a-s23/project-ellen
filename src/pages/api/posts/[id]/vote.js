@@ -18,13 +18,8 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     res.status(400).end("Invalid Vote");
     return;
   }
-  //validate vote
-  // if (body.vote !== "upvote" && body.vote !== "downvote") {
-  //   res.status(400).end("Invalid Vote");
-  //   return;
-  // }
   //validate user
-  if (!body.userID) {
+  if (!req.user) {
     res.status(400).end("Invalid User");
     return;
   }
@@ -34,10 +29,18 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   //get post
   const userID = req.user.id;
   const value = parseInt(req.body.value);
+
+  //delete vote first
   await Vote.query().delete().where("postID", postID).where("voterID", userID);
 
-  await Vote.query().insert({ postID: postID, voterID: userID, value: value });
+  //then insert new vote
+  await Vote.query().insert({
+    postID: postID,
+    voterID: userID,
+    value: value,
+  });
 
+  //then get new sum of votes
   const getVotes = await Vote.query().where("postID", postID).sum("value");
 
   console.log(getVotes[0]["sum(`value`)"]);

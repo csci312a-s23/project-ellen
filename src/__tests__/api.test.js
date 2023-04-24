@@ -366,7 +366,7 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: 2,
+              commenterID: "2",
               content: "new comment content",
             }),
           });

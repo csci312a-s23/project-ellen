@@ -3,12 +3,10 @@ import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
 import { onError } from "../../../../lib/middleware.js";
 import { isAuthenticated } from "../../../../lib/middleware.js";
-// interaciton with post based on id
 
 const handler = nc({ onError })
   .get(isAuthenticated, async (req, res) => {
     const { id } = req.query;
-    const { myID } = req.query;
 
     if (!!id) {
       const post = await Posts.query()
@@ -23,8 +21,6 @@ const handler = nc({ onError })
       let myVote = 0;
 
       if (!!req.user) {
-        console.log("my id via session", req.user.id);
-        // if (!!myID) {
         const myVoteRow = await Votes.query()
           .where("postID", parseInt(id))
           .where("voterID", req.user.id);
@@ -33,12 +29,6 @@ const handler = nc({ onError })
           myVote = myVoteRow[0].value;
         }
       }
-      console.log("myid", myID);
-      // }
-
-      // console.log(getVotes[0]["sum(`value`)"])
-
-      console.log("post", post);
 
       const newPost = {
         ...post,

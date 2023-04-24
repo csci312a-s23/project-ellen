@@ -12,7 +12,7 @@ export default function voteSlider({ voteVal, setVote }) {
         min={-3}
         max={3}
         marks={marks}
-        value={voteVal}
+        value={voteVal || 0}
         onChange={(e) => setVote(e.target.value)}
         aria-label="Custom marks"
         valueLabelDisplay="auto"
