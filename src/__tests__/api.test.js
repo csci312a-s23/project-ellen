@@ -267,6 +267,7 @@ describe("API tests", () => {
         username: "updated user",
         email: "updated@newemail.com",
         id: 1,
+        classYear: 2023,
       };
 
       await testApiHandler({
