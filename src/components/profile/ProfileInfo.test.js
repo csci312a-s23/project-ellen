@@ -1,7 +1,7 @@
 import ProfileInfo from "./ProfileInfo";
-import { knex } from "../../knex/knex";
+import { knex } from "../../../knex/knex.js";
 import { screen, render } from "@testing-library/react";
-import seedData from "../../data/SeedData.json";
+import seedData from "../../../data/SeedData.json";
 
 const sampleUserData = { ...seedData.UserSeedData };
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Object/values

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import IndividualPost from "@/components/IndividualPost";
-import CommentsContainer from "@/components/CommentsContainer";
+import IndividualPost from "@/components/post/IndividualPost";
+import CommentsContainer from "@/components/comment/CommentsContainer";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
@@ -14,6 +14,17 @@ export default function ShowPost({ currentPost }) {
           console.log("comments Response:", response);
           setComments(response);
         });
+    }
+  };
+
+  const deletePost = () => {
+    if (!!currentPost) {
+      console.log("Deleting post:", currentPost.id);
+      fetch(`/api/posts/${currentPost.id}`, {
+        method: "DELETE",
+      }).then(() => {
+        // redirect or do something else after deletion
+      });
     }
   };
 
@@ -41,6 +52,7 @@ export default function ShowPost({ currentPost }) {
     <>
       <h1>Post:</h1>
       {currentPost && <IndividualPost post={currentPost} />}
+      <button onClick={deletePost}>Delete Post</button>
       <h2>Comments:</h2>
       {!!comments && (
         <CommentsContainer

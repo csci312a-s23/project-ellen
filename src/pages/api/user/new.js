@@ -2,6 +2,7 @@ import nc from "next-connect";
 import { onError } from "../../../lib/middleware";
 import User from "../../../../models/Users";
 
+//this endpoint is functionally deprecated by the /auth/[...nextauth] endpoint and should be used for testing only
 const handler = nc({ onError })
   //create new user
   .post(async (req, res) => {
