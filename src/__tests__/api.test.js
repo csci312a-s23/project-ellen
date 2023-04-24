@@ -372,7 +372,6 @@ describe("API tests", () => {
           });
 
           const response = await res.json();
-          console.log(response);
 
           expect(response).toHaveProperty("commenterID", "2");
           expect(response).toHaveProperty("postID", 1);
@@ -380,6 +379,123 @@ describe("API tests", () => {
           expect(response).toHaveProperty("created_at");
           expect(response).toHaveProperty("id");
           expect(response).toHaveProperty("likes");
+        },
+      });
+    });
+  });
+
+  describe("Unauthenticated API calls are rejected", () => {
+    beforeEach(() => {
+      getServerSession.mockResolvedValue(undefined);
+    });
+
+    test("POST /api/posts/ should be rejected", async () => {
+      const newPost = {
+        posterID: "1111",
+        title: "new title",
+        content: "new content",
+        category: "school",
+        created_at: new Date().toISOString(),
+      };
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: newPost_endpoint, // NextJS API function to test
+        url: "/api/posts",
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(newPost),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("POST /api/posts/[id]/comments should be rejected", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+
+        // post the new comment
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              commenterID: "2",
+              content: "new comment content",
+            }),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("PATCH /api/posts/[id] should be rejected", async () => {
+      const downvote = {
+        vote: "downvote",
+        userID: "1",
+      };
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: vote_endpoint, // NextJS API function to test
+        url: "/api/posts/2/vote",
+        paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(downvote),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
+        },
+      });
+    });
+
+    test("PUT /api/users/[id] should be rejected", async () => {
+      const updatedUser = {
+        username: "updated user",
+        email: "updated@newemail.com",
+        id: 1,
+      };
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: individualUser_endpoint, // NextJS API function to test
+        url: "/api/user/1",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "PUT",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(updatedUser),
+          });
+
+          expect(res.ok).toBe(false);
+          expect(res.status).toBe(403);
         },
       });
     });
