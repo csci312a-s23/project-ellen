@@ -59,6 +59,7 @@ export default function App({
     refreshPosts,
     posts,
   };
+  // console.log(session);
 
   return (
     <SessionProvider session={session}>

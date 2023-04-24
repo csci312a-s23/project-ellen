@@ -4,6 +4,7 @@ import CommentsContainer from "@/components/comment/CommentsContainer";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
+  const [canDelete] = useState(false);
 
   const getComments = () => {
     if (!!currentPost) {
@@ -23,7 +24,7 @@ export default function ShowPost({ currentPost }) {
       fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
       }).then(() => {
-        // redirect or do something else after deletion
+        // redirect?
       });
     }
   };
@@ -52,7 +53,7 @@ export default function ShowPost({ currentPost }) {
     <>
       <h1>Post:</h1>
       {currentPost && <IndividualPost post={currentPost} />}
-      <button onClick={deletePost}>Delete Post</button>
+      {canDelete && <button onClick={deletePost}>Delete Post</button>}
       <h2>Comments:</h2>
       {!!comments && (
         <CommentsContainer
