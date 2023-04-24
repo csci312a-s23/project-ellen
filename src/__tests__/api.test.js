@@ -285,7 +285,6 @@ describe("API tests", () => {
           });
 
           const response = await res.json();
-          console.log(response);
           expect(response.username).toBe(updatedUser.username);
         },
       });
