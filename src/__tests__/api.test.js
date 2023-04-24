@@ -59,7 +59,7 @@ describe("API tests", () => {
     // Mock nex-auth getServerSession with id of test user
     getServerSession.mockResolvedValue({
       user: {
-        id: 1,
+        id: "1",
         googleID: "3253415415415458",
         username: "test1",
         email: "test1@middlebury.edu",
@@ -266,7 +266,6 @@ describe("API tests", () => {
       const updatedUser = {
         username: "updated user",
         email: "updated@newemail.com",
-        id: 1,
         classYear: 2023,
       };
 
@@ -286,6 +285,7 @@ describe("API tests", () => {
           });
 
           const response = await res.json();
+          console.log(response);
           expect(response.username).toBe(updatedUser.username);
         },
       });
