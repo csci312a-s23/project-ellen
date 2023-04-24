@@ -40,7 +40,7 @@ const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
-describe("API Post tests", () => {
+describe("API tests", () => {
   beforeAll(() => {
     // Ensure test database is initialized before an tests
     return knex.migrate.rollback().then(() => knex.migrate.latest());
@@ -320,67 +320,68 @@ describe("API Post tests", () => {
       });
     });
   });
-});
-describe("API Comment tests", () => {
-  beforeAll(() => {
-    // Ensure test database is initialized before an tests
-    return knex.migrate.rollback().then(() => knex.migrate.latest());
-  });
 
-  beforeEach(() => {
-    // Reset contents of the test database
-    return knex.seed.run();
-  });
-
-  test("GET /api/post/[id]/comments should return all comments for a post", async () => {
-    await testApiHandler({
-      rejectOnHandlerError: true, // Make sure to catch any errors
-      handler: postComments_endpoint, // NextJS API function to test
-      url: "/api/posts/1/comments",
-      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
-      test: async ({ fetch }) => {
-        // test endpoint
-        const res = await fetch();
-        const response = await res.json();
-        expect(response.content).toBe(
-          data.CommentSeedData.filter((c) => {
-            c.postID === 1;
-          }).content
-        );
-      },
+  describe("API Comment tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
     });
-  });
-  test("POST new to /api/posts/[id]/comments", async () => {
-    await testApiHandler({
-      rejectOnHandlerError: true, // Make sure to catch any errors
 
-      // post the new comment
-      handler: postComments_endpoint, // NextJS API function to test
-      url: "/api/posts/1/comments",
-      paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
-      test: async ({ fetch }) => {
-        // Test endpoint with mock fetch
-        const res = await fetch({
-          method: "POST",
-          headers: {
-            "content-type": "application/json", // Must use correct content type
-          },
-          body: JSON.stringify({
-            commenterID: "2",
-            content: "new comment content",
-          }),
-        });
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
 
-        const response = await res.json();
-        console.log(response);
+    test("GET /api/post/[id]/comments should return all comments for a post", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // test endpoint
+          const res = await fetch();
+          const response = await res.json();
+          expect(response.content).toBe(
+            data.CommentSeedData.filter((c) => {
+              c.postID === 1;
+            }).content
+          );
+        },
+      });
+    });
+    test("POST new to /api/posts/[id]/comments", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
 
-        expect(response).toHaveProperty("commenterID", "2");
-        expect(response).toHaveProperty("postID", 1);
-        expect(response).toHaveProperty("content", "new comment content");
-        expect(response).toHaveProperty("created_at");
-        expect(response).toHaveProperty("id");
-        expect(response).toHaveProperty("likes");
-      },
+        // post the new comment
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher - ?
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "POST",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              commenterID: "2",
+              content: "new comment content",
+            }),
+          });
+
+          const response = await res.json();
+          console.log(response);
+
+          expect(response).toHaveProperty("commenterID", "2");
+          expect(response).toHaveProperty("postID", 1);
+          expect(response).toHaveProperty("content", "new comment content");
+          expect(response).toHaveProperty("created_at");
+          expect(response).toHaveProperty("id");
+          expect(response).toHaveProperty("likes");
+        },
+      });
     });
   });
 });
