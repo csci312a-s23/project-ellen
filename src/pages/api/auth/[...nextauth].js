@@ -5,6 +5,7 @@ import { Scraper } from "directory.js";
 
 export const authOptions = {
   // Configure one or more authentication providers
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,

@@ -33,13 +33,15 @@ export default function App({
   };
 
   useEffect(() => {
+    console.log(id, currentPost, router.pathname, myID);
+
     if (!id) {
       setCurrentPostState(null);
     } else if (
       (!currentPost || currentPost.id !== parseInt(id)) &&
       router.pathname.includes("posts")
     ) {
-      fetch(`/api/posts/${parseInt(id)}?myID=${myID}`)
+      fetch(`/api/posts/${parseInt(id)}`)
         .then((res) => res.json())
         .then((response) => {
           // console.log(response)

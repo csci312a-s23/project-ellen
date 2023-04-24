@@ -13,7 +13,7 @@ export default class Vote extends BaseModel {
 
       properties: {
         id: { type: "integer" },
-        voterID: { type: "integer" },
+        voterID: { type: "string" },
         postID: { type: "integer" },
         value: { type: "integer" },
       },

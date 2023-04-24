@@ -13,7 +13,7 @@ export default class Comment extends BaseModel {
 
       properties: {
         id: { type: "integer" },
-        commenterID: { type: "integer" },
+        commenterID: { type: "string" },
         postID: { type: "integer" },
         content: { type: "string" },
         created_at: { type: "string" },

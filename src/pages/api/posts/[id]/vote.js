@@ -32,7 +32,7 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   //add after login is implemented
 
   //get post
-  const userID = parseInt(req.body.userID);
+  const userID = req.user.id;
   const value = parseInt(req.body.value);
   await Vote.query().delete().where("postID", postID).where("voterID", userID);
 
