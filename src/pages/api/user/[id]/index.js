@@ -23,7 +23,7 @@ const handler = nc({ onError })
     const session = await getServerSession(req, res, authOptions);
     const requestingUser = session.user;
     const changedUser = await User.query().findById(id).throwIfNotFound();
-    if (requestingUser.email !== changedUser.email) {
+    if (requestingUser.googleID !== changedUser.googleID) {
       res.status(401).end("Unauthorized");
       return;
     }

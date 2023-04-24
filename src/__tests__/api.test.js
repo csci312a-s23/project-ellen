@@ -10,7 +10,7 @@ import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
 import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
-import newUser_endpoint from "../pages/api/user/new.js";
+// import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/user/index.js";
 import individualUser_endpoint from "../pages/api/user/[id]/index.js";
 import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
@@ -60,6 +60,14 @@ describe("API Post tests", () => {
     getServerSession.mockResolvedValue({
       user: {
         id: 1,
+        googleID: "3253415415415458",
+        username: "test1",
+        email: "test1@middlebury.edu",
+        firstName: "test1",
+        lastName: "test1",
+        type: "Student",
+        classYear: 2024,
+        major: "Computer Science",
       },
     });
     return knex.seed.run();
@@ -226,32 +234,33 @@ describe("API Post tests", () => {
       });
     });
 
-    test("POST /api/users/new should return create a new user", async () => {
-      const newUser = {
-        username: "new user",
-        email: "new@email.com",
-        created_at: new Date().toISOString(),
-      };
+    //removing this test because feature has be deprecated and supplanted by auth
+    // test("POST /api/users/new should return create a new user", async () => {
+    //   const newUser = {
+    //     username: "new user",
+    //     email: "new@email.com",
+    //     created_at: new Date().toISOString(),
+    //   };
 
-      await testApiHandler({
-        rejectOnHandlerError: true, // Make sure to catch any errors
-        handler: newUser_endpoint, // NextJS API function to test
-        url: "/api/users/new",
-        test: async ({ fetch }) => {
-          // Test endpoint with mock fetch
-          const res = await fetch({
-            method: "POST",
-            headers: {
-              "content-type": "application/json", // Must use correct content type
-            },
-            body: JSON.stringify(newUser),
-          });
+    //   await testApiHandler({
+    //     rejectOnHandlerError: true, // Make sure to catch any errors
+    //     handler: newUser_endpoint, // NextJS API function to test
+    //     url: "/api/users/new",
+    //     test: async ({ fetch }) => {
+    //       // Test endpoint with mock fetch
+    //       const res = await fetch({
+    //         method: "POST",
+    //         headers: {
+    //           "content-type": "application/json", // Must use correct content type
+    //         },
+    //         body: JSON.stringify(newUser),
+    //       });
 
-          const response = await res.json();
-          expect(typeof response.id).toBe("number");
-        },
-      });
-    });
+    //       const response = await res.json();
+    //       expect(typeof response.id).toBe("number");
+    //     },
+    //   });
+    // });
 
     test("PUT /api/users/[id] should return updated user", async () => {
       const updatedUser = {
@@ -263,7 +272,7 @@ describe("API Post tests", () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/users/1",
+        url: "/api/user/1",
         paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
