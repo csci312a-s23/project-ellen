@@ -21,7 +21,6 @@ const handler = nc({ onError })
 
     //only the user is allowed to update their own profile
     const session = await getServerSession(req, res, authOptions);
-    console.log(session);
     const requestingUser = session.user;
     const changedUser = await User.query().findById(id).throwIfNotFound();
     if (requestingUser.id !== changedUser.id) {
