@@ -2,7 +2,7 @@
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import Head from "next/head";
 
 import { ThemeProvider } from "@mui/material/styles";
@@ -88,12 +88,12 @@ export default function App({
             <Typography variant="h2" align="center">
               Feed
             </Typography>
-            <button>
+            {/* <button>
               <Link href="/profile">Profile</Link>
             </button>
             <button>
               <Link href="">Analytics</Link>
-            </button>
+            </button> */}
             <Component {...props} />
           </Container>
         </main>
