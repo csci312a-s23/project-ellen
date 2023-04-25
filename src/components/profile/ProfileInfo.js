@@ -29,7 +29,7 @@ export default function ProfileInfo(user) {
           </p>
         </li>
         <li>
-          {currentUser.type === "student" && (
+          {currentUser.type === "Student" && (
             <p data-testid="profile">
               <span>&#x1F4DA;&#xFE0F;</span> Major: {currentUser.major}
             </p>
@@ -37,7 +37,7 @@ export default function ProfileInfo(user) {
         </li>
 
         <li>
-          {currentUser.type === "student" && (
+          {currentUser.type === "Student" && (
             <p data-testid="profile">
               <span>&#127891;</span> Class Year: {currentUser.classYear}
             </p>
@@ -45,14 +45,14 @@ export default function ProfileInfo(user) {
         </li>
 
         <li>
-          {currentUser.type === "faculty" && (
+          {currentUser.type === "Faculty" && (
             <p data-testid="profile">Department: {currentUser.department}</p>
           )}
         </li>
 
         <li>
-          {(currentUser.type === "faculty" ||
-            currentUser.type === "administration") && (
+          {(currentUser.type === "Faculty" ||
+            currentUser.type === "Administration") && (
             <p data-testid="profile">Title: {currentUser.title}</p>
           )}
         </li>
