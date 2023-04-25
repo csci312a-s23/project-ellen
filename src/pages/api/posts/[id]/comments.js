@@ -2,6 +2,7 @@ import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
 import { onError } from "../../../../lib/middleware.js";
+import { authenticated } from "../../../../lib/middleware.js";
 
 const handler = nc({ onError })
   .get(async (req, res) => {
@@ -27,7 +28,7 @@ const handler = nc({ onError })
       res.status(404).end(`${id} is not valid`);
     }
   })
-  .post(async (req, res) => {
+  .post(authenticated, async (req, res) => {
     // post a new comment to a given post
     const { id } = req.query;
     const newComment = req.body;

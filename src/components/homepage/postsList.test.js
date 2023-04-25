@@ -55,8 +55,8 @@ describe("postList: postList tests", () => {
     await act(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
-
     const items = await screen.findAllByTestId("post");
+
     const dates = items.map(
       (item) => new Date(item.children[0].children[2].innerHTML.slice(12))
     );

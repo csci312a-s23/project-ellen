@@ -1,6 +1,7 @@
 import nc from "next-connect";
 import Post from "../../../../models/Posts.js";
 import { onError } from "../../../lib/middleware.js";
+import { authenticated } from "../../../lib/middleware.js";
 
 // function to handle returning all posts
 const handler = nc({ onError })
@@ -19,7 +20,7 @@ const handler = nc({ onError })
     }
     res.status(200).json(posts);
   })
-  .post(async (req, res) => {
+  .post(authenticated, async (req, res) => {
     const { body } = req;
 
     if (!body) {

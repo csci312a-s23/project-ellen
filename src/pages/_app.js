@@ -1,7 +1,9 @@
-//import NavBar from "@/components/NavBar";
+import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
+
 // import Link from "next/link";
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
@@ -17,7 +19,7 @@ const clientSideEmotionCache = createEmotionCache();
 
 export default function App({
   Component,
-  pageProps,
+  pageProps: { session, ...pageProps },
   emotionCache = clientSideEmotionCache,
 }) {
   const [currentPost, setCurrentPostState] = useState(null);
@@ -79,22 +81,21 @@ export default function App({
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
+
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <main>
-          <Container>
-            <Typography variant="h2" align="center">
-              Feed
-            </Typography>
-            {/* <button>
-              <Link href="/profile">Profile</Link>
-            </button>
-            <button>
-              <Link href="">Analytics</Link>
-            </button> */}
-            <Component {...props} />
-          </Container>
+          <SessionProvider session={session}>
+            <NavBar />
+            <Container>
+              <Typography variant="h2" align="center">
+                Feed
+              </Typography>
+
+              <Component {...props} />
+            </Container>
+          </SessionProvider>
         </main>
       </ThemeProvider>
     </CacheProvider>
