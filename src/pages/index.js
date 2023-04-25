@@ -11,8 +11,8 @@ const Container = styled("div")({
   display: "flex",
   width: "40%",
   flexDirection: "column",
-  alignItems: "center",
   margin: "2%",
+  marginLeft: "20%",
 });
 
 export default function Home({ posts, refreshPosts }) {
@@ -31,8 +31,8 @@ export default function Home({ posts, refreshPosts }) {
           setCurrentSortFilter={changeSortFilter}
         />
         <PostList posts={posts} sortingFilter={currentSortFilter} />
+        <PostCreator refresh={refreshPosts} />
       </Container>
-      <PostCreator refresh={refreshPosts} />
     </div>
   );
 }

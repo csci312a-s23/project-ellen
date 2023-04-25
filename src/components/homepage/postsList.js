@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 const Container = styled("div")({
   width: "150%",
   margin: "5% 0 5% 0",
-  align: "center",
+  // align: "center",
 });
 
 const PostContainer = styled("div")({

@@ -8,8 +8,10 @@ import styled from "@emotion/styled";
 const PostContainer = styled("div")({
   marginBottom: "2%",
   border: "2px solid #E0E0E0",
-  borderRadius: "15px",
+  borderRadius: "25px",
   padding: "10px",
+  position: "relative",
+  alignItems: "center",
 });
 
 export default function Post({ postInfo }) {
@@ -47,12 +49,14 @@ export default function Post({ postInfo }) {
           {postInfo.title}
         </Typography>
       </Link>
+
       <Typography position={"relative"} ml={"13%"}>
         {postInfo.content}
       </Typography>
       <Typography position={"relative"} ml={"90%"}>
         {postInfo.votes}
       </Typography>
+
       {/* <Typography>{postInfo.created_at}</Typography> */}
     </PostContainer>
   );
