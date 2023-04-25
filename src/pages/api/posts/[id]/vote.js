@@ -32,15 +32,14 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   const value = parseInt(req.body.value);
 
   // delete vote first
-  try {
-    await Votes.query()
-      .delete()
-      .where("postID", postID)
-      .where("voterID", userID)
-      .throwIfNotFound();
-  } catch (err) {
-    // person has not voted before,
-    // so add their vote to total number of votes
+  const delVote = await Votes.query()
+    .delete()
+    .where("postID", postID)
+    .where("voterID", userID);
+
+  // they have not voted before
+  if (delVote === 0) {
+    // add their vote to total number of votes
     const post = await Posts.query().findById(postID).throwIfNotFound();
     post.num_votes++;
     await Posts.query().patchAndFetchById(parseInt(postID), {
@@ -58,7 +57,7 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   //then get new sum of votes
   const getVotes = await Votes.query().where("postID", postID).sum("value");
 
-  console.log(getVotes[0]["sum(`value`)"]);
+  // console.log(getVotes[0]["sum(`value`)"]);
   res
     .status(200)
     .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
