@@ -4,12 +4,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 // import Link from "next/link";
 import Head from "next/head";
-
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
-import theme from "../material/theme";
-import createEmotionCache from "../material/createEmotionCache";
+import theme from "@/material/theme";
+import createEmotionCache from "@/material/createEmotionCache";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 // import { styled } from "@mui/material/styles";
