@@ -1,5 +1,6 @@
 import nc from "next-connect";
-import Vote from "../../../../../models/Votes.js";
+import Votes from "../../../../../models/Votes.js";
+import Posts from "../../../../../models/Posts.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
 
@@ -30,18 +31,32 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   const userID = req.user.id;
   const value = parseInt(req.body.value);
 
-  //delete vote first
-  await Vote.query().delete().where("postID", postID).where("voterID", userID);
+  // delete vote first
+  try {
+    await Votes.query()
+      .delete()
+      .where("postID", postID)
+      .where("voterID", userID)
+      .throwIfNotFound();
+  } catch (err) {
+    // person has not voted before,
+    // so add their vote to total number of votes
+    const post = await Posts.query().findById(postID).throwIfNotFound();
+    post.num_votes++;
+    await Posts.query().patchAndFetchById(parseInt(postID), {
+      num_votes: post.num_votes,
+    });
+  }
 
   //then insert new vote
-  await Vote.query().insert({
+  await Votes.query().insert({
     postID: postID,
     voterID: userID,
     value: value,
   });
 
   //then get new sum of votes
-  const getVotes = await Vote.query().where("postID", postID).sum("value");
+  const getVotes = await Votes.query().where("postID", postID).sum("value");
 
   console.log(getVotes[0]["sum(`value`)"]);
   res

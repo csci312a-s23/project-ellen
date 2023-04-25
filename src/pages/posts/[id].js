@@ -8,7 +8,6 @@ export default function ShowPost({ currentPost }) {
 
   const getComments = () => {
     if (!!currentPost) {
-      console.log("currentPost:", currentPost);
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
@@ -20,7 +19,7 @@ export default function ShowPost({ currentPost }) {
 
   useEffect(() => {
     getComments();
-  }, [currentPost, getComments]);
+  }, [currentPost]);
 
   const addComment = (comment) => {
     fetch(`/api/posts/${currentPost.id}/comments`, {

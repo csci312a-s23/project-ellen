@@ -17,6 +17,7 @@ export default class Post extends BaseModel {
         content: { type: "string" },
         category: { type: "string" },
         created_at: { type: "string" },
+        num_votes: { type: "integer", default: 0 },
       },
     };
   }
