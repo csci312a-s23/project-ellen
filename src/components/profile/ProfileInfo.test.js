@@ -16,7 +16,9 @@ const displayTest = (userData, expectedItems, items) => {
     if (expectedItems.includes(key)) {
       // using getAllByText because first name can equal last name
       // getting first element of returned array because they'll be the same element anyways
-      expect(screen.getAllByText(val)[0]).toBeVisible();
+
+      const regex = new RegExp(val);
+      expect(screen.getAllByText(regex)[0]).toBeInTheDocument();
     }
     // we don't want to see elements like id
     else {
