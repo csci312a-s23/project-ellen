@@ -28,17 +28,3 @@ export async function authenticated(request, response, next) {
     response.status(403).end("You must be signed in to access this endpoint.");
   }
 }
-
-export async function isAuthenticated(request, response, next) {
-  const session = await getServerSession(request, response, authOptions);
-  if (session) {
-    request.user = await User.query()
-      .findById(session.user.id)
-      .throwIfNotFound();
-    console.log("finding");
-    next(); // Authenticated, proceed to the next handler
-  } else {
-    console.log("no session");
-    next();
-  }
-}
