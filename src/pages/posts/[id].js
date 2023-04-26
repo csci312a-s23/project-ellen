@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
+import { useSession } from "next-auth/react";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
-  const [canDelete] = useState(false);
+
+  let canDelete = false;
+
+  const { data: session, status } = useSession({ required: true });
+
+  if (status === "authenticated") {
+    if (!!currentPost && session.user.id === currentPost.posterID) {
+      canDelete = true;
+    }
+  }
 
   const getComments = () => {
     if (!!currentPost) {
@@ -53,7 +63,7 @@ export default function ShowPost({ currentPost }) {
     <>
       <h1>Post:</h1>
       {currentPost && <IndividualPost post={currentPost} />}
-      {canDelete && <button onClick={deletePost}>Delete Post</button>}
+      {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
       <h2>Comments:</h2>
       {!!comments && (
         <CommentsContainer
