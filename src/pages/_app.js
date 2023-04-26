@@ -61,6 +61,9 @@ export default function App({
   };
   // console.log(session);
 
+  // TO TEST, I PUT USERID = 1 BELOW
+  // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
+
   return (
     <SessionProvider session={session}>
       <div>

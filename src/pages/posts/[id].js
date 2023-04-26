@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
+import NewComment from "@/components/comment/NewComment";
 
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
+  const router = useRouter();
 
   let canDelete = false;
-
   const { data: session, status } = useSession({ required: true });
 
   if (status === "authenticated") {
@@ -16,7 +19,7 @@ export default function ShowPost({ currentPost }) {
     }
   }
 
-  const getComments = () => {
+  const getComments = useCallback(() => {
     if (!!currentPost) {
       console.log("currentPost:", currentPost);
       fetch(`/api/posts/${currentPost.id}/comments`)
@@ -26,7 +29,7 @@ export default function ShowPost({ currentPost }) {
           setComments(response);
         });
     }
-  };
+  }, [currentPost]);
 
   const deletePost = () => {
     if (!!currentPost) {
@@ -34,30 +37,30 @@ export default function ShowPost({ currentPost }) {
       fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
       }).then(() => {
-        // redirect?
+        router.push("/");
       });
     }
   };
 
   useEffect(() => {
-    // setComments([
-    //   {
-    //     id: 1,
-    //     commenterID: 1,
-    //     postID: 1,
-    //     content: "commentContent1",
-    //     likes: 0,
-    //   },
-    //   {
-    //     id: 2,
-    //     commenterID: 2,
-    //     postID: 2,
-    //     content: "commentContent2",
-    //     likes: 3,
-    //   },
-    // ]);
     getComments();
-  }, [currentPost]);
+  }, [getComments]);
+
+  const addComment = (comment) => {
+    fetch(`/api/posts/${currentPost.id}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: currentPost.id,
+        // change this once we've got user id from auth
+        commenterID: "1",
+        content: comment,
+      }),
+    });
+    getComments();
+  };
 
   return (
     <>
@@ -65,13 +68,8 @@ export default function ShowPost({ currentPost }) {
       {currentPost && <IndividualPost post={currentPost} />}
       {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
       <h2>Comments:</h2>
-      {!!comments && (
-        <CommentsContainer
-          postID={currentPost.id}
-          comments={comments}
-          getComments={getComments}
-        />
-      )}
+      {!!comments && <CommentsContainer comments={comments} />}
+      <NewComment addComment={addComment} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import styles from "../styles/NavBar.module.css";
 import LoginButton from "./LoginButon";
 import Link from "next/link";
-export default function NavBar() {
+export default function NavBar({ userID }) {
   return (
     <ul className={styles.navbar}>
       <li>
@@ -9,7 +9,7 @@ export default function NavBar() {
       </li>
 
       <li>
-        <Link href="/profile">Profile</Link>
+        <Link href={`/profile/${userID}`}>Profile</Link>
       </li>
 
       <li>

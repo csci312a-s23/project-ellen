@@ -1,5 +1,6 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
+import Profile from "@/pages/profile/[id]";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -18,6 +19,7 @@ jest.mock("next/router", () => require("next-router-mock"));
 mockRouter.useParser(
   createDynamicRouteParser([
     // These paths should match those found in the `/pages` folder:
+    "/profile/[id]",
     "/posts/[id]",
     "/posts",
     "/",
@@ -36,6 +38,17 @@ describe("General Tests", () => {
     fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);
+    fetchMock.get("/api/user/1", data.UserSeedData[0]);
+    fetchMock.get(
+      "/api/user/1/posts",
+      data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
+    );
+    fetchMock.get(
+      "/api/user/1/comments",
+      data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 1
+      )
+    );
     mockRouter.setCurrentUrl("/");
   });
 
@@ -144,6 +157,33 @@ describe("General Tests", () => {
       expect(
         await screen.findByText(data.CommentSeedData[0].content)
       ).toBeInTheDocument();
+    });
+  });
+
+  describe("Profile Page testing", () => {
+    // not planning on testing that posts are sorted because thats handled in
+    // post list tests
+
+    test("all of user's posts are showing", async () => {
+      mockRouter.setCurrentUrl(`/profile/1`);
+      const expectedPosts = data.PostSeedData.filter(
+        (post) => parseInt(post.posterID) === 1
+      );
+      render(<Profile />);
+      expect(await screen.findAllByTestId("post")).toHaveLength(
+        expectedPosts.length
+      );
+    });
+
+    test("all of user's comments are showing", async () => {
+      mockRouter.setCurrentUrl(`/profile/1`);
+      const expectedComments = data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 1
+      );
+      render(<Profile />);
+      expect(await screen.findAllByTestId("comment")).toHaveLength(
+        expectedComments.length
+      );
     });
   });
 });
