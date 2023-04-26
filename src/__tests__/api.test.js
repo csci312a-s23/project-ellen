@@ -122,7 +122,7 @@ describe("API tests", () => {
 
     test("POST /api/posts should return create a new post", async () => {
       const newPost = {
-        posterID: "1111",
+        posterID: 1111,
         title: "new title",
         content: "new content",
         category: "school",
