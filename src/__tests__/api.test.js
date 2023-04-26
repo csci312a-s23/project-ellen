@@ -15,7 +15,6 @@ import users_endpoint from "../pages/api/user/index.js";
 import individualUser_endpoint from "../pages/api/user/[id]/index.js";
 import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
 import userComments_endpoint from "../pages/api/user/[id]/comments.js";
-
 import { knex } from "../../knex/knex";
 import { getServerSession } from "next-auth/next";
 jest.mock("next-auth/next");
@@ -151,11 +150,11 @@ describe("API tests", () => {
 
     test("PATCH /api/posts/[id]/vote should return upvoted post on upvote", async () => {
       const upvote = {
-        userID: 2,
-        value: 2,
+        vote: "upvote",
+        userID: "2",
       };
 
-      // const post = data.PostSeedData[0];
+      const post = data.PostSeedData[0];
 
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -173,38 +172,38 @@ describe("API tests", () => {
           });
 
           const response = await res.json();
-          expect(response.newVoteSum).toBe(2);
+          expect(response.votes).toBe(post.votes + 1);
         },
       });
     });
 
-    // test("PATCH /api/posts/[id]/vote should return downvoted post on downvote", async () => {
-    //   const downvote = {
-    //     vote: "downvote",
-    //     userID: 1,
-    //   };
-    //   const post = data.PostSeedData[1];
+    test("PATCH /api/posts/[id]/vote should return downvoted post on downvote", async () => {
+      const downvote = {
+        vote: "downvote",
+        userID: "1",
+      };
+      const post = data.PostSeedData[1];
 
-    //   await testApiHandler({
-    //     rejectOnHandlerError: true, // Make sure to catch any errors
-    //     handler: vote_endpoint, // NextJS API function to test
-    //     url: "/api/posts/2/vote",
-    //     paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
-    //     test: async ({ fetch }) => {
-    //       // Test endpoint with mock fetch
-    //       const res = await fetch({
-    //         method: "PATCH",
-    //         headers: {
-    //           "content-type": "application/json", // Must use correct content type
-    //         },
-    //         body: JSON.stringify(downvote),
-    //       });
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: vote_endpoint, // NextJS API function to test
+        url: "/api/posts/2/vote",
+        paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify(downvote),
+          });
 
-    //       const response = await res.json();
-    //       expect(response.votes).toBe(post.votes - 1);
-    //     },
-    //   });
-    // });
+          const response = await res.json();
+          expect(response.votes).toBe(post.votes - 1);
+        },
+      });
+    });
   });
 
   describe("User API tests", () => {
@@ -497,100 +496,6 @@ describe("API tests", () => {
 
           expect(res.ok).toBe(false);
           expect(res.status).toBe(403);
-        },
-      });
-    });
-  });
-  describe("Voting tests", () => {
-    beforeEach(() => {
-      // Ensure test database is initialized before an tests
-      return knex.migrate.rollback().then(() => knex.migrate.latest());
-    });
-
-    beforeEach(() => {
-      // Reset contents of the test database
-      return knex.seed.run();
-    });
-
-    test("initial vote increments total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
-      await testApiHandler({
-        rejectOnHandlerError: true, // Make sure to catch any errors
-        handler: vote_endpoint, // NextJS API function to test
-        url: "/api/posts/1/vote",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
-        requestPatcher: (req) => (req.user = { id: 1 }),
-        test: async ({ fetch }) => {
-          // Test endpoint with mock fetch
-          await fetch({
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json", // Must use correct content type
-            },
-            body: JSON.stringify({
-              value: 5,
-            }),
-          });
-
-          const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
-          expect(final.num_votes).toBe(11);
-        },
-      });
-    });
-
-    test("duplicate vote increments does not increase total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
-
-      // vote 1
-      await testApiHandler({
-        rejectOnHandlerError: true, // Make sure to catch any errors
-        handler: vote_endpoint, // NextJS API function to test
-        url: "/api/posts/1/vote",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
-        requestPatcher: (req) => (req.user = { id: 1 }),
-        test: async ({ fetch }) => {
-          // Test endpoint with mock fetch
-          await fetch({
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json", // Must use correct content type
-            },
-            body: JSON.stringify({
-              value: 5,
-            }),
-          });
-
-          const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
-          expect(final.num_votes).toBe(11);
-        },
-      });
-
-      // vote 2
-      await testApiHandler({
-        rejectOnHandlerError: true, // Make sure to catch any errors
-        handler: vote_endpoint, // NextJS API function to test
-        url: "/api/posts/1/vote",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
-        requestPatcher: (req) => (req.user = { id: 1 }),
-        test: async ({ fetch }) => {
-          // Test endpoint with mock fetch
-          await fetch({
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json", // Must use correct content type
-            },
-            body: JSON.stringify({
-              value: 5,
-            }),
-          });
-
-          const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
-          expect(final.num_votes).toBe(11);
         },
       });
     });
