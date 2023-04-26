@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import PostList from "./postsList.js";
 import fetchMock from "fetch-mock-jest";
 import { PostSeedData } from "../../../data/SeedData.json";
-import { act } from "react-dom/test-utils";
 
 describe("postList: postList tests", () => {
   beforeEach(() => {
@@ -14,13 +13,13 @@ describe("postList: postList tests", () => {
   });
 
   test("Smoke test", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
   });
 
   test("When currentFilter is new, should render three posts", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
     const post1 = await screen.getByText("title1");
@@ -32,7 +31,7 @@ describe("postList: postList tests", () => {
   });
 
   test("When currentFilter is hot, should render two posts", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="hot" />)
     );
     const post1 = await screen.getByText("title1");
@@ -52,7 +51,7 @@ describe("postList: postList tests", () => {
   });
 
   test("Check to see the posts are correctly sorted by date", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
 
