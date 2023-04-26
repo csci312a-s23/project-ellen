@@ -9,7 +9,7 @@ export default class Post extends BaseModel {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["posterID", "title", "content", "category"],
+      required: ["posterID", "title", "content", "category", "votes"],
       properties: {
         id: { type: "integer" },
         posterID: { type: "string" },
@@ -17,7 +17,7 @@ export default class Post extends BaseModel {
         content: { type: "string" },
         category: { type: "string" },
         created_at: { type: "string" },
-        num_votes: { type: "integer", default: 0 },
+        votes: { type: "integer", default: 0 },
       },
     };
   }
@@ -25,7 +25,6 @@ export default class Post extends BaseModel {
   static get relationMappings() {
     const User = require("./Users");
     const Comment = require("./Comments");
-    const Vote = require("./Votes");
 
     return {
       poster: {
@@ -42,14 +41,6 @@ export default class Post extends BaseModel {
         join: {
           from: "posts.id",
           to: "comments.postID",
-        },
-      },
-      votes: {
-        relation: Model.HasManyRelation,
-        modelClass: Vote,
-        join: {
-          from: "posts.id",
-          to: "votes.postID",
         },
       },
     };
