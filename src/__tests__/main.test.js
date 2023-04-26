@@ -1,3 +1,9 @@
+/**
+ * @jest-environment node
+ *
+ * Use Node environment for server-side tests to avoid loading browser libraries
+ */
+
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[id]";

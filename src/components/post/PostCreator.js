@@ -16,7 +16,6 @@ export default function PostCreator({ refresh }) {
   const [category, setCategory] = useState(" ");
 
   const { data: session } = useSession({ required: true });
-  console.log(session);
 
   const options = [
     { label: "Food" },
@@ -45,6 +44,7 @@ export default function PostCreator({ refresh }) {
         category: category,
       }),
     });
+    console.log(title, category, description);
     setCategory(" ");
     setDescription(" ");
     setTitle(" ");

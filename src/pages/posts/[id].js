@@ -21,7 +21,6 @@ export default function ShowPost({ currentPost }) {
 
   const getComments = useCallback(() => {
     if (!!currentPost) {
-      console.log("currentPost:", currentPost);
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
@@ -45,6 +44,8 @@ export default function ShowPost({ currentPost }) {
   useEffect(() => {
     getComments();
   }, [getComments]);
+
+  // }, [currentPost]);
 
   const addComment = (comment) => {
     fetch(`/api/posts/${currentPost.id}/comments`, {
