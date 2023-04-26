@@ -14,7 +14,6 @@ const handler = nc({ onError })
       await Posts.query()
         .findById(parseInt(id))
         .first()
-        .withGraphFetched("votes")
         .throwIfNotFound({
           message: `Post with id ${id} not found... cannot retrieve comments`,
         });
