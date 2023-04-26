@@ -10,7 +10,7 @@ exports.up = function (knex) {
     table.text("content");
     table.string("category");
     table.timestamp("created_at");
-    table.integer("num_votes");
+    table.integer("votes");
   });
 };
 

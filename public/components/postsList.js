@@ -10,7 +10,7 @@ function PostList({ posts, sortingFilter }) {
         return true; //returns all posts
       } else if (sortingFilter === "hot") {
         //sort by date
-        return post.num_votes > 5; //need to implement this once we start scoring posts
+        return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
       }
     });
   } else {
