@@ -12,7 +12,7 @@ export default class Post extends BaseModel {
       required: ["posterID", "title", "content", "category"],
       properties: {
         id: { type: "integer" },
-        posterID: { type: "integer" },
+        posterID: { type: "string" },
         title: { type: "string" },
         content: { type: "string" },
         category: { type: "string" },
