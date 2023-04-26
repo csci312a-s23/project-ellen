@@ -35,7 +35,7 @@ describe("postList: postList tests", () => {
     await act(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="hot" />)
     );
-    const post1 = await screen.findByText("title1");
+    const post1 = await screen.getByText("title1");
     const post2 = screen.queryByText("title2");
     const post3 = screen.getByText("title3");
     expect(post1).not.toBeNull();

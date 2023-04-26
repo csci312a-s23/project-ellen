@@ -22,7 +22,7 @@ describe("postList: postList tests", () => {
     waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
-    const post1 = screen.getByText("title1");
+    const post1 = await screen.getByText("title1");
     const post2 = screen.getByText("title2");
     const post3 = screen.getByText("title3");
     expect(post1).not.toBeNull();
@@ -34,9 +34,9 @@ describe("postList: postList tests", () => {
     waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="hot" />)
     );
-    const post1 = screen.findByText("title1");
+    const post1 = await screen.getByText("title1");
     const post2 = screen.queryByText("title2");
-    const post3 = screen.findByText("title3");
+    const post3 = screen.getByText("title3");
     expect(post1).not.toBeNull();
     expect(post2).toBeNull();
     expect(post3).not.toBeNull();

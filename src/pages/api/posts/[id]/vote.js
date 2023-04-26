@@ -1,13 +1,12 @@
 import nc from "next-connect";
-import Votes from "../../../../../models/Votes.js";
-import Posts from "../../../../../models/Posts.js";
+import Post from "../../../../../models/Posts.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
 
 const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   // handle the upvote or downvote of a post
 
-  const postID = parseInt(req.query.id);
+  const postID = req.query.id;
   //validate postID
   if (!postID) {
     res.status(400).end("Invalid Post ID");
@@ -19,8 +18,13 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     res.status(400).end("Invalid Vote");
     return;
   }
+  //validate vote
+  if (body.vote !== "upvote" && body.vote !== "downvote") {
+    res.status(400).end("Invalid Vote");
+    return;
+  }
   //validate user
-  if (!req.user) {
+  if (!body.userID) {
     res.status(400).end("Invalid User");
     return;
   }
@@ -28,39 +32,22 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   //add after login is implemented
 
   //get post
-  const userID = req.user.id;
-  const value = parseInt(req.body.value);
+  const post = await Post.query().findById(postID).throwIfNotFound();
 
-  // delete vote first
-  const delVote = await Votes.query()
-    .delete()
-    .where("postID", postID)
-    .where("voterID", userID);
-
-  // they have not voted before
-  if (delVote === 0) {
-    // add their vote to total number of votes
-    const post = await Posts.query().findById(postID).throwIfNotFound();
-    post.num_votes++;
-    await Posts.query().patchAndFetchById(parseInt(postID), {
-      num_votes: post.num_votes,
-    });
+  //update post
+  if (body.vote === "upvote") {
+    post.votes++;
   }
+  if (body.vote === "downvote") {
+    post.votes--;
+  }
+  const updatedPost = await Post.query()
+    .patchAndFetchById(postID, {
+      votes: post.votes,
+    })
+    .throwIfNotFound();
 
-  //then insert new vote
-  await Votes.query().insert({
-    postID: postID,
-    voterID: userID,
-    value: value,
-  });
-
-  //then get new sum of votes
-  const getVotes = await Votes.query().where("postID", postID).sum("value");
-
-  // console.log(getVotes[0]["sum(`value`)"]);
-  res
-    .status(200)
-    .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
+  res.status(200).json(updatedPost);
 });
 
 export default handler;
