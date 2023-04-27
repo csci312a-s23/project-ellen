@@ -6,6 +6,7 @@ import PostList from "@/components/homepage/postsList";
 import PropTypes from "prop-types";
 
 import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 
 const Container = styled("div")({
   display: "flex",
@@ -25,6 +26,9 @@ export default function Home({ posts, refreshPosts }) {
 
   return (
     <div>
+      <Typography variant="h2" align="center">
+        Feed
+      </Typography>
       <Container>
         <FilterBar
           currentSortFilter={currentSortFilter}

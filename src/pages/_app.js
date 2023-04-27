@@ -12,7 +12,7 @@ import { CacheProvider } from "@emotion/react";
 import theme from "@/material/theme";
 import createEmotionCache from "@/material/createEmotionCache";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+// import Typography from "@mui/material/Typography";
 // import { styled } from "@mui/material/styles";
 
 const clientSideEmotionCache = createEmotionCache();
@@ -92,10 +92,6 @@ export default function App({
           <SessionProvider session={session}>
             <NavBar />
             <Container>
-              <Typography variant="h2" align="center">
-                Feed
-              </Typography>
-
               <Component {...props} />
             </Container>
           </SessionProvider>
