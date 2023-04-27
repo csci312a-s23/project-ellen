@@ -6,6 +6,24 @@ import NewComment from "@/components/comment/NewComment";
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
 
+  const vote = (action, commentID) => {
+    fetch(`/api/posts/${currentPost.id}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: currentPost.id,
+        commentID: commentID,
+        vote: action,
+      }),
+    });
+    // if(action === "upvote"){
+
+    // } else if (action === "downvote"){
+
+    // }
+  };
   const getComments = () => {
     if (!!currentPost) {
       fetch(`/api/posts/${currentPost.id}/comments`)
@@ -42,7 +60,7 @@ export default function ShowPost({ currentPost }) {
       <h1>Post:</h1>
       {!!currentPost && <IndividualPost post={currentPost} />}
       <h2>Comments:</h2>
-      {!!comments && <CommentsContainer comments={comments} />}
+      {!!comments && <CommentsContainer comments={comments} vote={vote} />}
       <NewComment addComment={addComment} />
     </>
   );

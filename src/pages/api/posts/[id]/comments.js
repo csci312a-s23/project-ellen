@@ -1,6 +1,7 @@
 import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
+import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
 
@@ -46,6 +47,47 @@ const handler = nc({ onError })
       created_at: new Date().toISOString(),
     });
     res.status(200).json(comment);
+  })
+  .patch(authenticated, async (req, res) => {
+    // const { id } = req.query;
+    const { postID } = req.body;
+    const { commentID } = req.body;
+    // const {value} = req.body;
+
+    const delVote = await Votes.query()
+      .delete()
+      .where("postID", postID)
+      .where("commentID", commentID)
+      .where("voterID", req.user.id)
+      .where("typeOf", "comment");
+
+    // they have not voted before
+    if (delVote === 0) {
+      // add their vote to total number of votes
+      // const post = await Posts.query()
+      // 	.findById(postID)
+      // 	.throwIfNotFound();
+      // post.num_votes++;
+      // await Posts.query().patchAndFetchById(parseInt(postID), {
+      // 	num_votes: post.num_votes,
+      // });
+    }
+
+    //then insert new vote
+    const ret = await Votes.query().insertAndFetch({
+      postID: postID,
+      voterID: req.user.id,
+      commentID: commentID,
+      value: 1,
+      typeOf: "post",
+    });
+
+    res.status(200).json(ret);
+    //then get new sum of votes
+    // const getVotes = await Votes.query()
+    // 	.where("postID", postID)
+    // 	.where("typeOf", "post")
+    // 	.sum("value");
   });
 
 export default handler;
