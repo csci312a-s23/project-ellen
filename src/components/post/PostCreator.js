@@ -30,9 +30,9 @@ export default function PostCreator({ refresh }) {
     setChecked(val);
   };
 
-  const submitPost = () => {
+  const submitPost = async () => {
     closeModal();
-    fetch("/api/posts", {
+    await fetch("/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,6 @@ export default function PostCreator({ refresh }) {
         category: category,
       }),
     });
-    console.log(title, category, description);
     setCategory(" ");
     setDescription(" ");
     setTitle(" ");
