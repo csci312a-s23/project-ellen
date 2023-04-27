@@ -6,24 +6,6 @@ import NewComment from "@/components/comment/NewComment";
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
 
-  const vote = (action, commentID) => {
-    fetch(`/api/posts/${currentPost.id}/comments`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        postID: currentPost.id,
-        commentID: commentID,
-        vote: action,
-      }),
-    });
-    // if(action === "upvote"){
-
-    // } else if (action === "downvote"){
-
-    // }
-  };
   const getComments = () => {
     if (!!currentPost) {
       fetch(`/api/posts/${currentPost.id}/comments`)
@@ -35,12 +17,27 @@ export default function ShowPost({ currentPost }) {
     }
   };
 
+  const vote = async (action, commentID) => {
+    await fetch(`/api/posts/${currentPost.id}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: currentPost.id,
+        commentID: commentID,
+        vote: action,
+      }),
+    });
+    getComments();
+  };
+
   useEffect(() => {
     getComments();
   }, [currentPost]);
 
-  const addComment = (comment) => {
-    fetch(`/api/posts/${currentPost.id}/comments`, {
+  const addComment = async (comment) => {
+    await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

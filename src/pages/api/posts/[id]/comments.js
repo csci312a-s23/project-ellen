@@ -25,6 +25,24 @@ const handler = nc({ onError })
         .where({ postID: parseInt(id) })
         .throwIfNotFound({ message: "No comments associated with this post" });
 
+      // let commentsWVote = comments.map(async comment => {
+
+      for (let i = 0; i < comments.length; i++) {
+        // console.log("comment", comments[i])
+        const commentVal = await Votes.query()
+          .where({ postID: parseInt(id) })
+          .where({ commentID: comments[i].id })
+          .where({ typeOf: "comment" })
+          .sum("value");
+
+        // console.log("value:", commentVal[0]["sum(`value`)"])
+
+        comments[i] = {
+          ...comments[i],
+          newVoteSum: commentVal[0]["sum(`value`)"],
+        };
+      }
+
       res.status(200).json(comments);
     } else {
       res.status(404).end(`${id} is not valid`);
@@ -52,12 +70,19 @@ const handler = nc({ onError })
     // const { id } = req.query;
     const { postID } = req.body;
     const { commentID } = req.body;
-    // const {value} = req.body;
+    const { vote } = req.body;
+    let value = 0;
+    if (vote === "upvote") {
+      value = 1;
+    }
+    if (vote === "downvote") {
+      value = -1;
+    }
 
     const delVote = await Votes.query()
       .delete()
-      .where("postID", postID)
-      .where("commentID", commentID)
+      .where("postID", parseInt(postID))
+      .where("commentID", parseInt(commentID))
       .where("voterID", req.user.id)
       .where("typeOf", "comment");
 
@@ -74,15 +99,23 @@ const handler = nc({ onError })
     }
 
     //then insert new vote
-    const ret = await Votes.query().insertAndFetch({
+    await Votes.query().insert({
       postID: postID,
       voterID: req.user.id,
       commentID: commentID,
-      value: 1,
-      typeOf: "post",
+      value: value,
+      typeOf: "comment",
     });
 
-    res.status(200).json(ret);
+    const getVotes = await Votes.query()
+      .where("postID", parseInt(postID))
+      .where("commentID", commentID)
+      .where("typeOf", "comment")
+      .sum("value");
+
+    res
+      .status(200)
+      .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
     //then get new sum of votes
     // const getVotes = await Votes.query()
     // 	.where("postID", postID)
