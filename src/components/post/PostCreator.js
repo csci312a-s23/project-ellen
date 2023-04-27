@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import styles from "./PostCreator.module.css";
 import ReactSwitch from "react-switch";
-import Button from "@mui/material/Button";
+//import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function PostCreator({ refresh }) {
   const [open, setOpen] = useState(false);
@@ -50,15 +52,10 @@ export default function PostCreator({ refresh }) {
 
   return (
     <div>
-      <div style={{ margin: "5%" }}>
-        <Button
-          variant="outlined"
-          type="button"
-          className={styles.openCreator}
-          onClick={() => setOpen((o) => !o)}
-        >
-          New Post
-        </Button>
+      <div>
+        <Fab color="primary" aria-label="add" className="add-button">
+          <AddIcon onClick={() => setOpen((o) => !o)} />
+        </Fab>
       </div>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className={styles.modal}>
