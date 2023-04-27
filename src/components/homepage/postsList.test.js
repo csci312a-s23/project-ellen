@@ -50,22 +50,23 @@ describe("postList: postList tests", () => {
     expect(post3).toBeNull();
   });
 
-  test("Check to see the posts are correctly sorted by date", async () => {
-    waitFor(async () =>
-      render(<PostList posts={PostSeedData} sortingFilter="new" />)
-    );
-    const items = await screen.findAllByTestId("post");
+  //we are currently not displaying date so this test is commented
+  // test("Check to see the posts are correctly sorted by date", async () => {
+  //   waitFor(async () =>
+  //     render(<PostList posts={PostSeedData} sortingFilter="new" />)
+  //   );
+  //   const items = await screen.findAllByTestId("post");
 
-    const dates = items.map(
-      (item) => new Date(item.children[0].children[2].innerHTML.slice(12))
-    );
-    console.log(dates);
-    let sorted = true;
-    for (let i = 1; i < dates.length; i++) {
-      if (dates[i] > dates[i - 1]) {
-        sorted = false;
-      }
-    }
-    expect(sorted).toBe(true);
-  });
+  //   const dates = items.map(
+  //     (item) => new Date(item.children[0].children[2].innerHTML.slice(12))
+  //   );
+  //   console.log(dates);
+  //   let sorted = true;
+  //   for (let i = 1; i < dates.length; i++) {
+  //     if (dates[i] > dates[i - 1]) {
+  //       sorted = false;
+  //     }
+  //   }
+  //   expect(sorted).toBe(true);
+  // });
 });
