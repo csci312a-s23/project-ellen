@@ -1,9 +1,3 @@
-/**
- * @jest-environment node
- *
- * Use Node environment for server-side tests to avoid loading browser libraries
- */
-
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[id]";
@@ -16,14 +10,14 @@ import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
 // import { SessionProvider } from "next-auth/react";
-import { getServerSession } from "next-auth/next";
+// import { getServerSession } from "next-auth/next";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
 jest.mock("next/router", () => require("next-router-mock"));
-jest.mock("next-auth/next");
+// jest.mock("next-auth/next");
 
 mockRouter.useParser(
   createDynamicRouteParser([
@@ -44,14 +38,14 @@ describe("General Tests", () => {
   });
 
   beforeEach(() => {
-    getServerSession.mockResolvedValue({
-      user: {
-        email: "test@middlebury.edu",
-        id: "1",
-        image: "",
-        name: "Jest Test",
-      },
-    });
+    // getServerSession.mockResolvedValue({
+    //   user: {
+    //     email: "test@middlebury.edu",
+    //     id: "1",
+    //     image: "",
+    //     name: "Jest Test",
+    //   },
+    // });
 
     fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);

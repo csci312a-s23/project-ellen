@@ -570,7 +570,7 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
+
           expect(final.num_votes).toBe(11);
         },
       });
@@ -600,7 +600,7 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
+
           expect(final.num_votes).toBe(11);
         },
       });
@@ -625,7 +625,7 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
+
           expect(final.num_votes).toBe(11);
         },
       });

@@ -35,7 +35,11 @@ export default function Home({ posts, refreshPosts }) {
         currentSortFilter={currentSortFilter}
         setCurrentSortFilter={changeSortFilter}
       />
-      <PostList posts={posts} sortingFilter={currentSortFilter} />
+      <PostList
+        posts={posts}
+        sortingFilter={currentSortFilter}
+        refreshPosts={refreshPosts}
+      />
       <PostCreator refresh={refreshPosts} />
     </div>
   );

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import NewComment from "@/components/comment/NewComment";
 
-export default function ShowPost({ currentPost }) {
+export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
   const router = useRouter();
 
@@ -30,13 +30,14 @@ export default function ShowPost({ currentPost }) {
     }
   }, [currentPost]);
 
-  const deletePost = () => {
+  const deletePost = async () => {
     if (!!currentPost) {
       console.log("Deleting post:", currentPost.id);
-      fetch(`/api/posts/${currentPost.id}`, {
+      await fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
       }).then(() => {
         router.push("/");
+        refreshPosts();
       });
     }
   };
