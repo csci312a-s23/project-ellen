@@ -68,7 +68,6 @@ const handler = nc({ onError })
   })
   .patch(authenticated, async (req, res) => {
     // const { id } = req.query;
-    console.log("patching comment");
 
     const { postID } = req.body;
     const { commentID } = req.body;
@@ -101,16 +100,13 @@ const handler = nc({ onError })
         .where("commentID", parseInt(commentID))
         .where("voterID", req.user.id)
         .where("typeOf", "comment");
-      console.log("has voted before:", commentSum);
     }
 
     const comment = await Comments.query()
       .findById(commentID)
       .throwIfNotFound();
 
-    console.log("current likes::", comment.likes);
     comment.likes += parseInt(value + commentSum);
-    console.log("new likes:", comment.likes);
 
     await Comments.query().patchAndFetchById(parseInt(commentID), {
       // num_votes: comment.num_votes,
