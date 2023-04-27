@@ -53,8 +53,13 @@ export default function PostCreator({ refresh }) {
   return (
     <div>
       <div>
-        <Fab color="primary" aria-label="add" className="add-button">
-          <AddIcon onClick={() => setOpen((o) => !o)} />
+        <Fab
+          color="primary"
+          aria-label="add"
+          className="add-button"
+          onClick={() => setOpen((o) => !o)}
+        >
+          <AddIcon />
         </Fab>
       </div>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>

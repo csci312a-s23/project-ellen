@@ -1,27 +1,40 @@
-import styles from "../styles/NavBar.module.css";
-import LoginButton from "./LoginButon";
 import Link from "next/link";
-export default function NavBar() {
+import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+// import MenuIcon from "@mui/icons-material/Menu";
+import LoginButton from "./LoginButon";
+// import { useState } from "react";
+// import Menu from "@mui/material";
+
+export default function NavBar({ userID }) {
   return (
-    <ul className={styles.navbar}>
-      <li>
-        <Link href="/">Home</Link>
-      </li>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          {/* <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton> */}
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/">StudentDirect</Link>
+          </Typography>
 
-      <li>
-        <Link href="/profile">Profile</Link>
-      </li>
-
-      <li>
-        <Link href="/post">Post</Link>
-      </li>
-
-      <li>
-        <Link href="/posts">Feed</Link>
-      </li>
-      <li>
-        <LoginButton />
-      </li>
-    </ul>
+          <Button color="inherit">
+            <Link href={`/profile/${userID}`}>Profile</Link>
+          </Button>
+          <Button color="inherit">
+            <Link href="/post">Post</Link>
+          </Button>
+          <Button color="inherit">
+            <Link href="/posts">Feed</Link>
+          </Button>
+          <LoginButton />
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 }
