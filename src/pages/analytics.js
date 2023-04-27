@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js/auto"; // need this?
+} from "chart.js/auto";
 
 import {
   Paper,
@@ -27,9 +27,10 @@ import {
   MenuItem,
   Box,
   TextField,
+  IconButton,
 } from "@mui/material";
 
-//import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 ChartJS.register(
   CategoryScale,
@@ -46,16 +47,16 @@ export default function page() {
 }
 
 function AnalyticsDisplay() {
-  const controlPanelWidth = 25;
+  const controlPanelWidth = 25; // %
   // Class, Athlete, 1st Gen, Gender, ...
 
+  // stores the current issue to be analyzed
   const [compare, setCompare] = useState("Housing");
-  // Registration, Housing, Dining, ...
 
   // stores the current categories (of students) being graphed
   const [categories, setCategories] = useState([]);
 
-  let key = 100;
+  let key = 0;
 
   return (
     <div
@@ -88,9 +89,12 @@ function AnalyticsDisplay() {
           varaint="outlined"
         >
           {categories.map((c) => {
-            key += 1;
+            key++;
             return (
-              <div key={key} style={{ margin: "5% 5% 0% 5%" }}>
+              <div
+                key={`analyticsGroup${  key.toString()}`}
+                style={{ margin: "5% 5% 0% 5%" }}
+              >
                 <MakeGroup
                   c={c}
                   categories={categories}
@@ -116,6 +120,7 @@ function AnalyticsDisplay() {
                 ); // generate a random hex code
                 const temp = [...categories];
                 temp.push({
+                  // add a new category
                   // filters
                   classes: [],
                   majors: [],
@@ -126,7 +131,7 @@ function AnalyticsDisplay() {
                   label: "",
                   data: Array.from({ length: 9 }, () =>
                     Math.floor(Math.random() * 100)
-                  ),
+                  ), // randomize the data for now
                   backgroundColor: `#${newcolor}`,
                   borderColor: `#${newcolor}`,
                 });
@@ -151,7 +156,7 @@ function AnalyticsDisplay() {
                 "Mar",
                 "Apr",
                 "May",
-              ],
+              ], // temporary data labels
               datasets: categories,
             }}
             compare={compare}
@@ -163,19 +168,35 @@ function AnalyticsDisplay() {
   );
 }
 function MakeGroup({ c, categories, setCategories }) {
+  const groups = [
+    ["classes", ["Freshmen", "Sophomores", "Juniors", "Seniors"]],
+    [
+      "majors",
+      [
+        "Science",
+        "Mathematics",
+        "Computer Science",
+        "History",
+        "Pre-Law",
+        "Literature",
+      ],
+    ],
+    ["athletics", ["Varsity Athletes", "Club Athletes", "Non-athletes"]],
+    ["misc", ["1st Gen", "College-employed", "Minority Group"]],
+  ];
+  let key = 0;
   return (
     <Accordion style={{ backgroundColor: c.backgroundColor }}>
       <AccordionSummary
         //expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
-        id="panel1a-header"
       >
-        <TextField id="standard-basic" label="Group Name" variant="standard" />
+        <TextField label="Group Name" variant="standard" />
         <Box sx={{ "& button": { m: 1 } }}>
-          <Button
+          <IconButton
             variant="contained"
             size="small"
-            style={{ backgroundColor: "red", marginRight: 0 }}
+            style={{ backgroundColor: "", marginRight: 0 }}
             onClick={() => {
               const withRemoved = [...categories].filter(
                 (obj) => JSON.stringify(obj) !== JSON.stringify(c)
@@ -183,47 +204,25 @@ function MakeGroup({ c, categories, setCategories }) {
               setCategories(withRemoved);
             }}
           >
-            D
-          </Button>
+            <DeleteIcon sx={{ color: "#FF0000" }} />
+          </IconButton>
         </Box>
       </AccordionSummary>
 
       <AccordionDetails style={{ backgroundColor: "white" }}>
-        <MakeDropDown
-          options={["Freshmen", "Sophomores", "Juniors", "Seniors"]}
-          label="classes"
-          c={c}
-          categories={categories}
-          setCategories={setCategories}
-        />
-        <MakeDropDown
-          options={[
-            "Science",
-            "Mathematics",
-            "Computer Science",
-            "History",
-            "Pre-Law",
-            "Literature",
-          ]}
-          label="majors"
-          c={c}
-          categories={categories}
-          setCategories={setCategories}
-        />
-        <MakeDropDown
-          options={["Varsity Athletes", "Club Athletes", "Non-athletes"]}
-          label="athletics"
-          c={c}
-          categories={categories}
-          setCategories={setCategories}
-        />
-        <MakeDropDown
-          options={["1st Gen", "College-employed", "Minority Group"]}
-          label="misc"
-          c={c}
-          categories={categories}
-          setCategories={setCategories}
-        />
+        {groups.map((g) => {
+          key++;
+          return (
+            <MakeDropDown
+              key={`groupSpecs${  key.toString()}`}
+              options={g[1]}
+              label={g[0]}
+              c={c}
+              categories={categories}
+              setCategories={setCategories}
+            />
+          );
+        })}
       </AccordionDetails>
     </Accordion>
   );
@@ -243,9 +242,10 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
     modified[changeIdx][label] = value;
     setCategories(modified);
   };
+  let key = 0;
   return (
     <FormControl sx={{ width: "100%", marginTop: "5%" }}>
-      <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
+      <InputLabel>{label}</InputLabel>
       <Select
         multiple
         value={c[label]} // values
@@ -259,17 +259,37 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
           </Box>
         )}
       >
-        {options.map((option) => (
-          <MenuItem key={option} value={option.substring(0, 2)}>
-            {option}
-          </MenuItem>
-        ))}
+        {options.map((option) => {
+          key++;
+          return (
+            <MenuItem
+              key={`${option}_${c}_${key}`}
+              value={option.substring(0, 2)}
+            >
+              {option}
+            </MenuItem>
+          );
+        })}
       </Select>
     </FormControl>
   );
 }
 
 function LineChart({ data, compare, setCompare }) {
+  const issues = [
+    "Registration",
+    "Housing",
+    "Dining",
+    "Parking",
+    "Facilities",
+    "Student Life",
+    "Academics",
+    "SGA",
+    "MCAB",
+    "Misc",
+  ];
+  const metrics = ["Post Engagement"];
+  let key = 0;
   return (
     <div className="chart-container" style={{ margin: "5vh 5vh 5vh 5vh" }}>
       <div
@@ -281,43 +301,46 @@ function LineChart({ data, compare, setCompare }) {
         }}
       >
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label"> Metric </InputLabel>
+          <InputLabel> Metric </InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={"Post Engagement"}
+            value={metrics[0]}
             label="Metric"
             onChange={(e) => {
               setMetric(e.target.value);
             }}
           >
-            <MenuItem value="Post Engagement"> Post Engagement </MenuItem>
+            {metrics.map((m) => {
+              key++;
+              return (
+                <MenuItem key={`menuItem${  key.toString()}`} value={m}>
+                  {" "}
+                  {m}{" "}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
         <p style={{ margin: "1vw" }}> x </p>
 
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label"> Topic </InputLabel>
+          <InputLabel> Topic </InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            data-testid="topicSel"
             value={compare}
             label="Topic"
             onChange={(e) => {
               setCompare(e.target.value);
             }}
           >
-            <MenuItem value="Registration"> Registration </MenuItem>
-            <MenuItem value="Housing"> Housing </MenuItem>
-            <MenuItem value="Dining"> Dining </MenuItem>
-            <MenuItem value="Parking"> Parking </MenuItem>
-            <MenuItem value="Facilities"> Facilities </MenuItem>
-            <MenuItem value="Student Life"> Student Life </MenuItem>
-            <MenuItem value="Academics"> Academics </MenuItem>
-            <MenuItem value="SGA"> SGA </MenuItem>
-            <MenuItem value="MCAB"> MCAB </MenuItem>
-            <MenuItem value="Misc"> Misc </MenuItem>
+            {issues.map((i) => {
+              return (
+                <MenuItem key={`menuItem_${key}`} value={i}>
+                  {" "}
+                  {i}{" "}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </div>
