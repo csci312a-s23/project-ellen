@@ -27,21 +27,21 @@ const handler = nc({ onError })
 
       // let commentsWVote = comments.map(async comment => {
 
-      for (let i = 0; i < comments.length; i++) {
-        // console.log("comment", comments[i])
-        const commentVal = await Votes.query()
-          .where({ postID: parseInt(id) })
-          .where({ commentID: comments[i].id })
-          .where({ typeOf: "comment" })
-          .sum("value");
+      // 			for (let i = 0; i < comments.length; i++) {
+      // 				// console.log("comment", comments[i])
+      // 				const commentVal = await Votes.query()
+      // 					.where({ postID: parseInt(id) })
+      // 					.where({ commentID: comments[i].id })
+      // 					.where({ typeOf: "comment" })
+      // 					.sum("value");
 
-        // console.log("value:", commentVal[0]["sum(`value`)"])
+      // 				// console.log("value:", commentVal[0]["sum(`value`)"])
 
-        comments[i] = {
-          ...comments[i],
-          newVoteSum: commentVal[0]["sum(`value`)"],
-        };
-      }
+      // 				comments[i] = {
+      // 					...comments[i],
+      // 					newVoteSum: commentVal[0]["sum(`value`)"],
+      // 				};
+      // 			}
 
       res.status(200).json(comments);
     } else {
@@ -79,24 +79,38 @@ const handler = nc({ onError })
       value = -1;
     }
 
-    const delVote = await Votes.query()
-      .delete()
+    // get previous vote
+
+    const votes = await Votes.query()
       .where("postID", parseInt(postID))
       .where("commentID", parseInt(commentID))
       .where("voterID", req.user.id)
-      .where("typeOf", "comment");
+      .where("typeOf", "comment")
+      .first();
 
-    // they have not voted before
-    if (delVote === 0) {
-      // add their vote to total number of votes
-      // const post = await Posts.query()
-      // 	.findById(postID)
-      // 	.throwIfNotFound();
-      // post.num_votes++;
-      // await Posts.query().patchAndFetchById(parseInt(postID), {
-      // 	num_votes: post.num_votes,
-      // });
+    let commentSum = 0;
+
+    //if they have voted before
+    if (!!votes) {
+      commentSum -= votes.value;
+      await Votes.query()
+        .delete()
+        .where("postID", parseInt(postID))
+        .where("commentID", parseInt(commentID))
+        .where("voterID", req.user.id)
+        .where("typeOf", "comment");
     }
+
+    const comment = await Comments.query()
+      .findById(commentID)
+      .throwIfNotFound();
+
+    comment.likes += parseInt(value + commentSum);
+
+    await Comments.query().patchAndFetchById(parseInt(commentID), {
+      // num_votes: comment.num_votes,
+      likes: comment.likes,
+    });
 
     //then insert new vote
     await Votes.query().insert({
@@ -107,15 +121,7 @@ const handler = nc({ onError })
       typeOf: "comment",
     });
 
-    const getVotes = await Votes.query()
-      .where("postID", parseInt(postID))
-      .where("commentID", commentID)
-      .where("typeOf", "comment")
-      .sum("value");
-
-    res
-      .status(200)
-      .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
+    res.status(200).end(JSON.stringify({ newVoteSum: comment.likes }));
     //then get new sum of votes
     // const getVotes = await Votes.query()
     // 	.where("postID", postID)
