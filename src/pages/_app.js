@@ -74,6 +74,9 @@ export default function App({
     posts,
   };
 
+  // TO TEST, I PUT USERID = 1 BELOW
+  // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>

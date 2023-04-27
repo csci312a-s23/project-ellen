@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import PostList from "./postsList.js";
 import fetchMock from "fetch-mock-jest";
 import { PostSeedData } from "../../../data/SeedData.json";
-import { act } from "react-dom/test-utils";
 
 describe("postList: postList tests", () => {
   beforeEach(() => {
@@ -14,16 +13,16 @@ describe("postList: postList tests", () => {
   });
 
   test("Smoke test", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
   });
 
   test("When currentFilter is new, should render three posts", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
-    const post1 = await screen.getByText("title1");
+    const post1 = screen.getByText("title1");
     const post2 = screen.getByText("title2");
     const post3 = screen.getByText("title3");
     expect(post1).not.toBeNull();
@@ -32,12 +31,12 @@ describe("postList: postList tests", () => {
   });
 
   test("When currentFilter is hot, should render two posts", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="hot" />)
     );
-    const post1 = await screen.getByText("title1");
+    const post1 = screen.findByText("title1");
     const post2 = screen.queryByText("title2");
-    const post3 = screen.getByText("title3");
+    const post3 = screen.findByText("title3");
     expect(post1).not.toBeNull();
     expect(post2).toBeNull();
     expect(post3).not.toBeNull();
@@ -52,7 +51,7 @@ describe("postList: postList tests", () => {
   });
 
   test("Check to see the posts are correctly sorted by date", async () => {
-    await act(async () =>
+    waitFor(async () =>
       render(<PostList posts={PostSeedData} sortingFilter="new" />)
     );
     const items = await screen.findAllByTestId("post");
