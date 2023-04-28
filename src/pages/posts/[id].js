@@ -13,6 +13,8 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   let canDelete = false;
   const { data: session, status } = useSession({ required: true });
 
+  //additionally confirms in the backend
+  //for conditionally rendering the deletePost button
   if (status === "authenticated") {
     if (!!currentPost && session.user.id === currentPost.posterID) {
       canDelete = true;

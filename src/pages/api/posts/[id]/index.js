@@ -51,12 +51,22 @@ const handler = nc({ onError })
     console.log(req, res);
   })
   .delete(async (req, res) => {
+    const session = await getServerSession(req, res, authOptions);
     const { id } = req.query;
 
     if (!!id) {
-      await Posts.query().deleteById(parseInt(id)).first().throwIfNotFound();
+      const post = await Posts.query()
+        .findById(parseInt(id))
+        .first()
+        .throwIfNotFound();
+
+      if (!!session && session.user.id === post.posterID) {
+        await Posts.query().deleteById(parseInt(id)).first().throwIfNotFound();
+        res.status(200).json({ message: "Post deleted" });
+      } else {
+        res.status(403).json({ message: "Not authorized to delete this post" });
+      }
     }
-    res.status(200).json({ message: "Post deleted" });
   });
 
 export default handler;
