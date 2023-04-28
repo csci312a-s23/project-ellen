@@ -12,9 +12,9 @@ import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 // import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/user/index.js";
-import individualUser_endpoint from "../pages/api/user/[id]/index.js";
-import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
-import userComments_endpoint from "../pages/api/user/[id]/comments.js";
+import individualUser_endpoint from "../pages/api/user/[username]/index.js";
+import userPosts_endpoint from "../pages/api/user/[username]/posts.js";
+import userComments_endpoint from "../pages/api/user/[username]/comments.js";
 
 import { knex } from "../../knex/knex";
 import { getServerSession } from "next-auth/next";

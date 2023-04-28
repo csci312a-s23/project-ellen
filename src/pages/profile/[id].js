@@ -15,20 +15,19 @@ export default function Profile() {
 
   useEffect(() => {
     if (id) {
-      const numberId = parseInt(id);
       const getUserInfo = async () => {
-        const detailsResponse = await fetch(`/api/user/${numberId}`);
+        const detailsResponse = await fetch(`/api/user/${id}`);
         if (detailsResponse.ok) {
           const fetchedUserDetails = await detailsResponse.json();
           updateUser(fetchedUserDetails);
         }
-        const postsResponse = await fetch(`/api/user/${numberId}/posts`);
+        const postsResponse = await fetch(`/api/user/${id}/posts`);
         if (postsResponse.ok) {
           const fetchedUserPosts = await postsResponse.json();
           setUserPosts(fetchedUserPosts);
         }
 
-        const commentsResponse = await fetch(`/api/user/${numberId}/comments`);
+        const commentsResponse = await fetch(`/api/user/${id}/comments`);
         if (commentsResponse.ok) {
           const fetchedUserComments = await commentsResponse.json();
           setUserComments(fetchedUserComments);
@@ -36,7 +35,7 @@ export default function Profile() {
       };
 
       if (
-        (!currentUser || numberId !== parseInt(currentUser.id)) &&
+        (!currentUser || id !== currentUser.username) &&
         router.pathname.includes("profile")
       ) {
         getUserInfo();

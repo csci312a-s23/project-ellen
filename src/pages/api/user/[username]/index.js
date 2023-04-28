@@ -5,18 +5,25 @@ import { authenticated } from "../../../../lib/middleware";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
 
+export const getUserIdFromUsername = async ({ username }) => {
+  const user = await User.query()
+    .findOne("username", username)
+    .throwIfNotFound();
+  return user.id;
+};
+
 const handler = nc({ onError })
   //return user by id
   .get(async (req, res) => {
-    const { id } = req.query;
-
-    const user = await User.query().findById(id).throwIfNotFound();
-
+    const { username } = req.query;
+    const user = await User.query()
+      .findOne("username", username)
+      .throwIfNotFound();
     res.status(200).json(user);
   })
   //update user by id
   .put(authenticated, async (req, res) => {
-    const { id } = req.query;
+    const id = await getUserIdFromUsername(req.query);
     const { body } = req;
 
     //only the user is allowed to update their own profile
