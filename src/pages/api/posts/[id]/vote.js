@@ -35,12 +35,14 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   const delVote = await Votes.query()
     .delete()
     .where("postID", postID)
-    .where("voterID", userID);
+    .where("voterID", userID)
+    .where("typeOf", "post");
 
   // they have not voted before
   if (delVote === 0) {
     // add their vote to total number of votes
     const post = await Posts.query().findById(postID).throwIfNotFound();
+
     post.num_votes++;
     await Posts.query().patchAndFetchById(parseInt(postID), {
       num_votes: post.num_votes,
@@ -52,10 +54,14 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     postID: postID,
     voterID: userID,
     value: value,
+    typeOf: "post",
   });
 
   //then get new sum of votes
-  const getVotes = await Votes.query().where("postID", postID).sum("value");
+  const getVotes = await Votes.query()
+    .where("postID", postID)
+    .where("typeOf", "post")
+    .sum("value");
 
   // console.log(getVotes[0]["sum(`value`)"]);
   res

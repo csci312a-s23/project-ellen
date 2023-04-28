@@ -595,4 +595,107 @@ describe("API tests", () => {
       });
     });
   });
+
+  describe("comment voting tests:", () => {
+    beforeEach(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
+
+    test("new vote increments", async () => {
+      const initialComment = await knex("comments")
+        .where({ postID: "1", id: "1" })
+        .first();
+
+      expect(initialComment.likes).toEqual(2);
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "upvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          // console.log("initresponse", res)
+          const finalComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(finalComment.likes).toEqual(3);
+        },
+      });
+    });
+
+    test("new vote overrides old vote", async () => {
+      const initialComment = await knex("comments")
+        .where({ postID: "1", id: "1" })
+        .first();
+
+      expect(initialComment.likes).toEqual(2);
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "upvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          // console.log("initresponse", res)
+          const intermediateComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(intermediateComment.likes).toEqual(3);
+        },
+      });
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "downvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          const finalComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(finalComment.likes).toEqual(1);
+        },
+      });
+    });
+  });
 });
