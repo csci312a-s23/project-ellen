@@ -17,12 +17,27 @@ export default function ShowPost({ currentPost }) {
     }
   };
 
+  const vote = async (action, commentID) => {
+    await fetch(`/api/posts/${currentPost.id}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: currentPost.id,
+        commentID: commentID,
+        vote: action,
+      }),
+    });
+    getComments();
+  };
+
   useEffect(() => {
     getComments();
   }, [currentPost]);
 
-  const addComment = (comment) => {
-    fetch(`/api/posts/${currentPost.id}/comments`, {
+  const addComment = async (comment) => {
+    await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +57,7 @@ export default function ShowPost({ currentPost }) {
       <h1>Post:</h1>
       {!!currentPost && <IndividualPost post={currentPost} />}
       <h2>Comments:</h2>
-      {!!comments && <CommentsContainer comments={comments} />}
+      {!!comments && <CommentsContainer comments={comments} vote={vote} />}
       <NewComment addComment={addComment} />
     </>
   );
