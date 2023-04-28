@@ -25,24 +25,6 @@ const handler = nc({ onError })
         .where({ postID: parseInt(id) })
         .throwIfNotFound({ message: "No comments associated with this post" });
 
-      // let commentsWVote = comments.map(async comment => {
-
-      // 			for (let i = 0; i < comments.length; i++) {
-      // 				// console.log("comment", comments[i])
-      // 				const commentVal = await Votes.query()
-      // 					.where({ postID: parseInt(id) })
-      // 					.where({ commentID: comments[i].id })
-      // 					.where({ typeOf: "comment" })
-      // 					.sum("value");
-
-      // 				// console.log("value:", commentVal[0]["sum(`value`)"])
-
-      // 				comments[i] = {
-      // 					...comments[i],
-      // 					newVoteSum: commentVal[0]["sum(`value`)"],
-      // 				};
-      // 			}
-
       res.status(200).json(comments);
     } else {
       res.status(404).end(`${id} is not valid`);
@@ -122,11 +104,6 @@ const handler = nc({ onError })
     });
 
     res.status(200).end(JSON.stringify({ newVoteSum: comment.likes }));
-    //then get new sum of votes
-    // const getVotes = await Votes.query()
-    // 	.where("postID", postID)
-    // 	.where("typeOf", "post")
-    // 	.sum("value");
   });
 
 export default handler;
