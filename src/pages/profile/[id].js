@@ -16,18 +16,18 @@ export default function Profile() {
   useEffect(() => {
     if (id) {
       const getUserInfo = async () => {
-        const detailsResponse = await fetch(`/api/user/${id}`);
+        const detailsResponse = await fetch(`/api/users/${id}`);
         if (detailsResponse.ok) {
           const fetchedUserDetails = await detailsResponse.json();
           updateUser(fetchedUserDetails);
         }
-        const postsResponse = await fetch(`/api/user/${id}/posts`);
+        const postsResponse = await fetch(`/api/users/${id}/posts`);
         if (postsResponse.ok) {
           const fetchedUserPosts = await postsResponse.json();
           setUserPosts(fetchedUserPosts);
         }
 
-        const commentsResponse = await fetch(`/api/user/${id}/comments`);
+        const commentsResponse = await fetch(`/api/users/${id}/comments`);
         if (commentsResponse.ok) {
           const fetchedUserComments = await commentsResponse.json();
           setUserComments(fetchedUserComments);

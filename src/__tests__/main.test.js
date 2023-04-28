@@ -38,13 +38,13 @@ describe("General Tests", () => {
     fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);
-    fetchMock.get("/api/user/1", data.UserSeedData[0]);
+    fetchMock.get("/api/users/test1", data.UserSeedData[0]);
     fetchMock.get(
-      "/api/user/1/posts",
+      "/api/users/test1/posts",
       data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
     );
     fetchMock.get(
-      "/api/user/1/comments",
+      "/api/users/test1/comments",
       data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
       )
@@ -165,7 +165,7 @@ describe("General Tests", () => {
     // post list tests
 
     test("all of user's posts are showing", async () => {
-      mockRouter.setCurrentUrl(`/profile/1`);
+      mockRouter.setCurrentUrl(`/profile/test1`);
       const expectedPosts = data.PostSeedData.filter(
         (post) => parseInt(post.posterID) === 1
       );
@@ -176,7 +176,7 @@ describe("General Tests", () => {
     });
 
     test("all of user's comments are showing", async () => {
-      mockRouter.setCurrentUrl(`/profile/1`);
+      mockRouter.setCurrentUrl(`/profile/test1`);
       const expectedComments = data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
       );
