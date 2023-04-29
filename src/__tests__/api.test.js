@@ -368,14 +368,13 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
 
           const response = await res.json();
 
-          expect(response).toHaveProperty("commenterID", "2");
+          expect(response).toHaveProperty("commenterID", "1"); //we expect a one here because the user id based on the session is 1
           expect(response).toHaveProperty("postID", 1);
           expect(response).toHaveProperty("content", "new comment content");
           expect(response).toHaveProperty("created_at");
@@ -436,7 +435,6 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
