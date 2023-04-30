@@ -15,11 +15,25 @@ const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
 jest.mock("next/router", () => require("next-router-mock"));
+// https://github.com/nextauthjs/next-auth/discussions/4185 for help on mocking useSession
+jest.mock("next-auth/react", () => {
+  return {
+    useSession: jest.fn(() => {
+      return {
+        data: {
+          user: {
+            name: "test1",
+          },
+        },
+      };
+    }),
+  };
+});
 
 mockRouter.useParser(
   createDynamicRouteParser([
     // These paths should match those found in the `/pages` folder:
-    "/profile/[id]",
+    "/profile/[username]",
     "/posts/[id]",
     "/posts",
     "/",
@@ -169,6 +183,7 @@ describe("General Tests", () => {
       const expectedPosts = data.PostSeedData.filter(
         (post) => parseInt(post.posterID) === 1
       );
+
       render(<Profile />);
       expect(await screen.findAllByTestId("post")).toHaveLength(
         expectedPosts.length
@@ -186,8 +201,4 @@ describe("General Tests", () => {
       );
     });
   });
-
-  // describe("Profile Page testing", () => {
-
-  // })
 });
