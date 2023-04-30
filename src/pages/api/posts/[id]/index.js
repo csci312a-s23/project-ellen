@@ -19,6 +19,7 @@ const handler = nc({ onError })
 
       const getVotes = await Votes.query()
         .where("postID", parseInt(id))
+        .where("typeOf", "post")
         .sum("value");
 
       let myVote = 0;
@@ -30,6 +31,7 @@ const handler = nc({ onError })
 
         const myVoteRow = await Votes.query()
           .where("postID", parseInt(id))
+          .where("typeOf", "post")
           .where("voterID", userID);
 
         if (myVoteRow.length !== 0) {
