@@ -82,13 +82,44 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   };
 
   return (
-    <>
-      <h1>Post:</h1>
-      {currentPost && <IndividualPost post={currentPost} />}
-      {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
-      <h2>Comments:</h2>
-      {!!comments && <CommentsContainer comments={comments} vote={vote} />}
-      <NewComment addComment={addComment} />
-    </>
+    // <<<<<<< HEAD
+    //     <>
+    //       <h1>Post:</h1>
+    //       {currentPost && <IndividualPost post={currentPost} />}
+    //       {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
+    //       <h2>Comments:</h2>
+    //       {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+    //       <NewComment addComment={addComment} />
+    //     </>
+    // =======
+    <div
+      style={{
+        width: "100vw",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          border: "1px solid black",
+          width: 1000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 10,
+          backgroundColor: "darkgray",
+          borderRadius: 10,
+        }}
+      >
+        <h1>Post:</h1>
+        {!!currentPost && <IndividualPost post={currentPost} />}
+        {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
+        <h2>Comments:</h2>
+        {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+        <NewComment addComment={addComment} />
+      </div>
+    </div>
   );
 }

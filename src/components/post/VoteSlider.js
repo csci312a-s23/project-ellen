@@ -6,7 +6,6 @@ export default function voteSlider({ voteVal, setVote }) {
   });
   return (
     <div>
-      slider
       <Slider
         step={1}
         min={-3}
