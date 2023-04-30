@@ -17,6 +17,7 @@ export default class Comment extends BaseModel {
         postID: { type: "integer" },
         content: { type: "string" },
         created_at: { type: "string" },
+        likes: { type: "integer" },
       },
     };
   }
