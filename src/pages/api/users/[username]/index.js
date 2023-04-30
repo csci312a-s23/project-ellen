@@ -4,13 +4,7 @@ import { onError } from "../../../../lib/middleware";
 import { authenticated } from "../../../../lib/middleware";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
-
-export const getUserIdFromUsername = async ({ username }) => {
-  const user = await User.query()
-    .findOne("username", username)
-    .throwIfNotFound();
-  return user.id;
-};
+import { getUserIdFromUsername } from "../../../../lib/middleware";
 
 const handler = nc({ onError })
   //return user by id

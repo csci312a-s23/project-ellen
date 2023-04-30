@@ -2,6 +2,7 @@ import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
 import CommentsList from "@/components/comment/CommentsContainer";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 export default function Profile() {
@@ -11,23 +12,25 @@ export default function Profile() {
   const [userPosts, setUserPosts] = useState();
   const [userComments, setUserComments] = useState();
 
-  const { id } = router.query;
+  const { username } = router.query;
+
+  const { data: session } = useSession({ required: true });
 
   useEffect(() => {
-    if (id) {
+    if (username && session) {
       const getUserInfo = async () => {
-        const detailsResponse = await fetch(`/api/users/${id}`);
+        const detailsResponse = await fetch(`/api/users/${username}`);
         if (detailsResponse.ok) {
           const fetchedUserDetails = await detailsResponse.json();
           updateUser(fetchedUserDetails);
         }
-        const postsResponse = await fetch(`/api/users/${id}/posts`);
+        const postsResponse = await fetch(`/api/users/${username}/posts`);
         if (postsResponse.ok) {
           const fetchedUserPosts = await postsResponse.json();
           setUserPosts(fetchedUserPosts);
         }
 
-        const commentsResponse = await fetch(`/api/users/${id}/comments`);
+        const commentsResponse = await fetch(`/api/users/${username}/comments`);
         if (commentsResponse.ok) {
           const fetchedUserComments = await commentsResponse.json();
           setUserComments(fetchedUserComments);
@@ -35,8 +38,9 @@ export default function Profile() {
       };
 
       if (
-        (!currentUser || id !== currentUser.username) &&
-        router.pathname.includes("profile")
+        (!currentUser || username !== currentUser.username) &&
+        router.pathname.includes("profile") &&
+        session.user.name === username
       ) {
         getUserInfo();
       }
@@ -45,7 +49,7 @@ export default function Profile() {
       setUserPosts(undefined);
       setUserComments(undefined);
     }
-  }, [id, currentUser, router.pathname]);
+  }, [username, currentUser, router.pathname, session]);
 
   return (
     <div>

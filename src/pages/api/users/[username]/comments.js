@@ -1,7 +1,7 @@
 import nc from "next-connect";
 import { onError } from "../../../../lib/middleware";
 import Comments from "../../../../../models/Comments";
-import { getUserIdFromUsername } from ".";
+import { getUserIdFromUsername } from "../../../../lib/middleware";
 
 const handler = nc({ onError })
   //return this user's posts

@@ -41,7 +41,6 @@ export default function App({
       fetch(`/api/posts/${parseInt(id)}`)
         .then((res) => res.json())
         .then((response) => {
-          // console.log(response)
           setCurrentPostState(response);
         })
         .catch((error) => console.log(error));

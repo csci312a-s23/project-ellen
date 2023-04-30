@@ -1,6 +1,6 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
-import Profile from "@/pages/profile/[id]";
+import Profile from "@/pages/profile/[username]";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
