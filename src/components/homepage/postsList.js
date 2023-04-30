@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Post from "@/components/post/post.js";
 
-function PostList({ posts, sortingFilter }) {
+function PostList({ posts, sortingFilter, refreshPosts }) {
   let filteredPosts;
 
   if (posts) {
@@ -23,11 +23,10 @@ function PostList({ posts, sortingFilter }) {
 
   return (
     <div style={{ width: "100%", margin: "5% 0 5% 0" }}>
-      {/* WE need a post id */}
       {filteredPosts.map((post) => {
         return (
           <div key={post.id} style={{ marginBottom: "2%" }}>
-            <Post postInfo={post} />
+            <Post postInfo={post} refreshPosts={refreshPosts} />
           </div>
         );
       })}
