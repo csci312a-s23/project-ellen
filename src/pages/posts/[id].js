@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 import NewComment from "@/components/comment/NewComment";
-
 export default function ShowPost({ currentPost }) {
   const [comments, setComments] = useState(null);
 
@@ -53,12 +52,32 @@ export default function ShowPost({ currentPost }) {
   };
 
   return (
-    <>
-      <h1>Post:</h1>
-      {!!currentPost && <IndividualPost post={currentPost} />}
-      <h2>Comments:</h2>
-      {!!comments && <CommentsContainer comments={comments} vote={vote} />}
-      <NewComment addComment={addComment} />
-    </>
+    <div
+      style={{
+        width: "100vw",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          border: "1px solid black",
+          width: 1000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 10,
+          backgroundColor: "darkgray",
+          borderRadius: 10,
+        }}
+      >
+        {!!currentPost && <IndividualPost post={currentPost} />}
+        <h2>Comments:</h2>
+        {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+        <NewComment addComment={addComment} />
+      </div>
+    </div>
   );
 }
