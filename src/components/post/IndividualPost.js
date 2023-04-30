@@ -1,4 +1,3 @@
-import Link from "next/link";
 import VoteSlider from "./VoteSlider.js";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
@@ -38,17 +37,30 @@ export default function IndividualPost({ post }) {
   };
 
   return (
-    <Box sx={{ width: 200 }}>
-      <div data-testid="post">
-        <p style={{ color: "blue" }}>
-          <Link href={`/posts/${post.id}`}>{post.title}</Link>
-        </p>
-        <p>{post.content}</p>
-        <p>category: {post.category}</p>
-        <p>created at: {post.created_at}</p>
-        <p>votes: {voteSum}</p>
+    <Box
+      sx={{
+        width: 800,
+        bgcolor: "lightgray",
+        padding: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10,
+        marginTop: 2,
+        marginBottom: 2,
+      }}
+    >
+      {/* <div data-testid="post"> */}
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <p>category: {post.category}</p>
+      <p>created at: {post.created_at}</p>
+      <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />
-      </div>
+      </Box>
+      <p>total votes: {voteSum}</p>
+      {/* </div> */}
     </Box>
   );
 }

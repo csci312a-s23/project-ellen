@@ -12,7 +12,7 @@ const PostContainer = styled("div")({
   marginBottom: "2%",
 });
 
-function PostList({ posts, sortingFilter }) {
+function PostList({ posts, sortingFilter, refreshPosts }) {
   let filteredPosts;
 
   if (posts) {
@@ -37,7 +37,7 @@ function PostList({ posts, sortingFilter }) {
       {filteredPosts.map((post) => {
         return (
           <PostContainer key={post.id}>
-            <Post postInfo={post} />
+            <Post postInfo={post} refreshPosts={refreshPosts} />
           </PostContainer>
         );
       })}

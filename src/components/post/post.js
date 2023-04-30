@@ -14,29 +14,7 @@ const PostContainer = styled("div")({
   alignItems: "center",
 });
 
-export default function Post({ postInfo }) {
-  // return (
-  //   <div data-testid="post">
-  //     <Paper elevation={3} style={postStyle}>
-  //       <div style={{ display: "flex", flexDirection: "row", marginTop: "2%" }}>
-  //         <Link href={`/posts/${postInfo.id}`} style={{ marginLeft: "5%" }}>
-  //           {postInfo.title}
-  //         </Link>
-  //         <p style={{ alignSelf: "center", marginLeft: "5%" }}>
-  //           {postInfo.category}
-  //         </p>
-  //         <p style={{ marginLeft: "auto", marginRight: "2%" }}>
-  //           {postInfo.votes}
-  //         </p>
-  //       </div>
-  //       <p style={{ marginLeft: "10%", marginTop: "3%", marginBottom: "2%" }}>
-  //         {postInfo.content}
-  //       </p>
-  //       <p style={{ marginLeft: "80%", fontSize: "10px" }}>{postInfo.date}</p>
-  //     </Paper>
-  //   </div>
-  // );
-
+export default function Post({ postInfo, refreshPosts }) {
   console.log(postInfo);
 
   return (
@@ -44,7 +22,11 @@ export default function Post({ postInfo }) {
       <Typography position={"absolute"} color={"grey"}>
         {postInfo.category}
       </Typography>
-      <Link href={`/posts/${postInfo.id}`}>
+      <Link
+        href={`/posts/${postInfo.id}`}
+        style={{ marginLeft: "5%" }}
+        {...refreshPosts}
+      >
         <Typography fontSize={"210%"} href={`/posts/${postInfo.id}`} ml={"10%"}>
           {postInfo.title}
         </Typography>
