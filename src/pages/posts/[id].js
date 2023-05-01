@@ -26,7 +26,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
-          console.log("comments Response:", response);
           setComments(response);
         });
     }
@@ -34,7 +33,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
 
   const deletePost = async () => {
     if (!!currentPost) {
-      console.log("Deleting post:", currentPost.id);
       await fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
       }).then(() => {
@@ -62,8 +60,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   useEffect(() => {
     getComments();
   }, [getComments]);
-
-  // }, [currentPost]);
 
   const addComment = async (comment) => {
     await fetch(`/api/posts/${currentPost.id}/comments`, {
