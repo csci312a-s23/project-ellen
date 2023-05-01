@@ -60,7 +60,6 @@ describe("postList: postList tests", () => {
     const dates = items.map(
       (item) => new Date(item.children[0].children[2].innerHTML.slice(12))
     );
-    console.log(dates);
     let sorted = true;
     for (let i = 1; i < dates.length; i++) {
       if (dates[i] > dates[i - 1]) {

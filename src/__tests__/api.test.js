@@ -11,10 +11,10 @@ import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 // import newUser_endpoint from "../pages/api/user/new.js";
-import users_endpoint from "../pages/api/user/index.js";
-import individualUser_endpoint from "../pages/api/user/[id]/index.js";
-import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
-import userComments_endpoint from "../pages/api/user/[id]/comments.js";
+import users_endpoint from "../pages/api/users/index.js";
+import individualUser_endpoint from "../pages/api/users/[username]/index.js";
+import userPosts_endpoint from "../pages/api/users/[username]/posts.js";
+import userComments_endpoint from "../pages/api/users/[username]/comments.js";
 import makeCommentVote_endpoint from "../pages/api/posts/[id]/comments.js";
 
 import { knex } from "../../knex/knex";
@@ -257,12 +257,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id] should return singular user", async () => {
+    test("GET /api/users/[username] should return singular user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/users/1",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test indiv
           const res = await fetch();
@@ -300,7 +300,7 @@ describe("API tests", () => {
     //   });
     // });
 
-    test("PUT /api/users/[id] should return updated user", async () => {
+    test("PUT /api/userss/[username] should return updated user", async () => {
       const updatedUser = {
         username: "updated user",
         email: "updated@newemail.com",
@@ -310,8 +310,8 @@ describe("API tests", () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/user/1",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch({
@@ -328,12 +328,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id]/posts should return all posts by user", async () => {
+    test("GET /api/users/[username]/posts should return all posts by user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: userPosts_endpoint, // NextJS API function to test
-        url: "/api/users/1/posts",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1/posts",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch();
@@ -343,12 +343,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id]/comments should return all comments by user", async () => {
+    test("GET /api/users/[username]/comments should return all comments by user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: userComments_endpoint, // NextJS API function to test
-        url: "/api/users/1/comments",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1/comments",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch();
@@ -404,14 +404,13 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
 
           const response = await res.json();
 
-          expect(response).toHaveProperty("commenterID", "2");
+          expect(response).toHaveProperty("commenterID", "1"); //we expect a one here because the user id based on the session is 1
           expect(response).toHaveProperty("postID", 1);
           expect(response).toHaveProperty("content", "new comment content");
           expect(response).toHaveProperty("created_at");
@@ -472,7 +471,6 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
@@ -571,7 +569,6 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-
           expect(final.num_votes).toBe(11);
         },
       });
@@ -601,7 +598,6 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-
           expect(final.num_votes).toBe(11);
         },
       });
@@ -626,7 +622,6 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-
           expect(final.num_votes).toBe(11);
         },
       });

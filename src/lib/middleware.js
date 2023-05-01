@@ -28,3 +28,10 @@ export async function authenticated(request, response, next) {
     response.status(403).end("You must be signed in to access this endpoint.");
   }
 }
+
+export const getUserIdFromUsername = async ({ username }) => {
+  const user = await User.query()
+    .findOne("username", username)
+    .throwIfNotFound();
+  return user.id;
+};
