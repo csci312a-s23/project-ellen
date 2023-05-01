@@ -10,6 +10,7 @@ import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
 // import { SessionProvider } from "next-auth/react";
+import { waitFor } from "@testing-library/react";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
@@ -91,20 +92,24 @@ describe("General Tests", () => {
   });
 
   describe("Create new Post", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       expect(screen.queryByText("Describe your issue:")).toBeInTheDocument();
     });
   });
 
   describe("Pop up goes away once exit button is hit", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const closeButton = screen.queryByText("×");
       fireEvent.click(closeButton);
@@ -113,10 +118,12 @@ describe("General Tests", () => {
   });
 
   describe("title input is updated when typing in text box", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const titleInput = screen.getByTestId("title-input");
       const test = "new title";
@@ -126,10 +133,12 @@ describe("General Tests", () => {
   });
 
   describe("description input is updated when typing in text box", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const descInput = screen.getByTestId("description-input");
       const test = "new desc";
@@ -139,10 +148,12 @@ describe("General Tests", () => {
   });
 
   describe("category is updated once selected", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const catInput = screen.getByTestId("cat-input");
       const test = "Food";
@@ -152,10 +163,12 @@ describe("General Tests", () => {
   });
 
   describe("anonymous button switches once clicked", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const anonInput = screen.getByTestId("anon-input");
       const firstState = anonInput.checked;
