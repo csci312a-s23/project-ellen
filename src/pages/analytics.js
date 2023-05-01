@@ -78,7 +78,7 @@ function filterDpt(user, filter) {
     if (!passes) {
       value.forEach((element) => {
         // loop through the filter category and see if the user matches any of the specified options
-        if (element === user[idMappings[key]]) {
+        if (element === user[idMappings[key]].toString()) {
           // check if the element belongs to the user
           // element = "2023" or "CSCI" etc.
           passes = true;
@@ -133,26 +133,23 @@ async function formatData(filters) {
     // check if we need to add a new month
     if (
       !pooledDates.includes(
-        `${(currDate.getMonth() + 1).toString() 
-          }/${ 
-          currDate.getFullYear().toString()}`
+        `${(currDate.getMonth() + 1).toString()}/${currDate
+          .getFullYear()
+          .toString()}`
       )
     ) {
       // if we do- add the new month to our dates and linedata
       pooledDates.push(
-        `${(currDate.getMonth() + 1).toString() 
-          }/${ 
-          currDate.getFullYear().toString()}`
+        `${(currDate.getMonth() + 1).toString()}/${currDate
+          .getFullYear()
+          .toString()}`
       );
       pooledLineData.forEach((pld) => pld.push(0));
       monthIdx += 1;
     }
     // for each different filter we want to save the data filtered by that filter to an array in lineData
     filters.forEach((f, fIdx) => {
-      const countPassing = allData["PostSeedData"].reduce((
-        count,
-        dpt
-      ) => {
+      const countPassing = allData["PostSeedData"].reduce((count, dpt) => {
         const user = allData["UserSeedData"].filter(
           (u) => u.id === dpt.posterID
         )[0]; // get the user associated with the post
@@ -161,8 +158,7 @@ async function formatData(filters) {
           (new Date(dpt.created_at).toLocaleDateString() ===
             currDate.toLocaleDateString() && filterDpt(user, f.filters))
         );
-      },
-      0);
+      }, 0);
       console.log(fIdx);
       pooledLineData[fIdx][monthIdx] += countPassing;
     });
