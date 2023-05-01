@@ -4,9 +4,23 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
 
+// import Link from "next/link";
+import Head from "next/head";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider } from "@emotion/react";
+import theme from "@/material/theme";
+import createEmotionCache from "@/material/createEmotionCache";
+import Container from "@mui/material/Container";
+// import Typography from "@mui/material/Typography";
+// import { styled } from "@mui/material/styles";
+
+const clientSideEmotionCache = createEmotionCache();
+
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
+  emotionCache = clientSideEmotionCache,
 }) {
   const [currentPost, setCurrentPostState] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -58,17 +72,31 @@ export default function App({
     refreshPosts,
     posts,
   };
+  // console.log(session);
 
   // TO TEST, I PUT USERID = 1 BELOW
   // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
 
   return (
-    <SessionProvider session={session}>
-      <div>
-        <NavBar />
+    <CacheProvider value={emotionCache}>
+      <Head>
+        <title>Project-Ellen</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
 
-        <Component {...props} />
-      </div>
-    </SessionProvider>
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <main>
+          <SessionProvider session={session}>
+            <NavBar />
+            <Container>
+              <Component {...props} />
+            </Container>
+          </SessionProvider>
+        </main>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }

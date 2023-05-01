@@ -80,6 +80,15 @@ describe("API tests", () => {
   });
 
   describe("Posts API tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeAll(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
     test("GET /api/posts should return all posts", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -206,9 +215,36 @@ describe("API tests", () => {
     //     },
     //   });
     // });
+
+    test("DELETE /api/posts/[id] should delete post", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: individualPost_endpoint, // NextJS API function to test
+        url: "/api/posts/1",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "DELETE",
+          });
+
+          const response = await res.json();
+          expect(response.message).toBe("Post deleted");
+        },
+      });
+    });
   });
 
   describe("User API tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeAll(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
     test("GET /api/users should return all users", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
