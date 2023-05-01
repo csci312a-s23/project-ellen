@@ -26,11 +26,11 @@ export default function NavBar() {
             <Link href="/">StudentDirect</Link>
           </Typography>
 
-          <Button color="inherit">
-            {session && (
+          {session && (
+            <Button color="inherit">
               <Link href={`/profile/${session.user.name}`}>Profile</Link>
-            )}
-          </Button>
+            </Button>
+          )}
           <Button color="inherit">
             <Link href="/post">Post</Link>
           </Button>
