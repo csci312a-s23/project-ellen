@@ -3,6 +3,7 @@
 Student Direct is web application that allows optionally anonymous users to post and interact with comments regarding issues pertaining to college life. Students, faculty, and administrators can all participate. Student Direct provides students with a direct, effortless, and straightforward line of communication to the people positioned to make real changes on campus that can genuinely improve student life.
 
 ![workflow status](https://github.com/csci312a-s23/project-ellen/actions/workflows/node.js.yml/badge.svg)
+![workflow status](https://github.com/csci312a-s23/project-ellen/actions/workflows/deploy.yml/badge.svg)
 
 [Link to application](https://ellen.csci312.dev//)
 
