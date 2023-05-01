@@ -82,19 +82,8 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   };
 
   return (
-    // <<<<<<< HEAD
-    //     <>
-    //       <h1>Post:</h1>
-    //       {currentPost && <IndividualPost post={currentPost} />}
-    //       {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
-    //       <h2>Comments:</h2>
-    //       {!!comments && <CommentsContainer comments={comments} vote={vote} />}
-    //       <NewComment addComment={addComment} />
-    //     </>
-    // =======
     <div
       style={{
-        width: "100vw",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
