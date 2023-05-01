@@ -4,6 +4,8 @@ import Posts from "../../../../../models/Posts";
 import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
+import { authOptions } from "../../auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 const handler = nc({ onError })
   .get(async (req, res) => {
@@ -32,6 +34,7 @@ const handler = nc({ onError })
   })
   .post(authenticated, async (req, res) => {
     // post a new comment to a given post
+    const session = await getServerSession(req, res, authOptions);
     const { id } = req.query;
     const newComment = req.body;
     // we want to automatically assign a new comment ID
@@ -40,7 +43,7 @@ const handler = nc({ onError })
     const comment = await Comments.query().insertAndFetch({
       id: parseInt(maxId[0]["max(`id`)"]) + 1,
       postID: parseInt(id),
-      commenterID: newComment?.commenterID,
+      commenterID: session.user.id,
       content: newComment.content,
 
       likes: 0,

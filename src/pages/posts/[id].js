@@ -26,7 +26,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
-          console.log("comments Response:", response);
           setComments(response);
         });
     }
@@ -34,7 +33,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
 
   const deletePost = async () => {
     if (!!currentPost) {
-      console.log("Deleting post:", currentPost.id);
       await fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
       }).then(() => {
@@ -63,8 +61,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     getComments();
   }, [getComments]);
 
-  // }, [currentPost]);
-
   const addComment = async (comment) => {
     await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "POST",
@@ -82,16 +78,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   };
 
   return (
-    // <<<<<<< HEAD
-    //     <>
-    //       <h1>Post:</h1>
-    //       {currentPost && <IndividualPost post={currentPost} />}
-    //       {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
-    //       <h2>Comments:</h2>
-    //       {!!comments && <CommentsContainer comments={comments} vote={vote} />}
-    //       <NewComment addComment={addComment} />
-    //     </>
-    // =======
     <div
       style={{
         width: "100vw",
