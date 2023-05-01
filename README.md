@@ -4,7 +4,7 @@ Student Direct is web application that allows optionally anonymous users to post
 
 ![workflow status](https://github.com/csci312a-s23/project-ellen/actions/workflows/node.js.yml/badge.svg)
 
-[Link to application](https://student-direct.fly.dev/)
+[Link to application](https://ellen.csci312.dev//)
 
 ## Running the Database
 
