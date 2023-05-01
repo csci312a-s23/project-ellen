@@ -8,16 +8,12 @@ const handler = nc({ onError })
   .get(async (req, res) => {
     const { category } = req.query;
 
-    let posts;
+    const postQuery = Post.query();
 
     if (!!category) {
-      // posts = await knex("posts").where({ category: category });
-      posts = await Post.query()
-        .where({ category: category })
-        .throwIfNotFound();
-    } else {
-      posts = await Post.query();
+      postQuery.where({ category: category }).throwIfNotFound();
     }
+    const posts = await postQuery;
     res.status(200).json(posts);
   })
   .post(authenticated, async (req, res) => {
@@ -25,6 +21,7 @@ const handler = nc({ onError })
 
     if (!body) {
       res.status(500).end("Need Body");
+      return;
     }
 
     const newPost = await Post.query().insertAndFetch({
