@@ -15,7 +15,7 @@ export default function PostCreator({ refresh }) {
   const [checked, setChecked] = useState(false);
   const [category, setCategory] = useState(" ");
 
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession({ required: false });
 
   const options = [
     { label: "Food" },

@@ -11,7 +11,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   const router = useRouter();
 
   let canDelete = false;
-  const { data: session, status } = useSession({ required: true });
+  const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
