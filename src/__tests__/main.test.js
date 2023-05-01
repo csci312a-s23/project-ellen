@@ -32,21 +32,6 @@ jest.mock("next-auth/react", () => {
   };
 });
 
-jest.mock("next-auth/react", () => {
-  const originalModule = jest.requireActual("next-auth/react");
-  const mockSession = {
-    expires: new Date(Date.now() + 2 * 86400).toISOString(),
-    user: { username: "Testing" },
-  };
-  return {
-    __esModule: true,
-    ...originalModule,
-    useSession: jest.fn(() => {
-      return { data: mockSession, status: "authenticated" }; // return type is [] in v3 but changed to {} in v4
-    }),
-  };
-});
-
 mockRouter.useParser(
   createDynamicRouteParser([
     // These paths should match those found in the `/pages` folder:
@@ -66,15 +51,6 @@ describe("General Tests", () => {
   });
 
   beforeEach(() => {
-    // getServerSession.mockResolvedValue({
-    //   user: {
-    //     email: "test@middlebury.edu",
-    //     id: "1",
-    //     image: "",
-    //     name: "Jest Test",
-    //   },
-    // });
-
     fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);

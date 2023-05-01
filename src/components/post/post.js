@@ -15,8 +15,6 @@ const PostContainer = styled("div")({
 });
 
 export default function Post({ postInfo, refreshPosts }) {
-  console.log(postInfo);
-
   return (
     <PostContainer data-testid="post">
       <Typography position={"absolute"} color={"grey"}>
