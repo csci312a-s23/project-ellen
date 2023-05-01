@@ -1,5 +1,16 @@
 import PropTypes from "prop-types";
 import Post from "@/components/post/post.js";
+import { styled } from "@mui/material/styles";
+
+const Container = styled("div")({
+  width: "150%",
+  margin: "5% 0 5% 0",
+  // align: "center",
+});
+
+const PostContainer = styled("div")({
+  marginBottom: "2%",
+});
 
 function PostList({ posts, sortingFilter, refreshPosts }) {
   let filteredPosts;
@@ -22,15 +33,15 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
   });
 
   return (
-    <div style={{ width: "100%", margin: "5% 0 5% 0" }}>
+    <Container>
       {filteredPosts.map((post) => {
         return (
-          <div key={post.id} style={{ marginBottom: "2%" }}>
+          <PostContainer key={post.id}>
             <Post postInfo={post} refreshPosts={refreshPosts} />
-          </div>
+          </PostContainer>
         );
       })}
-    </div>
+    </Container>
   );
 }
 

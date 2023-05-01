@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import styles from "./PostCreator.module.css";
 import ReactSwitch from "react-switch";
-import Button from "@mui/material/Button";
+//import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
 import { useSession } from "next-auth/react";
 
@@ -52,15 +54,15 @@ export default function PostCreator({ refresh }) {
 
   return (
     <div>
-      <div style={{ margin: "5%" }}>
-        <Button
-          variant="outlined"
-          type="button"
-          className={styles.openCreator}
+      <div>
+        <Fab
+          color="primary"
+          aria-label="add"
+          className="add-button"
           onClick={() => setOpen((o) => !o)}
         >
-          New Post
-        </Button>
+          <AddIcon />
+        </Fab>
       </div>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className={styles.modal}>
