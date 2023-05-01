@@ -9,6 +9,7 @@ import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
+import { useSession } from "next-auth/react";
 // import { SessionProvider } from "next-auth/react";
 import { waitFor } from "@testing-library/react";
 
@@ -18,19 +19,9 @@ const data = JSON.parse(contents);
 
 jest.mock("next/router", () => require("next-router-mock"));
 // https://github.com/nextauthjs/next-auth/discussions/4185 for help on mocking useSession
-jest.mock("next-auth/react", () => {
-  return {
-    useSession: jest.fn(() => {
-      return {
-        data: {
-          user: {
-            name: "test1",
-          },
-        },
-      };
-    }),
-  };
-});
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(),
+}));
 
 mockRouter.useParser(
   createDynamicRouteParser([
@@ -73,6 +64,15 @@ describe("General Tests", () => {
   });
   beforeAll(() => {
     mockRouter.setCurrentUrl("/");
+    useSession.mockImplementation(() => {
+      return {
+        data: {
+          user: {
+            name: "test1",
+          },
+        },
+      };
+    });
   });
 
   describe("End-to-end testing", () => {
@@ -213,6 +213,30 @@ describe("General Tests", () => {
       expect(await screen.findAllByTestId("comment")).toHaveLength(
         expectedComments.length
       );
+    });
+
+    test("a signed in user can view their own profile", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+      render(<Profile />);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
+    });
+
+    test("a signed in user can't view another user's profile", async () => {
+      mockRouter.setCurrentUrl(`/profile/test2`);
+      render(<Profile />);
+      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+    });
+
+    test("a user who isn't signed in can't view another user's profile", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: undefined,
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test1`);
+      render(<Profile />);
+      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
     });
   });
 });
