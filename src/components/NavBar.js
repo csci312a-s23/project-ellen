@@ -27,7 +27,9 @@ export default function NavBar() {
           </Typography>
 
           <Button color="inherit">
-            <Link href={`/profile/${session.user.name}`}>Profile</Link>
+            {session && (
+              <Link href={`/profile/${session.user.name}`}>Profile</Link>
+            )}
           </Button>
           <Button color="inherit">
             <Link href="/post">Post</Link>
