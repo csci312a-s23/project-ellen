@@ -4,6 +4,7 @@ import CommentsList from "@/components/comment/CommentsContainer";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { Button } from "@mui/material";
 
 export default function Profile() {
   const router = useRouter();
@@ -54,6 +55,21 @@ export default function Profile() {
   return (
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => router.push(`/profile/${username}/edit`)}
+        >
+          Edit
+        </Button>
+      </div>
       {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
       {userComments && <CommentsList comments={userComments} />}
     </div>
