@@ -1,11 +1,27 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
-import NewComment from "@/components/comment/NewComment";
-export default function ShowPost({ currentPost }) {
-  const [comments, setComments] = useState(null);
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-  const getComments = () => {
+import NewComment from "@/components/comment/NewComment";
+
+export default function ShowPost({ currentPost, refreshPosts }) {
+  const [comments, setComments] = useState(null);
+  const router = useRouter();
+
+  let canDelete = false;
+  const { data: session, status } = useSession({ required: true });
+
+  //additionally confirms in the backend
+  //for conditionally rendering the deletePost button
+  if (status === "authenticated") {
+    if (!!currentPost && session.user.id === currentPost.posterID) {
+      canDelete = true;
+    }
+  }
+
+  const getComments = useCallback(() => {
     if (!!currentPost) {
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
@@ -13,6 +29,18 @@ export default function ShowPost({ currentPost }) {
           console.log("comments Response:", response);
           setComments(response);
         });
+    }
+  }, [currentPost]);
+
+  const deletePost = async () => {
+    if (!!currentPost) {
+      console.log("Deleting post:", currentPost.id);
+      await fetch(`/api/posts/${currentPost.id}`, {
+        method: "DELETE",
+      }).then(() => {
+        router.push("/");
+        refreshPosts();
+      });
     }
   };
 
@@ -33,7 +61,9 @@ export default function ShowPost({ currentPost }) {
 
   useEffect(() => {
     getComments();
-  }, [currentPost]);
+  }, [getComments]);
+
+  // }, [currentPost]);
 
   const addComment = async (comment) => {
     await fetch(`/api/posts/${currentPost.id}/comments`, {
@@ -52,6 +82,16 @@ export default function ShowPost({ currentPost }) {
   };
 
   return (
+    // <<<<<<< HEAD
+    //     <>
+    //       <h1>Post:</h1>
+    //       {currentPost && <IndividualPost post={currentPost} />}
+    //       {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
+    //       <h2>Comments:</h2>
+    //       {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+    //       <NewComment addComment={addComment} />
+    //     </>
+    // =======
     <div
       style={{
         width: "100vw",
@@ -73,7 +113,9 @@ export default function ShowPost({ currentPost }) {
           borderRadius: 10,
         }}
       >
+        <h1>Post:</h1>
         {!!currentPost && <IndividualPost post={currentPost} />}
+        {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
         <h2>Comments:</h2>
         {!!comments && <CommentsContainer comments={comments} vote={vote} />}
         <NewComment addComment={addComment} />
