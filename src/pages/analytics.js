@@ -97,7 +97,7 @@ async function formatData(filters) {
   // also- add a pooling param
   // Filtering all the data (working)
   const allData = await data;
-  const currDate = new Date("2022-09-01"); // date of the first post
+  const currDate = new Date("2022-08-01"); // date of the first post
 
   /*
     let dates = []
@@ -122,8 +122,8 @@ async function formatData(filters) {
 
   // Pooling the data- i.e. monthly
 
-  const pooledDates = [];
-  const pooledLineData = [];
+  let pooledDates = [];
+  let pooledLineData = [];
   for (let i = 0; i < filters.length; i++) {
     pooledLineData.push([]);
   } // theres definitely a better way to do this but this is working
@@ -164,8 +164,10 @@ async function formatData(filters) {
     });
     currDate.setDate(currDate.getDate() + 1);
   }
-  console.log(pooledDates);
-  console.log(pooledLineData);
+
+  // removing the first few elements now just to make it look better- can debug later
+  pooledDates = pooledDates.slice(2);
+  pooledLineData = pooledLineData.map((pld) => pld.slice(2));
 
   return [
     pooledDates,
@@ -424,13 +426,13 @@ function LineChart({ categories, compare, setCompare }) {
           date: { locale: enGB },
           type: "time",
           //distribution: "linear",
-          time: {
+          /*time: {
             //parser: "MM-dd-year",
-            displayFormats: {
+            /*displayFormats: {
               quarter: "MMM YYYY",
             },
-            unit: "month",
-          },
+            //unit: "month",
+          },*/
           title: {
             display: true,
             text: "Date",
