@@ -47,12 +47,14 @@ export const authOptions = {
           });
         }
         // Add user id to the token
+        token.name = localUser.username;
         token.id = localUser.id;
       }
       return token;
     },
     async session({ session, token }) {
       // Add user id to the session
+      session.user.name = token.name;
       session.user.id = token.id;
       return session;
     },
