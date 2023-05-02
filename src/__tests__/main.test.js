@@ -1,6 +1,6 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
-import Profile from "@/pages/profile/[id]";
+import Profile from "@/pages/profile/[username]";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -9,17 +9,24 @@ import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
+import { useSession } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
+import { waitFor } from "@testing-library/react";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
 
 jest.mock("next/router", () => require("next-router-mock"));
+// https://github.com/nextauthjs/next-auth/discussions/4185 for help on mocking useSession
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(),
+}));
 
 mockRouter.useParser(
   createDynamicRouteParser([
     // These paths should match those found in the `/pages` folder:
-    "/profile/[id]",
+    "/profile/[username]",
     "/posts/[id]",
     "/posts",
     "/",
@@ -38,13 +45,13 @@ describe("General Tests", () => {
     fetchMock.get("/api/posts/1/comments", [data.CommentSeedData[0]]);
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);
-    fetchMock.get("/api/user/1", data.UserSeedData[0]);
+    fetchMock.get("/api/users/test1", data.UserSeedData[0]);
     fetchMock.get(
-      "/api/user/1/posts",
+      "/api/users/test1/posts",
       data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
     );
     fetchMock.get(
-      "/api/user/1/comments",
+      "/api/users/test1/comments",
       data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
       )
@@ -57,6 +64,15 @@ describe("General Tests", () => {
   });
   beforeAll(() => {
     mockRouter.setCurrentUrl("/");
+    useSession.mockImplementation(() => {
+      return {
+        data: {
+          user: {
+            name: "test1",
+          },
+        },
+      };
+    });
   });
 
   describe("End-to-end testing", () => {
@@ -66,20 +82,24 @@ describe("General Tests", () => {
   });
 
   describe("Create new Post", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       expect(screen.queryByText("Describe your issue:")).toBeInTheDocument();
     });
   });
 
   describe("Pop up goes away once exit button is hit", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const closeButton = screen.queryByText("×");
       fireEvent.click(closeButton);
@@ -88,10 +108,12 @@ describe("General Tests", () => {
   });
 
   describe("title input is updated when typing in text box", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const titleInput = screen.getByTestId("title-input");
       const test = "new title";
@@ -101,10 +123,12 @@ describe("General Tests", () => {
   });
 
   describe("description input is updated when typing in text box", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const descInput = screen.getByTestId("description-input");
       const test = "new desc";
@@ -114,10 +138,12 @@ describe("General Tests", () => {
   });
 
   describe("category is updated once selected", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const catInput = screen.getByTestId("cat-input");
       const test = "Food";
@@ -127,10 +153,12 @@ describe("General Tests", () => {
   });
 
   describe("anonymous button switches once clicked", () => {
-    test("Render index.js component", () => {
+    test("Render index.js component", async () => {
       render(<PostCreator />);
-      expect(screen.queryByText("New Post")).toBeInTheDocument();
-      const newPostButton = screen.queryByText("New Post");
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
+      });
+      const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const anonInput = screen.getByTestId("anon-input");
       const firstState = anonInput.checked;
@@ -165,10 +193,11 @@ describe("General Tests", () => {
     // post list tests
 
     test("all of user's posts are showing", async () => {
-      mockRouter.setCurrentUrl(`/profile/1`);
+      mockRouter.setCurrentUrl(`/profile/test1`);
       const expectedPosts = data.PostSeedData.filter(
         (post) => parseInt(post.posterID) === 1
       );
+
       render(<Profile />);
       expect(await screen.findAllByTestId("post")).toHaveLength(
         expectedPosts.length
@@ -176,7 +205,7 @@ describe("General Tests", () => {
     });
 
     test("all of user's comments are showing", async () => {
-      mockRouter.setCurrentUrl(`/profile/1`);
+      mockRouter.setCurrentUrl(`/profile/test1`);
       const expectedComments = data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
       );
@@ -184,6 +213,30 @@ describe("General Tests", () => {
       expect(await screen.findAllByTestId("comment")).toHaveLength(
         expectedComments.length
       );
+    });
+
+    test("a signed in user can view their own profile", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+      render(<Profile />);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
+    });
+
+    test("a signed in user can't view another user's profile", async () => {
+      mockRouter.setCurrentUrl(`/profile/test2`);
+      render(<Profile />);
+      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+    });
+
+    test("a user who isn't signed in can't view another user's profile", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: undefined,
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test1`);
+      render(<Profile />);
+      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
     });
   });
 });

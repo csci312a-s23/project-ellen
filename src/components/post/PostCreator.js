@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import styles from "./PostCreator.module.css";
 import ReactSwitch from "react-switch";
-import Button from "@mui/material/Button";
+//import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+
+import { useSession } from "next-auth/react";
 
 export default function PostCreator({ refresh }) {
   const [open, setOpen] = useState(false);
@@ -10,10 +14,10 @@ export default function PostCreator({ refresh }) {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // eslint-disable-next-line no-unused-vars
-  const [myID, setMyID] = useState("");
   const [checked, setChecked] = useState(false);
   const [category, setCategory] = useState(" ");
+
+  const { data: session } = useSession({ required: false });
 
   const options = [
     { label: "Food" },
@@ -28,9 +32,9 @@ export default function PostCreator({ refresh }) {
     setChecked(val);
   };
 
-  const submitPost = () => {
+  const submitPost = async () => {
     closeModal();
-    fetch("/api/posts", {
+    await fetch("/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +42,7 @@ export default function PostCreator({ refresh }) {
       body: JSON.stringify({
         title: title,
         content: description,
-        posterID: checked ? "0000" : myID,
+        posterID: checked ? "0000" : session.user.id,
         category: category,
       }),
     });
@@ -50,15 +54,15 @@ export default function PostCreator({ refresh }) {
 
   return (
     <div>
-      <div style={{ margin: "5%" }}>
-        <Button
-          variant="outlined"
-          type="button"
-          className={styles.openCreator}
+      <div>
+        <Fab
+          color="primary"
+          aria-label="add"
+          className="add-button"
           onClick={() => setOpen((o) => !o)}
         >
-          New Post
-        </Button>
+          <AddIcon />
+        </Fab>
       </div>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className={styles.modal}>

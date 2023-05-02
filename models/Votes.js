@@ -15,7 +15,9 @@ export default class Vote extends BaseModel {
         id: { type: "integer" },
         voterID: { type: "string" },
         postID: { type: "integer" },
+        commentID: { type: "integer" },
         value: { type: "integer" },
+        typeOf: { type: "string" },
       },
     };
   }
@@ -23,6 +25,7 @@ export default class Vote extends BaseModel {
   static get relationMappings() {
     const User = require("./Users");
     const Post = require("./Posts");
+    // const Comment = require("./Comments.js");
 
     return {
       poster: {
@@ -39,6 +42,14 @@ export default class Vote extends BaseModel {
         join: {
           from: "votes.postID",
           to: "posts.id",
+        },
+      },
+      comments: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Post,
+        join: {
+          from: "votes.commentID",
+          to: "comments.id",
         },
       },
     };

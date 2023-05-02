@@ -11,10 +11,11 @@ import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
 // import newUser_endpoint from "../pages/api/user/new.js";
-import users_endpoint from "../pages/api/user/index.js";
-import individualUser_endpoint from "../pages/api/user/[id]/index.js";
-import userPosts_endpoint from "../pages/api/user/[id]/posts.js";
-import userComments_endpoint from "../pages/api/user/[id]/comments.js";
+import users_endpoint from "../pages/api/users/index.js";
+import individualUser_endpoint from "../pages/api/users/[username]/index.js";
+import userPosts_endpoint from "../pages/api/users/[username]/posts.js";
+import userComments_endpoint from "../pages/api/users/[username]/comments.js";
+import makeCommentVote_endpoint from "../pages/api/posts/[id]/comments.js";
 
 import { knex } from "../../knex/knex";
 import { getServerSession } from "next-auth/next";
@@ -79,6 +80,15 @@ describe("API tests", () => {
   });
 
   describe("Posts API tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeAll(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
     test("GET /api/posts should return all posts", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -205,9 +215,36 @@ describe("API tests", () => {
     //     },
     //   });
     // });
+
+    test("DELETE /api/posts/[id] should delete post", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: individualPost_endpoint, // NextJS API function to test
+        url: "/api/posts/1",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "DELETE",
+          });
+
+          const response = await res.json();
+          expect(response.message).toBe("Post deleted");
+        },
+      });
+    });
   });
 
   describe("User API tests", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeAll(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
     test("GET /api/users should return all users", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -220,12 +257,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id] should return singular user", async () => {
+    test("GET /api/users/[username] should return singular user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/users/1",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test indiv
           const res = await fetch();
@@ -263,7 +300,7 @@ describe("API tests", () => {
     //   });
     // });
 
-    test("PUT /api/users/[id] should return updated user", async () => {
+    test("PUT /api/userss/[username] should return updated user", async () => {
       const updatedUser = {
         username: "updated user",
         email: "updated@newemail.com",
@@ -273,8 +310,8 @@ describe("API tests", () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualUser_endpoint, // NextJS API function to test
-        url: "/api/user/1",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch({
@@ -291,12 +328,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id]/posts should return all posts by user", async () => {
+    test("GET /api/users/[username]/posts should return all posts by user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: userPosts_endpoint, // NextJS API function to test
-        url: "/api/users/1/posts",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1/posts",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch();
@@ -306,12 +343,12 @@ describe("API tests", () => {
       });
     });
 
-    test("GET /api/users/[id]/comments should return all comments by user", async () => {
+    test("GET /api/users/[username]/comments should return all comments by user", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: userComments_endpoint, // NextJS API function to test
-        url: "/api/users/1/comments",
-        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        url: "/api/users/test1/comments",
+        paramsPatcher: (params) => (params.username = "test1"), // Testing dynamic routes requires patcher
         test: async ({ fetch }) => {
           // Test endpoint with mock fetch
           const res = await fetch();
@@ -367,14 +404,13 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
 
           const response = await res.json();
 
-          expect(response).toHaveProperty("commenterID", "2");
+          expect(response).toHaveProperty("commenterID", "1"); //we expect a one here because the user id based on the session is 1
           expect(response).toHaveProperty("postID", 1);
           expect(response).toHaveProperty("content", "new comment content");
           expect(response).toHaveProperty("created_at");
@@ -435,7 +471,6 @@ describe("API tests", () => {
               "content-type": "application/json", // Must use correct content type
             },
             body: JSON.stringify({
-              commenterID: "2",
               content: "new comment content",
             }),
           });
@@ -534,7 +569,6 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
           expect(final.num_votes).toBe(11);
         },
       });
@@ -564,7 +598,6 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
           expect(final.num_votes).toBe(11);
         },
       });
@@ -589,8 +622,110 @@ describe("API tests", () => {
           });
 
           const final = await knex("posts").where({ id: "1" }).first();
-          console.log("final");
           expect(final.num_votes).toBe(11);
+        },
+      });
+    });
+  });
+
+  describe("comment voting tests:", () => {
+    beforeEach(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
+
+    test("new vote increments", async () => {
+      const initialComment = await knex("comments")
+        .where({ postID: "1", id: "1" })
+        .first();
+
+      expect(initialComment.likes).toEqual(2);
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "upvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          // console.log("initresponse", res)
+          const finalComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(finalComment.likes).toEqual(3);
+        },
+      });
+    });
+
+    test("new vote overrides old vote", async () => {
+      const initialComment = await knex("comments")
+        .where({ postID: "1", id: "1" })
+        .first();
+
+      expect(initialComment.likes).toEqual(2);
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "upvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          // console.log("initresponse", res)
+          const intermediateComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(intermediateComment.likes).toEqual(3);
+        },
+      });
+
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: makeCommentVote_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        test: async ({ fetch }) => {
+          await fetch({
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json", // Must use correct content type
+            },
+            body: JSON.stringify({
+              vote: "downvote",
+              postID: 1,
+              commentID: 1,
+            }),
+          });
+
+          const finalComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(finalComment.likes).toEqual(1);
         },
       });
     });

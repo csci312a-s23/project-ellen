@@ -20,10 +20,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/cache": "^11.10.7",
+    "@emotion/react": "^11.10.8",
+    "@emotion/server": "^11.10.0",
+    "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.12.1",
+    "@mui/material": "^5.12.2",
     "ajv-formats": "^2.1.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^2.30.0",
