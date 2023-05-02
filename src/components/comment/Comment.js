@@ -4,23 +4,23 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function Comment({ data, vote }) {
   return (
-    <Box
-      sx={{
-        width: 700,
-        bgcolor: "lightgray",
-        padding: 2,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        // justifyContent: "center",
-        borderRadius: 10,
-        padding: 2,
-        marginTop: 2,
-        marginBottom: 2,
-      }}
-    >
-      <div data-testid="comment">
-        <Box sx={{ width: "70%", paddingLeft: 2 }}>
+    <div data-testid="comment">
+      <Box
+        sx={{
+          width: 700,
+          bgcolor: "lightgray",
+          padding: 2,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          // justifyContent: "center",
+          borderRadius: 10,
+          padding: 2,
+          marginTop: 2,
+          marginBottom: 2,
+        }}
+      >
+        <Box sx={{ width: 500, paddingLeft: 2 }}>
           <div>{data.content}</div>
         </Box>
 
@@ -47,7 +47,7 @@ export default function Comment({ data, vote }) {
             <KeyboardArrowDownIcon />{" "}
           </div>
         </Box>
-      </div>
-    </Box>
+      </Box>
+    </div>
   );
 }

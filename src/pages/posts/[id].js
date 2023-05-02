@@ -80,7 +80,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   return (
     <div
       style={{
-        width: "100vw",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
