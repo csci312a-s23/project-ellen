@@ -21,9 +21,9 @@ exports.down = function (knex) {
   // Remove foreign keys from posts table and comments table
   return knex.schema
     .alterTable("posts", (table) => {
-      table.dropForeign("userID");
+      table.dropForeign("posterID");
     })
     .alterTable("comments", (table) => {
-      table.dropForeign("userID");
+      table.dropForeign("commenterID");
     });
 };
