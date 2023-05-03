@@ -32,10 +32,12 @@ export const authOptions = {
           if (!info) {
             throw new Error("User not found in directory");
           }
+          //get username from email
+          const username = user.email.split("@")[0]; //This doesn't have any safety checks, but we're relying on Midd not putting any funky emails in the directory
           localUser = await User.query().insertAndFetch({
             id: info.id,
             googleID: user.id,
-            username: user.name,
+            username: username,
             email: user.email,
             firstName: info.firstName,
             lastName: info.lastName,
@@ -45,12 +47,14 @@ export const authOptions = {
           });
         }
         // Add user id to the token
+        token.name = localUser.username;
         token.id = localUser.id;
       }
       return token;
     },
     async session({ session, token }) {
       // Add user id to the session
+      session.user.name = token.name;
       session.user.id = token.id;
       return session;
     },
