@@ -25,14 +25,11 @@ const handler = nc({ onError })
       let myVote = 0;
 
       if (session) {
-        const user = await Users.query()
-          .findById(session.user.id)
-          .throwIfNotFound();
 
         const myVoteRow = await Votes.query()
           .where("postID", parseInt(id))
           .where("typeOf", "post")
-          .where("voterID", user.id);
+          .where("voterID", session.user.id);
 
         if (myVoteRow.length !== 0) {
           myVote = myVoteRow[0].value;
