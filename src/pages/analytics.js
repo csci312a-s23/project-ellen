@@ -71,6 +71,10 @@ function filterDpt(user, filter) {
     majors: "major",
   };
 
+  // then add: comments / votes support
+
+  // filtering by user information
+  // run checks through each key of the filter, make sure the user possesses at least one property as specified
   for (const [key, value] of Object.entries(filter)) {
     // iterate through the filter object: key = classes, majors, etc.
     let passes = value.length === 0; // if that filter category is empty, let it pass
@@ -90,10 +94,10 @@ function filterDpt(user, filter) {
       }
     }
   }
-  // now just run checks through each key of the filter, make sure the user possesses at least one property as specified
+
   return true;
 }
-async function formatData(filters) {
+async function formatData(filters, categoryFilter) {
   // also- add a pooling param
   // Filtering all the data (working)
   const allData = await data;
@@ -122,15 +126,16 @@ async function formatData(filters) {
 
   // Pooling the data- i.e. monthly
 
-  let pooledDates = [];
+  const pooledDates = [];
   let pooledLineData = [];
   for (let i = 0; i < filters.length; i++) {
     pooledLineData.push([]);
   } // theres definitely a better way to do this but this is working
   let monthIdx = 0;
 
+  // iterate by date
   while (currDate.toLocaleDateString() !== new Date().toLocaleDateString()) {
-    // check if we need to add a new month
+    // check if we need to increment the month
     if (
       !pooledDates.includes(
         `${(currDate.getMonth() + 1).toString()}/${currDate
@@ -147,27 +152,79 @@ async function formatData(filters) {
       pooledLineData.forEach((pld) => pld.push(0));
       monthIdx += 1;
     }
+
     // for each different filter we want to save the data filtered by that filter to an array in lineData
     filters.forEach((f, fIdx) => {
-      const countPassing = allData["PostSeedData"].reduce((count, dpt) => {
+      // get activity for posts on that day
+      let countPassing = allData["PostSeedData"].reduce((count, post) => {
         const user = allData["UserSeedData"].filter(
-          (u) => u.id === dpt.posterID
+          (u) => u.id === post.posterID
         )[0]; // get the user associated with the post
+
         return (
           count +
-          (new Date(dpt.created_at).toLocaleDateString() ===
-            currDate.toLocaleDateString() && filterDpt(user, f.filters))
+          (new Date(post.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() &&
+            filterDpt(user, f.filters) &&
+            post.category === categoryFilter)
         );
       }, 0);
-      console.log(fIdx);
+      // get activity for comments on that day
+      countPassing += allData["CommentSeedData"].reduce((count, comment) => {
+        const user = allData["UserSeedData"].filter(
+          (u) => u.id === comment.commenterID
+        )[0]; // get the user associated with the comment
+        const post = allData["PostSeedData"].filter(
+          (p) => p.id === comment.postID
+        )[0]; // get the post associated with the comment
+
+        return (
+          count +
+          (new Date(comment.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() &&
+            filterDpt(user, f.filters) &&
+            post.category === categoryFilter) /
+            2
+        );
+      }, 0);
+
+      // get activity for votes on that day -- works.. but is very slow for directly accessing the JSON seed file
+
+      /*
+      countPassing += allData["VoteSeedData"].reduce((count, vote) => {
+
+        const user = allData["UserSeedData"].filter(
+          (u) => u.id === vote.voterID
+        )[0]; // get the user associated with the comment
+        const post = allData["PostSeedData"].filter(
+          (p) => p.id === vote.postID
+        )[0]; // get the post associated with the comment
+
+        return (
+          count +
+          (new Date(vote.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() && filterDpt(user, f.filters) && post.category === categoryFilter)/10
+        );
+      }, 0);
+      */
+
       pooledLineData[fIdx][monthIdx] += countPassing;
     });
     currDate.setDate(currDate.getDate() + 1);
   }
 
+  console.log(pooledLineData);
+
   // removing the first few elements now just to make it look better- can debug later
-  pooledDates = pooledDates.slice(2);
   pooledLineData = pooledLineData.map((pld) => pld.slice(2));
+
+  // normalizing the line data
+  const normFactorSums = pooledLineData.map((line) =>
+    line.reduce((a, b) => a + b, 0)
+  );
+  pooledLineData = pooledLineData.map((line, i) =>
+    line.map((datapoint) => (datapoint / normFactorSums[i]) * 100)
+  );
 
   return [
     pooledDates,
@@ -181,7 +238,6 @@ async function formatData(filters) {
     }),
   ];
 }
-
 function AnalyticsDisplay() {
   const controlPanelWidth = 25; // %
   // Class, Athlete, 1st Gen, Gender, ...
@@ -407,10 +463,10 @@ function LineChart({ categories, compare, setCompare }) {
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     (async () => {
-      const updated = await formatData(categories, "monthly");
+      const updated = await formatData(categories, compare);
       setLineData(updated);
     })();
-  }, [categories]);
+  }, [categories, compare]);
 
   const chartData = {
     labels: lineData[0],
