@@ -57,6 +57,7 @@ export default function IndividualPost({ post }) {
       <h1>{post.title}</h1>
       <p>{post.content}</p>
       <p>category: {post.category}</p>
+      <p>by: {post.username}</p>
       <p>created at: {post.created_at}</p>
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />

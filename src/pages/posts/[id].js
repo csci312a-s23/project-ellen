@@ -26,6 +26,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       fetch(`/api/posts/${currentPost.id}/comments`)
         .then((res) => res.json())
         .then((response) => {
+          console.log("comments:", response);
           setComments(response);
         });
     }

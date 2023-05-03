@@ -1,6 +1,7 @@
 import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
+import Users from "../../../../../models/Users";
 import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
@@ -25,8 +26,21 @@ const handler = nc({ onError })
       // if the post exists- fetch the comments
       const comments = await Comments.query()
         .where({ postID: parseInt(id) })
+        // .withGraphFetched("poster")
         .throwIfNotFound({ message: "No comments associated with this post" });
 
+      //
+      console.log("comments", comments);
+      console.log("comment", comments[0]);
+      for (let i = 0; i < comments.length; i++) {
+        const user = await Users.query()
+          .where("id", comments[i].commenterID)
+          .select("username")
+          .first();
+
+        comments[i].username = user.username;
+        console.log("user", user);
+      }
       res.status(200).json(comments);
     } else {
       res.status(404).end(`${id} is not valid`);
