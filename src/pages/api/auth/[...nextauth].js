@@ -22,7 +22,7 @@ export const authOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        let localUser = await User.query().findOne("googleId", user.id);
+        let localUser = await User.query().findOne("googleID", user.id);
         if (!localUser) {
           // Create new user record in the database
           //gather user info from midd directory
