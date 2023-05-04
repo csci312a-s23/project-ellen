@@ -54,7 +54,7 @@ export default function PostCreator({ refresh }) {
 
   return (
     <div>
-      <div>
+      <div style={{ position: "fixed", bottom: 20, left: 20 }}>
         <Fab
           color="primary"
           aria-label="add"
