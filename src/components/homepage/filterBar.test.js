@@ -16,7 +16,7 @@ describe("filterBar: filterBar tests", () => {
   test("FilterBar correctly renders hot,new,recent buttons", () => {
     const { getAllByRole } = render(<FilterBar />);
     const buttons = getAllByRole("button");
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
   });
 
   test("Current button is disabled when selected", () => {
@@ -32,5 +32,30 @@ describe("filterBar: filterBar tests", () => {
     const currentButton = getByText("Hot");
     fireEvent.click(currentButton);
     expect(handler).toHaveBeenCalledWith("hot");
+  });
+
+  test("menu opens when category button clicked", () => {
+    const { getByRole } = render(<FilterBar />);
+    //"" is "category", just with conditional rendering it is funky
+    const categoryButton = getByRole("button", { name: "" });
+    fireEvent.click(categoryButton);
+    const menu = getByRole("menu", { name: "" });
+    expect(menu).toBeInTheDocument();
+  });
+
+  test("clicking on academics once menu is opened sorts by academic posts", () => {
+    const setCurrentSortFilter = jest.fn();
+    const { getByText } = render(
+      <FilterBar
+        currentSortFilter="new"
+        setCurrentSortFilter={setCurrentSortFilter}
+      />
+    );
+
+    const categoryButton = getByText("Category");
+    fireEvent.click(categoryButton);
+    const academicsOption = getByText("Academics");
+    fireEvent.click(academicsOption);
+    expect(setCurrentSortFilter).toHaveBeenCalledWith("Academics");
   });
 });

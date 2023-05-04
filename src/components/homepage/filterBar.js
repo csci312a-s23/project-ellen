@@ -11,35 +11,96 @@
     -setCurrentSortFilter: sets current filter based on button click
 */
 
+//https://codesandbox.io/s/wuydzh?file=/demo.tsx
+
 import Button from "@mui/material/Button";
+import { Menu, MenuItem } from "@mui/material";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
-function filterBar({ currentSortFilter, setCurrentSortFilter }) {
+const buttonStyle = {
+  variant: "outlined",
+  style: { marginLeft: "5%" },
+};
+
+function FilterBar({ currentSortFilter, setCurrentSortFilter }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const changeCategory = (event) => {
+    const clicked = event.currentTarget.textContent;
+    //if user clicks away from menu reset to new
+    !clicked ? setCurrentSortFilter("new") : setCurrentSortFilter(clicked);
+    setAnchorEl(null);
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
-      {/* Maybe want some sort of sections view / titles view combo? */}
       <Button
-        variant="outlined"
+        {...buttonStyle}
         onClick={() => setCurrentSortFilter("new")}
         disabled={currentSortFilter === "new"}
       >
         New
       </Button>
       <Button
-        style={{ marginLeft: "5%" }}
-        variant="outlined"
+        {...buttonStyle}
         onClick={() => setCurrentSortFilter("hot")}
         disabled={currentSortFilter === "hot"}
       >
         Hot
       </Button>
+
+      <Button
+        {...buttonStyle}
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        {currentSortFilter === "new" || currentSortFilter === "hot"
+          ? "Category"
+          : currentSortFilter}
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={changeCategory}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={changeCategory}>Academics</MenuItem>
+        <MenuItem onClick={changeCategory}>Athletics</MenuItem>
+        <MenuItem onClick={changeCategory}>Social</MenuItem>
+        <MenuItem onClick={changeCategory}>Professors</MenuItem>
+        <MenuItem onClick={changeCategory}>Housing</MenuItem>
+        <MenuItem onClick={changeCategory}>Dining</MenuItem>
+        <MenuItem onClick={changeCategory}>Other</MenuItem>
+      </Menu>
     </div>
   );
 }
 
-export default filterBar;
+export default FilterBar;
 
-filterBar.propTypes = {
-  currentSortFilter: PropTypes.oneOf(["new", "hot"]),
+FilterBar.propTypes = {
+  currentSortFilter: PropTypes.oneOf([
+    "new",
+    "hot",
+    "Academics",
+    "Athletics",
+    "Social",
+    "Professors",
+    "Housing",
+    "Dining",
+    "Other",
+  ]),
   setCurrentSortFilter: PropTypes.func,
 };
