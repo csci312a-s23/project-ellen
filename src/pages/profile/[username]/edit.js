@@ -6,22 +6,22 @@ export default function EditProfile() {
   const router = useRouter();
   const { username } = router.query;
 
-  const [email, setEmail] = useState("test");
-  const [department, setDepartment] = useState("test");
-  const [firstName, setFirstName] = useState("test");
-  const [lastName, setLastName] = useState("test");
-  const [major, setMajor] = useState("test");
-  const [title, setTitle] = useState("test");
-  const [type, setType] = useState("test");
-  const [classYear, setClass] = useState("test");
-  const [id, setId] = useState("John Kantaros");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [major, setMajor] = useState("");
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("");
+  const [classYear, setClass] = useState("");
+  const [id, setId] = useState("");
 
   async function getUserInfo(name) {
     const res = await fetch(`/api/users/${name}`);
     const json = await res.json();
     const jsonStr = JSON.stringify(json);
     const user = JSON.parse(jsonStr);
-    console.log(user);
+
     return user;
   }
 
@@ -135,6 +135,7 @@ export default function EditProfile() {
           onChange={(event) => {
             setEmail(event.target.value);
           }}
+          InputProps={{ readOnly: true, style: { color: "grey" } }}
         />
         {type === "Student" && (
           <TextField
