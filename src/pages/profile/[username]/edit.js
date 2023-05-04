@@ -132,9 +132,6 @@ export default function EditProfile() {
           value={email}
           style={{ width: "75%", float: "right" }}
           margin="normal"
-          onChange={(event) => {
-            setEmail(event.target.value);
-          }}
           InputProps={{ readOnly: true, style: { color: "grey" } }}
         />
         {type === "Student" && (
