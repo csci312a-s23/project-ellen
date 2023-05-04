@@ -33,7 +33,7 @@ export default function Comment({ data, vote }) {
         >
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("upvote", data.id)}
+            onClick={() => vote("upvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowUpIcon />{" "}
@@ -42,7 +42,7 @@ export default function Comment({ data, vote }) {
           <p>by: {data?.poster?.username}</p>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("downvote", data.id)}
+            onClick={() => vote("downvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowDownIcon />{" "}

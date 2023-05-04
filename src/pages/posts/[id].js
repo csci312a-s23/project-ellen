@@ -119,7 +119,13 @@ export default function ShowPost({ currentPost, refreshPosts }) {
           {!!currentPost && <IndividualPost post={currentPost} />}
           {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
           <h2>Comments:</h2>
-          {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+          {!!comments && (
+            <CommentsContainer
+              comments={comments}
+              vote={vote}
+              whereis="postViewer"
+            />
+          )}
           <NewComment addComment={addComment} />
         </div>
       </div>
