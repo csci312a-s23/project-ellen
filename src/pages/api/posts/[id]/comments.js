@@ -43,10 +43,10 @@ const handler = nc({ onError })
     const { id } = req.query;
     const newComment = req.body;
     // we want to automatically assign a new comment ID
-    const maxId = await Comments.query().max("id");
+    // const maxId = await Comments.query().max("id");
 
     const comment = await Comments.query().insertAndFetch({
-      id: parseInt(maxId[0]["max(`id`)"]) + 1,
+      // id: parseInt(maxId[0]["max(`id`)"]) + 1,
       postID: parseInt(id),
       commenterID: session.user.id,
       content: newComment.content,
