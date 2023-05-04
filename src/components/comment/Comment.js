@@ -1,9 +1,18 @@
 import { Box } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useEffect, useState } from "react";
 
-export default function Comment({ data, vote }) {
+export default function Comment({ data, vote, whereis }) {
   console.log("comment:", data);
+  const [allowVotes, setAllowVotes] = useState(true);
+
+  useEffect(() => {
+    if (whereis === "profile") {
+      setAllowVotes(false);
+    }
+  }, []);
+
   return (
     <div data-testid="comment">
       <Box
@@ -25,30 +34,32 @@ export default function Comment({ data, vote }) {
           <div>{data.content}</div>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => vote("upvote", data.id)}
+        {!!allowVotes && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            {" "}
-            <KeyboardArrowUpIcon />{" "}
-          </div>
-          <p>likes: {data.likes}</p>
-          <p>by: {data?.poster?.username}</p>
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => vote("downvote", data.id)}
-          >
-            {" "}
-            <KeyboardArrowDownIcon />{" "}
-          </div>
-        </Box>
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => vote("upvote", data.id)}
+            >
+              {" "}
+              <KeyboardArrowUpIcon />{" "}
+            </div>
+            <p>likes: {data.likes}</p>
+            <p>by: {data?.poster?.username}</p>
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => vote("downvote", data.id)}
+            >
+              {" "}
+              <KeyboardArrowDownIcon />{" "}
+            </div>
+          </Box>
+        )}
       </Box>
     </div>
   );
