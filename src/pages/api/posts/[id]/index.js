@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
-import Users from "../../../../../models/Users.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth/next";
@@ -15,6 +14,11 @@ const handler = nc({ onError })
       const post = await Posts.query()
         .findById(parseInt(id))
         .first()
+        .withGraphFetched("poster")
+        .modifyGraph("poster", (builder) => {
+          builder.select("username");
+        })
+
         .throwIfNotFound();
 
       const getVotes = await Votes.query()
@@ -25,14 +29,10 @@ const handler = nc({ onError })
       let myVote = 0;
 
       if (session) {
-        const userID = await Users.query()
-          .findById(session.user.id)
-          .throwIfNotFound();
-
         const myVoteRow = await Votes.query()
           .where("postID", parseInt(id))
           .where("typeOf", "post")
-          .where("voterID", userID);
+          .where("voterID", session.user.id);
 
         if (myVoteRow.length !== 0) {
           myVote = myVoteRow[0].value;
@@ -46,7 +46,6 @@ const handler = nc({ onError })
       };
 
       res.status(200).json(newPost);
-      // res.status(200).json(post);
     }
   })
   .put(async (req, res) => {

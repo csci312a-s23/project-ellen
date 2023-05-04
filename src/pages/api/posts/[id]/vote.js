@@ -63,7 +63,6 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     .where("typeOf", "post")
     .sum("value");
 
-  // console.log(getVotes[0]["sum(`value`)"]);
   res
     .status(200)
     .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
