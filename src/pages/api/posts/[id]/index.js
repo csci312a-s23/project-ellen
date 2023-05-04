@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
-import Users from "../../../../../models/Users.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth/next";
@@ -25,7 +24,6 @@ const handler = nc({ onError })
       let myVote = 0;
 
       if (session) {
-
         const myVoteRow = await Votes.query()
           .where("postID", parseInt(id))
           .where("typeOf", "post")
