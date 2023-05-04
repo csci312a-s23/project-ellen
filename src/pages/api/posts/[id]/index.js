@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
-import Users from "../../../../../models/Users.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth/next";
@@ -15,6 +14,11 @@ const handler = nc({ onError })
       const post = await Posts.query()
         .findById(parseInt(id))
         .first()
+        .withGraphFetched("poster")
+        .modifyGraph("poster", (builder) => {
+          builder.select("username");
+        })
+
         .throwIfNotFound();
 
       const getVotes = await Votes.query()
@@ -35,21 +39,13 @@ const handler = nc({ onError })
         }
       }
 
-      // console.log("current post:", post.posterID)
-      const user = await Users.query()
-        .where("id", post.posterID)
-        .select("username")
-        .first();
-
       const newPost = {
         ...post,
-        username: user.username,
         voteSum: getVotes[0]["sum(`value`)"],
         myVote: myVote,
       };
 
       res.status(200).json(newPost);
-      // res.status(200).json(post);
     }
   })
   .put(async (req, res) => {

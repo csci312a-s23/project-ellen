@@ -40,7 +40,7 @@ export default function Comment({ data, vote }) {
             <KeyboardArrowUpIcon />{" "}
           </div>
           <p>likes: {data.likes}</p>
-          <p>by: {data.username}</p>
+          <p>by: {data?.poster?.username}</p>
           <div
             style={{ cursor: "pointer" }}
             onClick={() => vote("downvote", data.id)}
