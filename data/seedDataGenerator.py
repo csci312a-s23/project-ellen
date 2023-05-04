@@ -15,7 +15,11 @@ majors = [
 ]
 for i in range(50):
     users.append({
+        'username':'TESTUSER_'+str(i),
         'id': i,
+        'email': 'testuser_$'+str(i)+'@gmail.com',
+        'googleID': 'TESTUSERGOOGLEID_'+str(i),
+
         'classYear': 2023 + random.randint(0, 3),
         'major': majors[random.randint(0,len(majors)-1)],
     })
@@ -26,20 +30,23 @@ topics = [
     'Registration',
     'Housing',
     'Dining',
-    'Parking'
+    'Parking',
+    'General'
 ]
 
-for i in range(len(users)*5):
+for i in range(len(users)*3):
     posts.append({
         'id': i,
         'posterID': random.randint(0, len(users)-1),
+        'title': "SEED DATA POST",
+        'content': "seed data post ~~ content",
         'category': topics[random.randint(0, len(topics)-1)],
         'created_at': daterange[random.randint(0, len(daterange)-1)].strftime("%m/%d/%Y")
     })
 
 
 comments = []
-for i in range(len(users)*10):
+for i in range(len(users)*4):
     postID = random.randint(0, len(posts)-1)
     comments.append({
         'id': i,
@@ -50,7 +57,7 @@ for i in range(len(users)*10):
 
 
 votes = []
-for i in range(len(users)*50):
+for i in range(len(users)*2):
     postID =  random.randint(0, len(posts)-1)
     votes.append({
         'id': i,
@@ -67,5 +74,5 @@ jsonExport = {
     "VoteSeedData": votes
 }
 
-with open('GenSeedData.json', 'w') as outfile:
+with open('newGenSeedData.json', 'w') as outfile:
     json.dump(jsonExport, outfile)

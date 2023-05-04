@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,8 +15,6 @@ import {
 import "chartjs-adapter-date-fns";
 import { enGB } from "date-fns/locale";
 //this sets the display language. In the documentation it uses "de", which will display dates in German.
-ChartJS.register(...registerables);
-
 import {
   Paper,
   Button,
@@ -36,9 +33,10 @@ import {
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+//import data from "../../data/GenSeedData.json"; // temporary seed data
 
-import data from "../../data/GenSeedData.json";
-
+// ! combine these two?
+ChartJS.register(...registerables);
 ChartJS.register(
   TimeScale,
   LinearScale,
@@ -49,194 +47,10 @@ ChartJS.register(
   Legend
 );
 
+//! note: graph category widget label doesnt work atm
+
 export default function page() {
   return <AnalyticsDisplay />;
-}
-
-function filterDpt(user, filter) {
-  // this will be way faster when we just query the database
-
-  // UserSeedData: {"id": 0, "classYear": 2023, "major": "CSCI"}
-  // PostSeedData: {"id": 0, "posterID": 48, "category": "Registration", "created_at": "02/14/2023"}
-  /* filter: {
-        classes: [],
-        majors: [],
-        athletics: [],
-        misc: [],
-    }
-  */
-
-  const idMappings = {
-    classes: "classYear",
-    majors: "major",
-  };
-
-  // then add: comments / votes support
-
-  // filtering by user information
-  // run checks through each key of the filter, make sure the user possesses at least one property as specified
-  for (const [key, value] of Object.entries(filter)) {
-    // iterate through the filter object: key = classes, majors, etc.
-    let passes = value.length === 0; // if that filter category is empty, let it pass
-
-    if (!passes) {
-      value.forEach((element) => {
-        // loop through the filter category and see if the user matches any of the specified options
-        if (element === user[idMappings[key]].toString()) {
-          // check if the element belongs to the user
-          // element = "2023" or "CSCI" etc.
-          passes = true;
-        }
-      });
-      if (!passes) {
-        // if the datapoint doesn't pass the filter, don't include it
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-async function formatData(filters, categoryFilter) {
-  // also- add a pooling param
-  // Filtering all the data (working)
-  const allData = await data;
-  const currDate = new Date("2022-08-01"); // date of the first post
-
-  /*
-    let dates = []
-    let lineData = [];
-    
-    for(let i = 0; i<filters.length; i++){ lineData.push([])} // theres definitely a better way to do this but this is working
-
-    while(currDate.toLocaleDateString() !== new Date().toLocaleDateString()){
-
-      // for each different filter we want to save the data filtered by that filter to an array in lineData
-      filters.forEach((f, i) => {
-        const countPassing = allData["PostSeedData"].reduce(
-          function(count, dpt) {
-            const user = allData["UserSeedData"].filter(u => u.id === dpt.posterID)[0]; // get the user associated with the post
-            return count + (new Date(dpt.created_at).toLocaleDateString() === currDate.toLocaleDateString() && filterDpt(user, f.filters));
-        }, 0);
-        lineData[i].push(countPassing);
-      })
-      dates.push(currDate.toLocaleDateString());
-      currDate.setDate(currDate.getDate() + 1);
-    }*/
-
-  // Pooling the data- i.e. monthly
-
-  const pooledDates = [];
-  let pooledLineData = [];
-  for (let i = 0; i < filters.length; i++) {
-    pooledLineData.push([]);
-  } // theres definitely a better way to do this but this is working
-  let monthIdx = 0;
-
-  // iterate by date
-  while (currDate.toLocaleDateString() !== new Date().toLocaleDateString()) {
-    // check if we need to increment the month
-    if (
-      !pooledDates.includes(
-        `${(currDate.getMonth() + 1).toString()}/${currDate
-          .getFullYear()
-          .toString()}`
-      )
-    ) {
-      // if we do- add the new month to our dates and linedata
-      pooledDates.push(
-        `${(currDate.getMonth() + 1).toString()}/${currDate
-          .getFullYear()
-          .toString()}`
-      );
-      pooledLineData.forEach((pld) => pld.push(0));
-      monthIdx += 1;
-    }
-
-    // for each different filter we want to save the data filtered by that filter to an array in lineData
-    filters.forEach((f, fIdx) => {
-      // get activity for posts on that day
-      let countPassing = allData["PostSeedData"].reduce((count, post) => {
-        const user = allData["UserSeedData"].filter(
-          (u) => u.id === post.posterID
-        )[0]; // get the user associated with the post
-
-        return (
-          count +
-          (new Date(post.created_at).toLocaleDateString() ===
-            currDate.toLocaleDateString() &&
-            filterDpt(user, f.filters) &&
-            post.category === categoryFilter)
-        );
-      }, 0);
-      // get activity for comments on that day
-      countPassing += allData["CommentSeedData"].reduce((count, comment) => {
-        const user = allData["UserSeedData"].filter(
-          (u) => u.id === comment.commenterID
-        )[0]; // get the user associated with the comment
-        const post = allData["PostSeedData"].filter(
-          (p) => p.id === comment.postID
-        )[0]; // get the post associated with the comment
-
-        return (
-          count +
-          (new Date(comment.created_at).toLocaleDateString() ===
-            currDate.toLocaleDateString() &&
-            filterDpt(user, f.filters) &&
-            post.category === categoryFilter) /
-            2
-        );
-      }, 0);
-
-      // get activity for votes on that day -- works.. but is very slow for directly accessing the JSON seed file
-
-      /*
-      countPassing += allData["VoteSeedData"].reduce((count, vote) => {
-
-        const user = allData["UserSeedData"].filter(
-          (u) => u.id === vote.voterID
-        )[0]; // get the user associated with the comment
-        const post = allData["PostSeedData"].filter(
-          (p) => p.id === vote.postID
-        )[0]; // get the post associated with the comment
-
-        return (
-          count +
-          (new Date(vote.created_at).toLocaleDateString() ===
-            currDate.toLocaleDateString() && filterDpt(user, f.filters) && post.category === categoryFilter)/10
-        );
-      }, 0);
-      */
-
-      pooledLineData[fIdx][monthIdx] += countPassing;
-    });
-    currDate.setDate(currDate.getDate() + 1);
-  }
-
-  console.log(pooledLineData);
-
-  // removing the first few elements now just to make it look better- can debug later
-  pooledLineData = pooledLineData.map((pld) => pld.slice(2));
-
-  // normalizing the line data
-  const normFactorSums = pooledLineData.map((line) =>
-    line.reduce((a, b) => a + b, 0)
-  );
-  pooledLineData = pooledLineData.map((line, i) =>
-    line.map((datapoint) => (datapoint / normFactorSums[i]) * 100)
-  );
-
-  return [
-    pooledDates,
-    pooledLineData.map((d, i) => {
-      return {
-        label: filters[i].label,
-        data: d,
-        backgroundColor: filters[i].backgroundColor,
-        borderColor: filters[i].borderColor,
-      };
-    }),
-  ];
 }
 function AnalyticsDisplay() {
   const controlPanelWidth = 25; // %
@@ -264,7 +78,6 @@ function AnalyticsDisplay() {
   ]);
 
   let key = 0;
-
   return (
     <div
       style={{
@@ -458,15 +271,232 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
     </FormControl>
   );
 }
+
+function filterDpt(user, filter) {
+  const idMappings = {
+    classes: "classYear",
+    majors: "major",
+  };
+  // filtering by user information
+  // run checks through each key of the filter, make sure the user possesses at least one property as specified
+  for (const [key, value] of Object.entries(filter)) {
+    // iterate through the filter object: key = classes, majors, etc.
+    let passes = value.length === 0; // if that filter category is empty, let it pass
+    if (!passes) {
+      value.forEach((element) => {
+        // loop through the filter category and see if the user matches any of the specified options
+        // ! make this more concise w conditional bool st. passes = (cond) ? true: passes
+        if (element === user[idMappings[key]].toString()) {
+          // check if the element belongs to the user s.t. element = "2023" or "CSCI" etc.
+          passes = true;
+        }
+      });
+      if (!passes) {
+        // if the datapoint doesn't pass the filter, don't include it
+        return false;
+      }
+    }
+  }
+  return true;
+}
+async function formatData(
+  filters,
+  categoryFilter,
+  posts,
+  users,
+  comments,
+  votes
+) {
+  const currDate = posts.reduce((minDate, nextPost) => {
+    return minDate < new Date(nextPost.created_at)
+      ? minDate
+      : new Date(nextPost.created_at);
+  }, new Date());
+  // Pooling the data- i.e. monthly
+
+  const pooledDates = [];
+  let pooledLineData = [];
+  for (let i = 0; i < filters.length; i++) {
+    pooledLineData.push([]);
+  } // theres definitely a better way to do this but this is working
+  let monthIdx = -1;
+
+  while (currDate <= new Date()) {
+    // check if we need to increment the month
+    if (
+      !pooledDates.includes(
+        `${(currDate.getMonth() + 1).toString()}/${currDate
+          .getFullYear()
+          .toString()}`
+      )
+    ) {
+      // if we do: add the new month to our dates and linedata
+      pooledDates.push(
+        `${(currDate.getMonth() + 1).toString()}/${currDate
+          .getFullYear()
+          .toString()}`
+      );
+      pooledLineData.forEach((pld) => pld.push(0));
+      monthIdx += 1;
+    }
+
+    // for each different filter we want to save the data filtered by that filter to an array in lineData
+    //^ posts
+    filters.forEach((f, fIdx) => {
+      let countPassing = posts.reduce((count, post) => {
+        // get the corresponding user
+        //! eventually make this more efficient by querying the api direcly by user id
+        const user = users.filter((u) => u.id === post.posterID)[0]; // get the user associated with the post
+
+        return (
+          count +
+          (new Date(post.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() &&
+            filterDpt(user, f.filters) &&
+            post.category === categoryFilter)
+        );
+      }, 0);
+
+      //^ get activity for comments on that day
+      countPassing += comments.reduce((count, comment) => {
+        //! access API endpoint to query all the comments
+        const user = users.filter((u) => u.id === comment.commenterID)[0]; // get the user associated with the comment
+        const post = posts.filter((p) => p.id === comment.postID)[0]; // get the post associated with the comment
+
+        return (
+          count +
+          (new Date(comment.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() &&
+            filterDpt(user, f.filters) &&
+            post.category === categoryFilter) /
+            2
+        );
+      }, 0);
+
+      //^ get activity for votes on that day -- works.. but is very slow for directly accessing the JSON seed file
+
+      countPassing += votes.reduce((count, vote) => {
+        const user = users.filter((u) => u.id === vote.voterID)[0]; // get the user associated with the comment
+
+        const post = posts.filter((p) => p.id === vote.postID)[0]; // get the post associated with the comment
+
+        return (
+          count +
+          (new Date(vote.created_at).toLocaleDateString() ===
+            currDate.toLocaleDateString() &&
+            filterDpt(user, f.filters) &&
+            post.category === categoryFilter) /
+            10
+        );
+      }, 0);
+
+      pooledLineData[fIdx][monthIdx] += countPassing;
+    });
+    currDate.setDate(currDate.getDate() + 1);
+  }
+
+  // normalizing the line data
+  const normFactorSums = pooledLineData.map((line) =>
+    line.reduce((a, b) => a + b, 0)
+  );
+  pooledLineData = pooledLineData.map((line, i) =>
+    line.map((datapoint) => (datapoint / normFactorSums[i]) * 100)
+  );
+
+  console.log(pooledLineData);
+
+  return [
+    pooledDates,
+    pooledLineData.map((d, i) => {
+      return {
+        label: filters[i].label,
+        data: d,
+        backgroundColor: filters[i].backgroundColor,
+        borderColor: filters[i].borderColor,
+      };
+    }),
+  ];
+}
+
+/*
+    let dates = []
+    let lineData = [];
+    
+    for(let i = 0; i<filters.length; i++){ lineData.push([])} // theres definitely a better way to do this but this is working
+
+    while(currDate.toLocaleDateString() !== new Date().toLocaleDateString()){
+
+      // for each different filter we want to save the data filtered by that filter to an array in lineData
+      filters.forEach((f, i) => {
+        const countPassing = allData["PostSeedData"].reduce(
+          function(count, dpt) {
+            const user = allData["UserSeedData"].filter(u => u.id === dpt.posterID)[0]; // get the user associated with the post
+            return count + (new Date(dpt.created_at).toLocaleDateString() === currDate.toLocaleDateString() && filterDpt(user, f.filters));
+        }, 0);
+        lineData[i].push(countPassing);
+      })
+      dates.push(currDate.toLocaleDateString());
+      currDate.setDate(currDate.getDate() + 1);
+    }*/
 function LineChart({ categories, compare, setCompare }) {
+  //! it could be worth creating an API endpoint exclusively for the analytics page to access the DB
+  const [posts, setPosts] = useState([]); // keeps track of all the posts
+
+  // ? temporary implementation ~ tb replaced w/ direct queries:
+  const [users, setUsers] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [votes, setVotes] = useState([]);
+
+  // wrap this in an empty useEffect so not as to trigger rerenders infinitely
+  useEffect(() => {
+    fetch(`/api/posts`)
+      .then((res) => res.json())
+      .then((response) => {
+        setPosts(response);
+      })
+      .catch((error) => console.log(error));
+
+    fetch(`/api/users`)
+      .then((res) => res.json())
+      .then((response) => {
+        setUsers(response);
+      })
+      .catch((error) => console.log(error));
+
+    fetch(`/api/analytics/comments`)
+      .then((res) => res.json())
+      .then((response) => {
+        setComments(response);
+      })
+      .catch((error) => console.log(error));
+
+    fetch(`/api/analytics/votes`)
+      .then((res) => res.json())
+      .then((response) => {
+        setVotes(response);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   const [lineData, setLineData] = useState([[], []]);
+
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     (async () => {
-      const updated = await formatData(categories, compare);
-      setLineData(updated);
+      if (posts !== []) {
+        // make sure posts is defined before calling this
+        const updated = await formatData(
+          categories,
+          compare,
+          posts,
+          users,
+          comments,
+          votes
+        );
+        setLineData(updated);
+      }
     })();
-  }, [categories, compare]);
+  }, [categories, compare, posts, users, comments, votes]);
 
   const chartData = {
     labels: lineData[0],

@@ -18,6 +18,7 @@ export default class Vote extends BaseModel {
         commentID: { type: "integer" },
         value: { type: "integer" },
         typeOf: { type: "string" },
+        created_at: { type: "string" },
       },
     };
   }
