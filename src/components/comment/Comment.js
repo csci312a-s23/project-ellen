@@ -3,7 +3,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function Comment({ data, vote }) {
-  console.log("comment:", data);
   return (
     <div data-testid="comment">
       <Box
@@ -34,7 +33,7 @@ export default function Comment({ data, vote }) {
         >
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("upvote", data.id)}
+            onClick={() => vote("upvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowUpIcon />{" "}
@@ -43,7 +42,7 @@ export default function Comment({ data, vote }) {
           <p>by: {data?.poster?.username}</p>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("downvote", data.id)}
+            onClick={() => vote("downvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowDownIcon />{" "}
