@@ -3,7 +3,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function Comment({ data, vote }) {
-  console.log("comment:", data);
   return (
     <div data-testid="comment">
       <Box

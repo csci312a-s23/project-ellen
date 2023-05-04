@@ -3,6 +3,8 @@ import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Fab from "@mui/material/Fab";
 
 import NewComment from "@/components/comment/NewComment";
 
@@ -69,7 +71,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       },
       body: JSON.stringify({
         id: currentPost.id,
-        // change this once we've got user id from auth
         content: comment,
       }),
     });
@@ -84,25 +85,43 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         justifyContent: "center",
       }}
     >
-      <div
-        style={{
-          border: "1px solid black",
-          width: 1000,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 10,
-          backgroundColor: "darkgray",
-          borderRadius: 10,
+      <Fab
+        variant="extended"
+        style={{ position: "fixed", top: 100, left: 20 }}
+        color="primary"
+        onClick={() => {
+          router.push("/");
         }}
       >
-        <h1>Post:</h1>
-        {!!currentPost && <IndividualPost post={currentPost} />}
-        {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
-        <h2>Comments:</h2>
-        {!!comments && <CommentsContainer comments={comments} vote={vote} />}
-        <NewComment addComment={addComment} />
+        <ArrowBackIcon />
+      </Fab>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            border: "1px solid black",
+            width: 1000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 10,
+            backgroundColor: "darkgray",
+            borderRadius: 10,
+          }}
+        >
+          {!!currentPost && <IndividualPost post={currentPost} />}
+          {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
+          <h2>Comments:</h2>
+          {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+          <NewComment addComment={addComment} />
+        </div>
       </div>
     </div>
   );
