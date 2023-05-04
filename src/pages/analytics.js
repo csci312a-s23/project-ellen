@@ -10,7 +10,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  registerables,
 } from "chart.js/auto";
 import "chartjs-adapter-date-fns";
 import { enGB } from "date-fns/locale";
@@ -31,12 +30,9 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
-//import data from "../../data/GenSeedData.json"; // temporary seed data
 
 // ! combine these two?
-ChartJS.register(...registerables);
 ChartJS.register(
   TimeScale,
   LinearScale,
@@ -271,8 +267,7 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
     </FormControl>
   );
 }
-
-function filterDpt(user, filter) {
+function filterUser(user, filter) {
   const idMappings = {
     classes: "classYear",
     majors: "major",
@@ -283,30 +278,20 @@ function filterDpt(user, filter) {
     // iterate through the filter object: key = classes, majors, etc.
     let passes = value.length === 0; // if that filter category is empty, let it pass
     if (!passes) {
+      // loop through the filter category and see if the user matches any of the specified options
       value.forEach((element) => {
-        // loop through the filter category and see if the user matches any of the specified options
-        // ! make this more concise w conditional bool st. passes = (cond) ? true: passes
-        if (element === user[idMappings[key]].toString()) {
-          // check if the element belongs to the user s.t. element = "2023" or "CSCI" etc.
-          passes = true;
-        }
+        // check if the element belongs to the user s.t. element = "2023" or "CSCI" etc.
+        passes = element === user[idMappings[key]].toString() ? true : passes;
       });
+      // if the datapoint doesn't pass the filter, don't include it
       if (!passes) {
-        // if the datapoint doesn't pass the filter, don't include it
         return false;
       }
     }
   }
   return true;
 }
-async function formatData(
-  filters,
-  categoryFilter,
-  posts,
-  users,
-  comments,
-  votes
-) {
+async function formatData(filters, categoryFilter, posts, comments, votes) {
   const currDate = posts.reduce((minDate, nextPost) => {
     return minDate < new Date(nextPost.created_at)
       ? minDate
@@ -341,18 +326,16 @@ async function formatData(
     }
 
     // for each different filter we want to save the data filtered by that filter to an array in lineData
-    //^ posts
     filters.forEach((f, fIdx) => {
+      // ^ get activity for posts on that day
       let countPassing = posts.reduce((count, post) => {
         // get the corresponding user
         //! eventually make this more efficient by querying the api direcly by user id
-        const user = users.filter((u) => u.id === post.posterID)[0]; // get the user associated with the post
-
         return (
           count +
           (new Date(post.created_at).toLocaleDateString() ===
             currDate.toLocaleDateString() &&
-            filterDpt(user, f.filters) &&
+            filterUser(post.poster, f.filters) &&
             post.category === categoryFilter)
         );
       }, 0);
@@ -360,32 +343,24 @@ async function formatData(
       //^ get activity for comments on that day
       countPassing += comments.reduce((count, comment) => {
         //! access API endpoint to query all the comments
-        const user = users.filter((u) => u.id === comment.commenterID)[0]; // get the user associated with the comment
-        const post = posts.filter((p) => p.id === comment.postID)[0]; // get the post associated with the comment
-
         return (
           count +
           (new Date(comment.created_at).toLocaleDateString() ===
             currDate.toLocaleDateString() &&
-            filterDpt(user, f.filters) &&
-            post.category === categoryFilter) /
+            filterUser(comment.poster, f.filters) &&
+            comment.post.category === categoryFilter) /
             2
         );
       }, 0);
 
       //^ get activity for votes on that day -- works.. but is very slow for directly accessing the JSON seed file
-
       countPassing += votes.reduce((count, vote) => {
-        const user = users.filter((u) => u.id === vote.voterID)[0]; // get the user associated with the comment
-
-        const post = posts.filter((p) => p.id === vote.postID)[0]; // get the post associated with the comment
-
         return (
           count +
           (new Date(vote.created_at).toLocaleDateString() ===
             currDate.toLocaleDateString() &&
-            filterDpt(user, f.filters) &&
-            post.category === categoryFilter) /
+            filterUser(vote.post, f.filters) &&
+            vote.post.category === categoryFilter) /
             10
         );
       }, 0);
@@ -402,8 +377,6 @@ async function formatData(
   pooledLineData = pooledLineData.map((line, i) =>
     line.map((datapoint) => (datapoint / normFactorSums[i]) * 100)
   );
-
-  console.log(pooledLineData);
 
   return [
     pooledDates,
@@ -437,29 +410,23 @@ async function formatData(
       })
       dates.push(currDate.toLocaleDateString());
       currDate.setDate(currDate.getDate() + 1);
-    }*/
+    }
+*/
 function LineChart({ categories, compare, setCompare }) {
   //! it could be worth creating an API endpoint exclusively for the analytics page to access the DB
   const [posts, setPosts] = useState([]); // keeps track of all the posts
 
   // ? temporary implementation ~ tb replaced w/ direct queries:
-  const [users, setUsers] = useState([]);
+  //const [users, setUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [votes, setVotes] = useState([]);
 
   // wrap this in an empty useEffect so not as to trigger rerenders infinitely
   useEffect(() => {
-    fetch(`/api/posts`)
+    fetch(`/api/analytics/posts`)
       .then((res) => res.json())
       .then((response) => {
         setPosts(response);
-      })
-      .catch((error) => console.log(error));
-
-    fetch(`/api/users`)
-      .then((res) => res.json())
-      .then((response) => {
-        setUsers(response);
       })
       .catch((error) => console.log(error));
 
@@ -489,14 +456,13 @@ function LineChart({ categories, compare, setCompare }) {
           categories,
           compare,
           posts,
-          users,
           comments,
           votes
         );
         setLineData(updated);
       }
     })();
-  }, [categories, compare, posts, users, comments, votes]);
+  }, [categories, compare, posts, comments, votes]);
 
   const chartData = {
     labels: lineData[0],
@@ -511,14 +477,6 @@ function LineChart({ categories, compare, setCompare }) {
         adapters: {
           date: { locale: enGB },
           type: "time",
-          //distribution: "linear",
-          /*time: {
-            //parser: "MM-dd-year",
-            /*displayFormats: {
-              quarter: "MMM YYYY",
-            },
-            //unit: "month",
-          },*/
           title: {
             display: true,
             text: "Date",
