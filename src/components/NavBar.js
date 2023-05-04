@@ -31,12 +31,7 @@ export default function NavBar() {
               <Link href={`/profile/${session.user.name}`}>Profile</Link>
             </Button>
           )}
-          <Button color="inherit">
-            <Link href="/post">Post</Link>
-          </Button>
-          <Button color="inherit">
-            <Link href="/posts">Feed</Link>
-          </Button>
+
           <LoginButton />
         </Toolbar>
       </AppBar>

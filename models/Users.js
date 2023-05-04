@@ -46,7 +46,7 @@ export default class User extends BaseModel {
         modelClass: Comment,
         join: {
           from: "users.id",
-          to: "comments.posterID",
+          to: "comments.commenterID",
         },
       },
     };
@@ -54,7 +54,7 @@ export default class User extends BaseModel {
   // Override this method to exclude googleId
   $formatJson(json) {
     json = super.$formatJson(json);
-    delete json.googleId;
+    delete json.googleID;
     return json;
   }
 }

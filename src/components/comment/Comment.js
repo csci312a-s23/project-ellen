@@ -33,15 +33,16 @@ export default function Comment({ data, vote }) {
         >
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("upvote", data.id)}
+            onClick={() => vote("upvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowUpIcon />{" "}
           </div>
           <p>likes: {data.likes}</p>
+          <p>by: {data?.poster?.username}</p>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("downvote", data.id)}
+            onClick={() => vote("downvote", data.id, data.postID)}
           >
             {" "}
             <KeyboardArrowDownIcon />{" "}

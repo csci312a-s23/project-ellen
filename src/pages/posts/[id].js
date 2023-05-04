@@ -70,7 +70,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       body: JSON.stringify({
         id: currentPost.id,
         // change this once we've got user id from auth
-        commenterID: "1",
         content: comment,
       }),
     });
@@ -102,7 +101,13 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         {!!currentPost && <IndividualPost post={currentPost} />}
         {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
         <h2>Comments:</h2>
-        {!!comments && <CommentsContainer comments={comments} vote={vote} />}
+        {!!comments && (
+          <CommentsContainer
+            comments={comments}
+            vote={vote}
+            whereis="postViewer"
+          />
+        )}
         <NewComment addComment={addComment} />
       </div>
     </div>

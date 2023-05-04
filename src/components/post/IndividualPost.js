@@ -7,6 +7,8 @@ export default function IndividualPost({ post }) {
   const [voteSum, setVoteSum] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
 
+  console.log("post data:", post);
+
   useEffect(() => {
     setVoteSum(post.voteSum);
     setVoteVal(post.myVote);
@@ -55,6 +57,7 @@ export default function IndividualPost({ post }) {
       <h1>{post.title}</h1>
       <p>{post.content}</p>
       <p>category: {post.category}</p>
+      <p>by: {post?.poster?.username}</p>
       <p>created at: {post.created_at}</p>
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />

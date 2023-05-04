@@ -1,6 +1,6 @@
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
-import CommentsList from "@/components/comment/CommentsContainer";
+import CommentsContainer from "@/components/comment/CommentsContainer";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
@@ -17,6 +17,14 @@ export default function Profile() {
 
   const { data: session } = useSession({ required: true });
 
+  const getComments = async () => {
+    const commentsResponse = await fetch(`/api/users/${username}/comments`);
+    if (commentsResponse.ok) {
+      const fetchedUserComments = await commentsResponse.json();
+      setUserComments(fetchedUserComments);
+    }
+  };
+
   useEffect(() => {
     if (username && session) {
       const getUserInfo = async () => {
@@ -31,11 +39,7 @@ export default function Profile() {
           setUserPosts(fetchedUserPosts);
         }
 
-        const commentsResponse = await fetch(`/api/users/${username}/comments`);
-        if (commentsResponse.ok) {
-          const fetchedUserComments = await commentsResponse.json();
-          setUserComments(fetchedUserComments);
-        }
+        getComments();
       };
 
       if (
@@ -51,6 +55,21 @@ export default function Profile() {
       setUserComments(undefined);
     }
   }, [username, currentUser, router.pathname, session]);
+
+  const vote = async (action, commentID, postID) => {
+    await fetch(`/api/posts/${postID}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: postID,
+        commentID: commentID,
+        vote: action,
+      }),
+    });
+    getComments();
+  };
 
   return (
     <div>
@@ -71,7 +90,13 @@ export default function Profile() {
         </Button>
       </div>
       {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
-      {userComments && <CommentsList comments={userComments} />}
+      {userComments && (
+        <CommentsContainer
+          comments={userComments}
+          vote={vote}
+          whereis="profile"
+        />
+      )}
     </div>
   );
 }
