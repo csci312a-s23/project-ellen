@@ -46,7 +46,7 @@ export default class User extends BaseModel {
         modelClass: Comment,
         join: {
           from: "users.id",
-          to: "comments.posterID",
+          to: "comments.commenterID",
         },
       },
     };

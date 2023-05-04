@@ -70,7 +70,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       body: JSON.stringify({
         id: currentPost.id,
         // change this once we've got user id from auth
-        commenterID: "1",
         content: comment,
       }),
     });

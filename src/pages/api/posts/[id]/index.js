@@ -14,6 +14,11 @@ const handler = nc({ onError })
       const post = await Posts.query()
         .findById(parseInt(id))
         .first()
+        .withGraphFetched("poster")
+        .modifyGraph("poster", (builder) => {
+          builder.select("username");
+        })
+
         .throwIfNotFound();
 
       const getVotes = await Votes.query()
@@ -41,7 +46,6 @@ const handler = nc({ onError })
       };
 
       res.status(200).json(newPost);
-      // res.status(200).json(post);
     }
   })
   .put(async (req, res) => {

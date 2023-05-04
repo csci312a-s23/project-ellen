@@ -23,8 +23,13 @@ const handler = nc({ onError })
         });
 
       // if the post exists- fetch the comments
+
       const comments = await Comments.query()
         .where({ postID: parseInt(id) })
+        .withGraphFetched("poster")
+        .modifyGraph("poster", (builder) => {
+          builder.select("username");
+        })
         .throwIfNotFound({ message: "No comments associated with this post" });
 
       res.status(200).json(comments);
