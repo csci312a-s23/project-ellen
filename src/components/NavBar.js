@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 // import MenuIcon from "@mui/icons-material/Menu";
 import LoginButton from "./LoginButon";
 // import { useState } from "react";
 // import Menu from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function NavBar() {
   const { data: session } = useSession();
@@ -27,9 +28,9 @@ export default function NavBar() {
           </Typography>
 
           {session && (
-            <Button color="inherit">
-              <Link href={`/profile/${session.user.name}`}>Profile</Link>
-            </Button>
+            <Link href={`/profile/${session.user.name}`}>
+              <AccountCircleIcon />
+            </Link>
           )}
 
           <LoginButton />
