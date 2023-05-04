@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Comment from "./Comment";
 
 export default function CommentsContainer({ comments, vote, whereis }) {
@@ -6,7 +7,17 @@ export default function CommentsContainer({ comments, vote, whereis }) {
     commentBlocks = comments.map((comment) => {
       return (
         <div key={comment.id}>
-          <Comment data={comment} vote={vote} whereis={whereis} />
+          {(() => {
+            if (whereis === "profile") {
+              return (
+                <Link href={`/posts/${comment.postID}`}>
+                  <Comment data={comment} vote={vote} />
+                </Link>
+              );
+            } else {
+              return <Comment data={comment} vote={vote} />;
+            }
+          })()}
         </div>
       );
     });

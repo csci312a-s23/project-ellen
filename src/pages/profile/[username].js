@@ -16,6 +16,14 @@ export default function Profile() {
 
   const { data: session } = useSession({ required: true });
 
+  const getComments = async () => {
+    const commentsResponse = await fetch(`/api/users/${username}/comments`);
+    if (commentsResponse.ok) {
+      const fetchedUserComments = await commentsResponse.json();
+      setUserComments(fetchedUserComments);
+    }
+  };
+
   useEffect(() => {
     if (username && session) {
       const getUserInfo = async () => {
@@ -30,11 +38,7 @@ export default function Profile() {
           setUserPosts(fetchedUserPosts);
         }
 
-        const commentsResponse = await fetch(`/api/users/${username}/comments`);
-        if (commentsResponse.ok) {
-          const fetchedUserComments = await commentsResponse.json();
-          setUserComments(fetchedUserComments);
-        }
+        getComments();
       };
 
       if (
@@ -51,6 +55,21 @@ export default function Profile() {
     }
   }, [username, currentUser, router.pathname, session]);
 
+  const vote = async (action, commentID, postID) => {
+    await fetch(`/api/posts/${postID}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: postID,
+        commentID: commentID,
+        vote: action,
+      }),
+    });
+    getComments();
+  };
+
   return (
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
@@ -58,7 +77,7 @@ export default function Profile() {
       {userComments && (
         <CommentsContainer
           comments={userComments}
-          vote={() => {}}
+          vote={vote}
           whereis="profile"
         />
       )}
