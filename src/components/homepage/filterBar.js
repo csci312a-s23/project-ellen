@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import PropTypes from "prop-types";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const buttonStyle = {
   variant: "outlined",
@@ -63,9 +64,20 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter }) {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        {currentSortFilter === "new" || currentSortFilter === "hot"
-          ? "Category"
-          : currentSortFilter}
+        {currentSortFilter === "new" || currentSortFilter === "hot" ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <span>Category</span>
+            <KeyboardArrowDownIcon />
+          </div>
+        ) : (
+          currentSortFilter
+        )}
       </Button>
       <Menu
         id="basic-menu"
