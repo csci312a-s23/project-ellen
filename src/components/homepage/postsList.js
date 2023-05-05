@@ -22,6 +22,8 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
       } else if (sortingFilter === "hot") {
         //sort by date
         return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
+      } else {
+        return post.category === sortingFilter;
       }
     });
   } else {
@@ -49,5 +51,15 @@ export default PostList;
 
 PostList.propTypes = {
   posts: PropTypes.array,
-  sortingFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
+  sortingFilter: PropTypes.oneOf([
+    "new",
+    "hot",
+    "Academics",
+    "Athletics",
+    "Social",
+    "Professors",
+    "Housing",
+    "Dining",
+    "Other",
+  ]),
 };
