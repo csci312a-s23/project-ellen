@@ -26,7 +26,7 @@ export default function EditProfile() {
   }
 
   useEffect(() => {
-    async function fetchInfo() {
+    const fetchInfo = async () => {
       const user = await getUserInfo(username);
 
       setEmail(user.email);
@@ -38,7 +38,7 @@ export default function EditProfile() {
       setType(user.type);
       setClass(user.classYear);
       setId(user.username);
-    }
+    };
     fetchInfo();
   }, [username]);
 
@@ -52,12 +52,12 @@ export default function EditProfile() {
         },
         body: JSON.stringify({
           classYear: classYear ? parseInt(classYear) : 0,
-          department: department ? department : " ",
+          department: department,
           email: email,
           firstName: firstName,
           lastName: lastName,
-          major: major ? major : " ",
-          title: title ? title : " ",
+          major: major,
+          title: title,
           username: username,
         }),
       })
@@ -158,6 +158,7 @@ export default function EditProfile() {
             }}
             style={{ width: "75%", float: "right" }}
             margin="normal"
+            data-testid="major-input"
           />
         )}
         {type === "Faculty" && (
