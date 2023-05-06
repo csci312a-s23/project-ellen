@@ -86,21 +86,19 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     >
       <div
         style={{
-          border: "1px solid black",
-          width: 1000,
+          // width: 1000,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: 10,
-          backgroundColor: "darkgray",
+          // padding: 10,
           borderRadius: 10,
         }}
       >
-        <h1>Post:</h1>
         {!!currentPost && <IndividualPost post={currentPost} />}
         {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
         <h2>Comments:</h2>
+        <NewComment addComment={addComment} />
         {!!comments && (
           <CommentsContainer
             comments={comments}
@@ -108,7 +106,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             whereis="postViewer"
           />
         )}
-        <NewComment addComment={addComment} />
       </div>
     </div>
   );

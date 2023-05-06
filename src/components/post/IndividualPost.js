@@ -42,23 +42,37 @@ export default function IndividualPost({ post }) {
     <Box
       sx={{
         width: 800,
-        bgcolor: "lightgray",
+        // bgcolor: "lightgray",
         padding: 2,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        // alignItems: "center",
+        // justifyContent: "center",
         borderRadius: 10,
         marginTop: 2,
         marginBottom: 2,
       }}
     >
       {/* <div data-testid="post"> */}
-      <h1>{post.title}</h1>
+      <h1 style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ paddingRight: "20px" }}>{post.title}</div>
+        <div
+          style={{
+            fontSize: "15px",
+            color: "white",
+            backgroundColor: "lightblue",
+            textAlign: "center",
+            padding: "2px 5px 2px 5px",
+            borderRadius: "10px",
+            // display: "flex", alignItems: "center", flexDirection: "row", justifyContent:"center"
+          }}
+        >
+          {post.category}
+        </div>
+      </h1>
+      <div>by: {post?.poster?.username}</div>
+      <div>at: {new Date(post.created_at).toISOString().substring(0, 10)}</div>
       <p>{post.content}</p>
-      <p>category: {post.category}</p>
-      <p>by: {post?.poster?.username}</p>
-      <p>created at: {post.created_at}</p>
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />
       </Box>

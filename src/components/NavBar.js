@@ -1,40 +1,53 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
 // import MenuIcon from "@mui/icons-material/Menu";
 import LoginButton from "./LoginButon";
-// import { useState } from "react";
-// import Menu from "@mui/material";
 
 export default function NavBar() {
   const { data: session } = useSession();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
+    <div
+      style={{
+        display: "flex",
+        flexShrink: "0",
+        flexDirection: "row",
+        justifyContent: "center",
+        width: "250px",
+        // paddingRight: "100px",
+        borderRight: "1px solid lightgrey ",
+      }}
+    >
+      <div
+        style={{
+          display: "absolute",
+          position: "fixed",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "100px",
+          paddingBottom: "200px",
+        }}
+      >
+        <Link href="/" style={{ textDecoration: "none", color: "black" }}>
+          <h1 style={{ fontsize: "30px" }}>StudentDirect</h1>
+        </Link>
+
+        {session && (
+          <Link
+            href={`/profile/${session.user.name}`}
+            style={{ textDecoration: "none" }}
           >
-            <MenuIcon />
-          </IconButton> */}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/">StudentDirect</Link>
-          </Typography>
+            <h2 style={{ fontsize: "20px" }}>profile</h2>
+          </Link>
+        )}
 
-          {session && (
-            <Button color="inherit">
-              <Link href={`/profile/${session.user.name}`}>Profile</Link>
-            </Button>
-          )}
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <h2 style={{ fontsize: "20px" }}>make post</h2>
+        </Link>
 
-          <LoginButton />
-        </Toolbar>
-      </AppBar>
-    </Box>
+        <LoginButton />
+      </div>
+    </div>
   );
 }

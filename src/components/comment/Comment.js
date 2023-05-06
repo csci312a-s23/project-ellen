@@ -8,14 +8,12 @@ export default function Comment({ data, vote }) {
       <Box
         sx={{
           width: 700,
-          bgcolor: "lightgray",
+          // bgcolor: "lightgray",
+          border: "1px solid black",
           padding: 2,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          // justifyContent: "center",
-          borderRadius: 10,
-          padding: 2,
           marginTop: 2,
           marginBottom: 2,
         }}
