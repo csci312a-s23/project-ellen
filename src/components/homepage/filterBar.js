@@ -11,10 +11,34 @@
 		-setCurrentSortFilter: sets current filter based on button click
 */
 
-import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
+//https://codesandbox.io/s/wuydzh?file=/demo.tsx
 
-function filterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
+import Button from "@mui/material/Button";
+import { Menu, MenuItem } from "@mui/material";
+import { useState } from "react";
+import PropTypes from "prop-types";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+const buttonStyle = {
+  variant: "outlined",
+  style: { marginLeft: "5%" },
+};
+
+function FilterBar({ currentSortFilter, setCurrentSortFilter }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const changeCategory = (event) => {
+    const clicked = event.currentTarget.textContent;
+    //if user clicks away from menu reset to new
+    !clicked ? setCurrentSortFilter("new") : setCurrentSortFilter(clicked);
+    setAnchorEl(null);
+  };
+
   return (
     <div
       style={{
@@ -37,42 +61,81 @@ function filterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
           paddingBottom: "200px",
         }}
       >
-        {!currentPost && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "300px",
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Button
+            {...buttonStyle}
+            onClick={() => setCurrentSortFilter("new")}
+            disabled={currentSortFilter === "new"}
+          >
+            New
+          </Button>
+          <Button
+            {...buttonStyle}
+            onClick={() => setCurrentSortFilter("hot")}
+            disabled={currentSortFilter === "hot"}
+          >
+            Hot
+          </Button>
+
+          <Button
+            {...buttonStyle}
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            {currentSortFilter === "new" || currentSortFilter === "hot" ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <span>Category</span>
+                <KeyboardArrowDownIcon />
+              </div>
+            ) : (
+              currentSortFilter
+            )}
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={changeCategory}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
             }}
           >
-            {/* Maybe want some sort of sections view / titles view combo? */}
-            <h2>Filter by:</h2>
-            <Button
-              variant="outlined"
-              onClick={() => setCurrentSortFilter("new")}
-              disabled={currentSortFilter === "new"}
-            >
-              New
-            </Button>
-            <Button
-              style={{}}
-              variant="outlined"
-              onClick={() => setCurrentSortFilter("hot")}
-              disabled={currentSortFilter === "hot"}
-            >
-              Hot
-            </Button>
-          </div>
-        )}
+            <MenuItem onClick={changeCategory}>Academics</MenuItem>
+            <MenuItem onClick={changeCategory}>Athletics</MenuItem>
+            <MenuItem onClick={changeCategory}>Social</MenuItem>
+            <MenuItem onClick={changeCategory}>Professors</MenuItem>
+            <MenuItem onClick={changeCategory}>Housing</MenuItem>
+            <MenuItem onClick={changeCategory}>Dining</MenuItem>
+            <MenuItem onClick={changeCategory}>Other</MenuItem>
+          </Menu>
+        </div>
       </div>
     </div>
   );
 }
 
-export default filterBar;
+export default FilterBar;
 
-filterBar.propTypes = {
-  currentSortFilter: PropTypes.oneOf(["new", "hot"]),
+FilterBar.propTypes = {
+  currentSortFilter: PropTypes.oneOf([
+    "new",
+    "hot",
+    "Academics",
+    "Athletics",
+    "Social",
+    "Professors",
+    "Housing",
+    "Dining",
+    "Other",
+  ]),
   setCurrentSortFilter: PropTypes.func,
 };

@@ -1,6 +1,10 @@
 export const categoryColors = {
-  food: "red",
-  registration: "lightblue",
-  school: "lightgreen",
   professors: "lightorange",
+  Academics: "yellow",
+  Athletics: "lightblue",
+  Social: "purple",
+  Professors: "lightgrey",
+  Housing: "maroon",
+  Dining: "pink",
+  Other: "blue",
 };
