@@ -28,9 +28,11 @@ export default function Post({
           boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 0.4px -1px",
         }}
       >
-        <Typography
+        <div
           style={{
-            marginBottom: "10px",
+            marginBottom: "0px",
+            display: "flex",
+            flexDirection: "row",
           }}
           position={"absolute"}
           color={"grey"}
@@ -45,9 +47,9 @@ export default function Post({
           >
             {postInfo.category}
           </div>
-        </Typography>
+        </div>
         <Typography
-          style={{ paddingTop: "30px" }}
+          style={{ paddingTop: "0px" }}
           fontSize={"35px"}
           href={`/posts/${postInfo.id}`}
           // ml={"10%"}

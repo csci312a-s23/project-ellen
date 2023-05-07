@@ -15,26 +15,18 @@
 
 import Button from "@mui/material/Button";
 import { Menu, MenuItem } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useRouter } from "next/router";
 
 const buttonStyle = {
   variant: "outlined",
   style: { marginLeft: "5%" },
 };
 
-function FilterBar({ currentSortFilter, setCurrentSortFilter }) {
+function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const router = useRouter();
-  const [page, setPage] = useState();
-
-  useEffect(() => {
-    setPage(router.asPath);
-    // console.log("router", router)
-  }, [router]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -69,7 +61,7 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter }) {
           paddingBottom: "200px",
         }}
       >
-        {page === "/" && (
+        {!currentPost && (
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Button
               {...buttonStyle}
