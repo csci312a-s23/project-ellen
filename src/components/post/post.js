@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
 
 import styled from "@emotion/styled";
+// const fs = require("fs");
+import { categoryColors } from "../../../data/CategoryColorData.js";
 
 const PostContainer = styled("div")({
   // marginBottom: "2%",
@@ -22,15 +24,30 @@ export default function Post({
       <div
         style={{
           border: "3px solid black ",
-          padding: "20px",
+          padding: "10px",
           boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 0.4px -1px",
         }}
       >
-        <Typography position={"absolute"} color={"grey"}>
-          {postInfo.category}
+        <Typography
+          style={{
+            marginBottom: "10px",
+          }}
+          position={"absolute"}
+          color={"grey"}
+        >
+          <div
+            style={{
+              backgroundColor: categoryColors[postInfo.category],
+              color: "black",
+              padding: "2px 5px 2px 5px",
+              borderRadius: "10px",
+            }}
+          >
+            {postInfo.category}
+          </div>
         </Typography>
         <Typography
-          style={{ paddingTop: "20px" }}
+          style={{ paddingTop: "30px" }}
           fontSize={"35px"}
           href={`/posts/${postInfo.id}`}
           // ml={"10%"}

@@ -19,6 +19,14 @@ export default function Comment({ data, vote }) {
         }}
       >
         <Box sx={{ width: 500, paddingLeft: 2 }}>
+          <h3
+            style={{
+              // marginBottom: "40px",
+              marginTop: "0px",
+            }}
+          >
+            by: {data?.poster?.username}
+          </h3>
           <div>{data.content}</div>
         </Box>
 
@@ -37,7 +45,6 @@ export default function Comment({ data, vote }) {
             <KeyboardArrowUpIcon />{" "}
           </div>
           <p>likes: {data.likes}</p>
-          <p>by: {data?.poster?.username}</p>
           <div
             style={{ cursor: "pointer" }}
             onClick={() => vote("downvote", data.id, data.postID)}

@@ -1,6 +1,7 @@
 import VoteSlider from "./VoteSlider.js";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import { categoryColors } from "../../../data/CategoryColorData.js";
 
 export default function IndividualPost({ post }) {
   const [voteVal, setVoteVal] = useState(0);
@@ -59,8 +60,8 @@ export default function IndividualPost({ post }) {
         <div
           style={{
             fontSize: "15px",
-            color: "white",
-            backgroundColor: "lightblue",
+            color: "black",
+            backgroundColor: categoryColors[post.category],
             textAlign: "center",
             padding: "2px 5px 2px 5px",
             borderRadius: "10px",
