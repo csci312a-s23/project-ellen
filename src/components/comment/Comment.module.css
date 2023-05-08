@@ -1,0 +1,20 @@
+.indivCommentContainer {
+  width: 700px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.leftSide {
+  width: 500px;
+  padding-left: 20px;
+}
+
+.rightSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import NewComment from "@/components/comment/NewComment";
+import FilterBar from "@/components/homepage/filterBar";
 
 export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
@@ -76,6 +77,12 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     getComments();
   };
 
+  const [currentSortFilter, setCurrentSortFilter] = useState("new");
+
+  //handles filter change
+  const changeSortFilter = (newFilter) => {
+    setCurrentSortFilter(newFilter);
+  };
   return (
     <div
       style={{
@@ -86,21 +93,24 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     >
       <div
         style={{
-          border: "1px solid black",
-          width: 1000,
+          // width: 1000,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: 10,
-          backgroundColor: "darkgray",
+          // padding: 10,
           borderRadius: 10,
         }}
       >
-        <h1>Post:</h1>
+        <FilterBar
+          currentSortFilter={currentSortFilter}
+          setCurrentSortFilter={changeSortFilter}
+          currentPost={currentPost}
+        />
         {!!currentPost && <IndividualPost post={currentPost} />}
         {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
         <h2>Comments:</h2>
+        <NewComment addComment={addComment} />
         {!!comments && (
           <CommentsContainer
             comments={comments}
@@ -108,7 +118,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             whereis="postViewer"
           />
         )}
-        <NewComment addComment={addComment} />
       </div>
     </div>
   );

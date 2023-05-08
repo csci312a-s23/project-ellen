@@ -5,7 +5,7 @@
 
 .modal {
   width: 700px;
-  height: 500px;
+  height: 650px;
   background-color: white;
   position: relative;
   border-radius: 20px;
@@ -14,6 +14,8 @@
 }
 
 .content {
+  box-shadow: 0px 0px 213px 1082px rgba(0, 0, 0, 0.45);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
