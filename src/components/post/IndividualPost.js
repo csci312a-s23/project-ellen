@@ -60,7 +60,8 @@ export default function IndividualPost({ post }) {
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />
       </Box>
-      <p>total votes: {voteSum}</p>
+      <span>score: {voteSum}</span>
+      <span>number of votes: {post.num_votes}</span>
       {/* </div> */}
     </Box>
   );
