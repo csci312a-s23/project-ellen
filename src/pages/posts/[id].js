@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import NewComment from "@/components/comment/NewComment";
+import FilterBar from "@/components/homepage/filterBar";
 
 export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
@@ -76,6 +77,12 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     getComments();
   };
 
+  const [currentSortFilter, setCurrentSortFilter] = useState("new");
+
+  //handles filter change
+  const changeSortFilter = (newFilter) => {
+    setCurrentSortFilter(newFilter);
+  };
   return (
     <div
       style={{
@@ -95,6 +102,11 @@ export default function ShowPost({ currentPost, refreshPosts }) {
           borderRadius: 10,
         }}
       >
+        <FilterBar
+          currentSortFilter={currentSortFilter}
+          setCurrentSortFilter={changeSortFilter}
+          currentPost={currentPost}
+        />
         {!!currentPost && <IndividualPost post={currentPost} />}
         {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
         <h2>Comments:</h2>

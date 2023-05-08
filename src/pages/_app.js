@@ -1,4 +1,4 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/navigation/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -11,7 +11,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
 import theme from "@/material/theme";
 import createEmotionCache from "@/material/createEmotionCache";
-import FilterBar from "@/components/homepage/filterBar";
 import Container from "@mui/material/Container";
 // import { Box } from "@mui/material";
 // import Typography from "@mui/material/Typography";
@@ -67,25 +66,18 @@ export default function App({
     refreshPosts();
   }, []);
 
-  const [currentSortFilter, setCurrentSortFilter] = useState("new");
-
   const props = {
     ...pageProps,
     currentPost,
     setCurrentPost,
     refreshPosts,
     posts,
-    currentSortFilter,
   };
   // console.log(session);
 
   // TO TEST, I PUT USERID = 1 BELOW
   // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
 
-  //handles filter change
-  const changeSortFilter = (newFilter) => {
-    setCurrentSortFilter(newFilter);
-  };
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -104,11 +96,6 @@ export default function App({
               <Container>
                 <Component {...props} />
               </Container>
-              <FilterBar
-                currentSortFilter={currentSortFilter}
-                setCurrentSortFilter={changeSortFilter}
-                currentPost={currentPost}
-              />
             </div>
           </SessionProvider>
         </main>

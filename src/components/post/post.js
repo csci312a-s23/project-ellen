@@ -2,41 +2,19 @@ import PropTypes from "prop-types";
 
 import { Typography } from "@mui/material";
 
-import styled from "@emotion/styled";
 // const fs = require("fs");
 import { categoryColors } from "../../../data/CategoryColorData.js";
 
-const PostContainer = styled("div")({
-  // marginBottom: "2%",
-  // border: "2px solid #E0E0E0",
-  // borderRadius: "25px",
-  // padding: "10px",
-  // position: "relative",
-  // alignItems: "center",
-});
+import styles from "./Post.module.css";
 
 export default function Post({
   postInfo,
   // refreshPosts
 }) {
   return (
-    <PostContainer data-testid="post">
-      <div
-        style={{
-          border: "3px solid black ",
-          padding: "10px",
-          boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 0.4px -1px",
-        }}
-      >
-        <div
-          style={{
-            marginBottom: "0px",
-            display: "flex",
-            flexDirection: "row",
-          }}
-          position={"absolute"}
-          color={"grey"}
-        >
+    <div data-testid="post">
+      <div className={styles.container}>
+        <div className={styles.content}>
           <div
             style={{
               backgroundColor: categoryColors[postInfo.category],
@@ -48,31 +26,17 @@ export default function Post({
             {postInfo.category}
           </div>
         </div>
-        <Typography
-          style={{ paddingTop: "0px" }}
-          fontSize={"35px"}
-          href={`/posts/${postInfo.id}`}
-          // ml={"10%"}
-        >
-          {postInfo.title}
-        </Typography>
+        <Typography className={styles.postTitle}>{postInfo.title}</Typography>
 
-        <Typography
-          position={"relative"}
-          // ml={"13%"}
-        >
-          {postInfo.content}
-        </Typography>
-        <Typography
-          position={"relative"}
-          // ml={"90%"}
-        >
-          {postInfo.votes}
-        </Typography>
+        <Typography>{postInfo.content}</Typography>
+        <div className={styles.stats}>
+          <span>Votes: {postInfo.votes}</span>
+          <span>Comments:</span>
+        </div>
 
         {/* <Typography>{postInfo.created_at}</Typography> */}
       </div>
-    </PostContainer>
+    </div>
   );
 }
 Post.propTypes = {

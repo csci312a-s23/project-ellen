@@ -1,42 +1,18 @@
 import { Box } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import styles from "./Comment.module.css";
 
 export default function Comment({ data, vote }) {
   return (
     <div data-testid="comment">
-      <Box
-        sx={{
-          width: 700,
-          // bgcolor: "lightgray",
-          border: "1px solid black",
-          padding: 2,
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: 2,
-          marginBottom: 2,
-        }}
-      >
-        <Box sx={{ width: 500, paddingLeft: 2 }}>
-          <h3
-            style={{
-              // marginBottom: "40px",
-              marginTop: "0px",
-            }}
-          >
-            by: {data?.poster?.username}
-          </h3>
+      <Box className={styles.indivCommentContainer}>
+        <Box className={styles.leftSide}>
+          <h3>by: {data?.poster?.username}</h3>
           <div>{data.content}</div>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <Box className={styles.rightSide}>
           <div
             style={{ cursor: "pointer" }}
             onClick={() => vote("upvote", data.id, data.postID)}

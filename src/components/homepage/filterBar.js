@@ -18,6 +18,7 @@ import { Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import styles from "./filterBar.module.css";
 
 const buttonStyle = {
   variant: "outlined",
@@ -40,29 +41,10 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        width: "200px",
-        flexShrink: "0",
-        borderLeft: "1px solid lightgrey ",
-      }}
-    >
-      <div
-        style={{
-          display: "absolute",
-          position: "fixed",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          paddingTop: "100px",
-          paddingBottom: "200px",
-        }}
-      >
+    <div className={styles.externalContainer}>
+      <div className={styles.content}>
         {!currentPost && (
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className={styles.buttonHolder}>
             <Button
               {...buttonStyle}
               onClick={() => setCurrentSortFilter("new")}
@@ -87,13 +69,7 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
               onClick={handleClick}
             >
               {currentSortFilter === "new" || currentSortFilter === "hot" ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
+                <div className={styles.filterButtonDropdown}>
                   <span>Category</span>
                   <KeyboardArrowDownIcon />
                 </div>

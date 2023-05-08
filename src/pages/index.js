@@ -6,25 +6,27 @@ import PropTypes from "prop-types";
 
 // import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
+import FilterBar from "@/components/homepage/filterBar";
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
 
-export default function Home({
-  posts,
-  refreshPosts,
-  currentSortFilter,
-  // changeSortFilter
-}) {
+export default function Home({ posts, refreshPosts }) {
+  const [currentSortFilter, setCurrentSortFilter] = useState("new");
+
+  //handles filter change
+  const changeSortFilter = (newFilter) => {
+    setCurrentSortFilter(newFilter);
+  };
+
   return (
-    <div
-      style={{
-        paddingTop: "30px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <div className={styles.container}>
       <Typography variant="h2" align="center">
         Feed
       </Typography>
+      <FilterBar
+        currentSortFilter={currentSortFilter}
+        setCurrentSortFilter={changeSortFilter}
+      />
       <div style={{ width: "80%" }}>
         <PostList
           posts={posts}
