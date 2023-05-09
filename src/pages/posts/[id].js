@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Fab from "@mui/material/Fab";
+import "@/styles/globals.css";
 
 import NewComment from "@/components/comment/NewComment";
 
@@ -87,7 +88,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     >
       <Fab
         variant="extended"
-        style={{ position: "fixed", top: 100, left: 20 }}
+        // style={}
         color="primary"
         onClick={() => {
           router.push("/");
