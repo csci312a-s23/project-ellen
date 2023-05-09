@@ -9,21 +9,29 @@ import FilterBar from "@/components/homepage/filterBar";
 
 export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
+  const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
 
-  let canDelete = false;
   const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
-  if (status === "authenticated") {
-    if (
-      (!!currentPost && session.user.id === currentPost.posterID) ||
-      session.user.isAdmin === 1
-    ) {
-      canDelete = true;
+  console.log("session:", session);
+  console.log("status:", status);
+  useEffect(() => {
+    console.log("status", status);
+    if (status === "authenticated") {
+      if (
+        !!currentPost &&
+        (session.user.id === currentPost.posterID || session.user.isAdmin === 1)
+      ) {
+        console.log("setitng ture");
+        setCanDelete(true);
+      } else {
+        console.log("staying false", !!currentPost, session.user.isAdmin);
+      }
     }
-  }
+  }, [status, currentPost]);
 
   const getComments = useCallback(() => {
     if (!!currentPost) {

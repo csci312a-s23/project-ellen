@@ -14,7 +14,6 @@ import { useSession } from "next-auth/react";
 // import { SessionProvider } from "next-auth/react";
 import { waitFor } from "@testing-library/react";
 import { within } from "@testing-library/dom";
-import PostPage from "@/pages/posts/[id].js";
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
@@ -24,6 +23,7 @@ jest.mock("next/router", () => require("next-router-mock"));
 jest.mock("next-auth/react", () => ({
   useSession: jest.fn(),
 }));
+jest.mock("next-auth/react");
 
 mockRouter.useParser(
   createDynamicRouteParser([
@@ -71,6 +71,7 @@ describe("General Tests", () => {
         data: {
           user: {
             name: "test1",
+            isAdmin: true,
           },
         },
       };
@@ -273,9 +274,21 @@ describe("General Tests", () => {
   });
   describe("admin features", () => {
     test("admin can see 'delete post' on all posts", async () => {
+      // useSession.mockImplementation(() => {
+      // 	return {
+      // 		data: {
+      // 			user: {
+      // 				name: "test1",
+      // 				username: "test1",
+      // 				isAdmin: 1
+      // 			},
+      // 		},
+      // 	}
+      // })
       useSession.mockImplementation(() => {
         return {
-          user: { username: "test", isAdmin: 1 },
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
         };
       });
       const examplePost = {
@@ -283,7 +296,7 @@ describe("General Tests", () => {
         content:
           "I got 0/4 courses for fall course registration. It is outrageous that as a junior I cannot get classes to fuffil my major!",
         created_at: "2023-05-09T13:04:18.913Z",
-        id: 3,
+        id: 1,
         myVote: 0,
         num_votes: 8,
         poster: null,
@@ -291,9 +304,10 @@ describe("General Tests", () => {
         title: "O for Registration",
         voteSum: 0,
       };
-      // mockRouter.setCurrentUrl(`/profile/test1`);
-      render(<PostPage currentPost={examplePost} />);
-      expect(await screen.findByText("Delete post")).toHaveLength(0);
+      mockRouter.setCurrentUrl(`/posts/1`);
+      render(<ShowPost currentPost={examplePost} />);
+      // screen.getByText()
+      expect(screen.getByText("Delete Post")).toBeInTheDocument();
     });
   });
 });
