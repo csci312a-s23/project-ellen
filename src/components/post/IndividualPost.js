@@ -9,15 +9,12 @@ export default function IndividualPost({ post }) {
   const [voteSum, setVoteSum] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
 
-  console.log("post data:", post);
-
   useEffect(() => {
     setVoteSum(post.voteSum);
     setVoteVal(post.myVote);
   }, []);
 
   const setVote = (vote) => {
-    console.log("vote", vote);
     setVoteVal(vote);
     clearTimeout(stateTimeout);
     setStateTimeout(
@@ -33,7 +30,7 @@ export default function IndividualPost({ post }) {
         })
           .then((res) => res.json())
           .then((response) => {
-            console.log("response", response);
+            // console.log("response", response);
             setVoteSum(response.newVoteSum);
           });
       }, 2000)

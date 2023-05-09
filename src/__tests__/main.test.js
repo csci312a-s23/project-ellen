@@ -2,6 +2,7 @@ import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[username]";
 import Post from "@/components/post/post.js";
+// import PostPage from "@/components/post/IndividualPost.js";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -252,9 +253,9 @@ describe("General Tests", () => {
         id: 6,
         myVote: 0,
         num_votes: 1,
-        num_comments: 10,
         posterID: "11111",
         title: "new post 2",
+        comments: [{}, {}, {}],
       };
       render(<Post postInfo={examplePost} />);
       // const find = screen.getByTestId("num_votes")
@@ -263,13 +264,7 @@ describe("General Tests", () => {
       expect(getByText("1")).toBeInTheDocument();
 
       const getByText2 = within(screen.getByTestId("num_comments")).getByText;
-      expect(getByText2("10")).toBeInTheDocument();
-
-      // const find = await screen.findByText("# votes: 1")
-      // console.log("find", find)
-      // console.log("find2", find2)
-      // expect(screen.findByText("# votes: 1")).toBeInTheDocument()
-      // expect(screen.findByText("# comments: 10")).toBeInTheDocument()
+      expect(getByText2("3")).toBeInTheDocument();
     });
   });
   describe("admin features", () => {

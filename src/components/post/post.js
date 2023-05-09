@@ -40,8 +40,6 @@ export default function Post({
             <span data-testid="num_comments">{postInfo.comments?.length}</span>
           </span>
         </div>
-
-        {/* <Typography>{postInfo.created_at}</Typography> */}
       </div>
     </div>
   );
