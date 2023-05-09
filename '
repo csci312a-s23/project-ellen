@@ -12,9 +12,9 @@
     "Rohan Datar <rdatar@middlebury.edu>"
   ],
   "scripts": {
-    "dev": " next dev",
+    "dev": "  next dev",
     "build": "next build",
-    "start": "next start",
+    "start":  "next start",
     "test": "jest",
     "lint": "eslint .",
     "prepare": "husky install"

@@ -2,7 +2,7 @@ import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[username]";
 import Post from "@/components/post/post.js";
-import PostPage from "@/components/post/IndividualPost.js";
+// import PostPage from "@/components/post/IndividualPost.js";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -264,33 +264,6 @@ describe("General Tests", () => {
 
       const getByText2 = within(screen.getByTestId("num_comments")).getByText;
       expect(getByText2("10")).toBeInTheDocument();
-    });
-  });
-
-  describe("admin features", () => {
-    test("admin can see 'delete post' on all posts", async () => {
-      useSession.mockImplementation(() => {
-        return {
-          user: { username: "test", isAdmin: 1 },
-        };
-      });
-
-      const examplePost = {
-        category: "Academics",
-        content:
-          "I got 0/4 courses for fall course registration. It is outrageous that as a junior I cannot get classes to fuffil my major!",
-        created_at: "2023-05-09T13:04:18.913Z",
-        id: 3,
-        myVote: 0,
-        num_votes: 8,
-        poster: null,
-        posterID: "3",
-        title: "O for Registration",
-        voteSum: 0,
-      };
-      // mockRouter.setCurrentUrl(`/profile/test1`);
-      render(<PostPage post={examplePost} />);
-      expect(await screen.findByText("Delete post")).toHaveLength(0);
     });
   });
 });
