@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 // import { SessionProvider } from "next-auth/react";
 import { waitFor } from "@testing-library/react";
 import { within } from "@testing-library/dom";
-
+import PostPage from "@/pages/posts/[id].js";
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
@@ -258,7 +258,7 @@ describe("General Tests", () => {
       render(<Post postInfo={examplePost} />);
       // const find = screen.getByTestId("num_votes")
       // const find2 = within(find).getByText("1")
-      const {getByText} = within(screen.getByTestId("num_votes"));
+      const { getByText } = within(screen.getByTestId("num_votes"));
       expect(getByText("1")).toBeInTheDocument();
 
       const getByText2 = within(screen.getByTestId("num_comments")).getByText;
@@ -269,6 +269,31 @@ describe("General Tests", () => {
       // console.log("find2", find2)
       // expect(screen.findByText("# votes: 1")).toBeInTheDocument()
       // expect(screen.findByText("# comments: 10")).toBeInTheDocument()
+    });
+  });
+  describe("admin features", () => {
+    test("admin can see 'delete post' on all posts", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          user: { username: "test", isAdmin: 1 },
+        };
+      });
+      const examplePost = {
+        category: "Academics",
+        content:
+          "I got 0/4 courses for fall course registration. It is outrageous that as a junior I cannot get classes to fuffil my major!",
+        created_at: "2023-05-09T13:04:18.913Z",
+        id: 3,
+        myVote: 0,
+        num_votes: 8,
+        poster: null,
+        posterID: "3",
+        title: "O for Registration",
+        voteSum: 0,
+      };
+      // mockRouter.setCurrentUrl(`/profile/test1`);
+      render(<PostPage currentPost={examplePost} />);
+      expect(await screen.findByText("Delete post")).toHaveLength(0);
     });
   });
 });
