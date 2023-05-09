@@ -37,11 +37,9 @@ export default function Post({
 
           <span className={styles.statsEntry}>
             # comments:
-            <span data-testid="num_comments">{postInfo.comments.length}</span>
+            <span data-testid="num_comments">{postInfo.comments?.length}</span>
           </span>
         </div>
-
-        {/* <Typography>{postInfo.created_at}</Typography> */}
       </div>
     </div>
   );

@@ -252,9 +252,9 @@ describe("General Tests", () => {
         id: 6,
         myVote: 0,
         num_votes: 1,
-        num_comments: 10,
         posterID: "11111",
         title: "new post 2",
+        comments: [{}, {}, {}],
       };
       render(<Post postInfo={examplePost} />);
       // const find = screen.getByTestId("num_votes")
@@ -263,7 +263,7 @@ describe("General Tests", () => {
       expect(getByText("1")).toBeInTheDocument();
 
       const getByText2 = within(screen.getByTestId("num_comments")).getByText;
-      expect(getByText2("10")).toBeInTheDocument();
+      expect(getByText2("3")).toBeInTheDocument();
     });
   });
 });
