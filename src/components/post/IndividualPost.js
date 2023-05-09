@@ -9,8 +9,6 @@ export default function IndividualPost({ post }) {
   const [voteSum, setVoteSum] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
 
-  console.log("post data:", post);
-
   useEffect(() => {
     setVoteSum(post.voteSum);
     setVoteVal(post.myVote);

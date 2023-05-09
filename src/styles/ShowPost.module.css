@@ -1,0 +1,10 @@
+.backButtonContainer {
+  position: relative;
+  top: 7.2em;
+  left: 0;
+}
+
+.backButton {
+  height: 40px;
+  width: 40px;
+}
