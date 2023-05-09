@@ -37,7 +37,6 @@ const handler = nc({ onError })
   })
   .post(authenticated, async (req, res) => {
     // post a new comment to a given post
-    // const session = await getServerSession(req, res, authOptions);
     const { id } = req.query;
     const newComment = req.body;
     // we want to automatically assign a new comment ID

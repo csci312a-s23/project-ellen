@@ -17,7 +17,6 @@ const handler = nc({ onError })
     res.status(200).json(posts);
   })
   .post(authenticated, async (req, res) => {
-    // const session = await getServerSession(req, res, authOptions);
     const { body } = req;
 
     if (!body) {
