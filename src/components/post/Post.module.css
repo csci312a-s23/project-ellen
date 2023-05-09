@@ -21,3 +21,12 @@
   color: gray;
   font-size: 15px;
 }
+
+.statsEntry {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.statsEntry span {
+  padding-left: 2px;
+}

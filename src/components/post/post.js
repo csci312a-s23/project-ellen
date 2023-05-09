@@ -30,8 +30,15 @@ export default function Post({
 
         <Typography>{postInfo.content}</Typography>
         <div className={styles.stats}>
-          <span>Votes:{postInfo.num_votes}</span>
-          <span>Comments: {postInfo.num_comments}</span>
+          <span className={styles.statsEntry}>
+            # votes:
+            <span>{postInfo.num_votes}</span>
+          </span>
+
+          <span className={styles.statsEntry}>
+            # comments:
+            <span>{postInfo.num_comments}</span>
+          </span>
         </div>
 
         {/* <Typography>{postInfo.created_at}</Typography> */}
