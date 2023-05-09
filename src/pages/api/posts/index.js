@@ -13,19 +13,9 @@ const handler = nc({ onError })
     if (!!category) {
       postQuery.where({ category: category }).throwIfNotFound();
     }
-    const posts = await postQuery.select(
-      "Posts.*",
-      Post.relatedQuery("comments").count().as("num_comments")
-    );
-    // .withGraphFetched("comments")
-    // .modifyGraph("comments", (builder) => {
-    // 	builder.count("postID")
-    // })
-    // const count = posts.count("comments")
+    const posts = await postQuery.withGraphFetched("comments");
 
     // console.log("posts:", posts);
-    // console.log("singular:", posts[0]);
-    // console.log("num comments:", count)
     res.status(200).json(posts);
   })
   .post(authenticated, async (req, res) => {
