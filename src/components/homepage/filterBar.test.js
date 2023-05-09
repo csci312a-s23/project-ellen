@@ -52,7 +52,7 @@ describe("filterBar: filterBar tests", () => {
       />
     );
 
-    const categoryButton = getByText("Category");
+    const categoryButton = getByText("All");
     fireEvent.click(categoryButton);
     const academicsOption = getByText("Academics");
     fireEvent.click(academicsOption);
