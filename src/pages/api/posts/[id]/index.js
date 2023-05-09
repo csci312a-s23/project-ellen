@@ -42,7 +42,9 @@ const handler = nc({ onError })
 
       const newPost = {
         ...post,
-        voteSum: getVotes[0]["sum(`value`)"],
+        voteSum: !!getVotes[0]["sum(`value`)"]
+          ? getVotes[0]["sum(`value`)"]
+          : 0,
         myVote: myVote,
       };
 
