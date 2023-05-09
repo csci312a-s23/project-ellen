@@ -37,7 +37,7 @@ export default function Post({
 
           <span className={styles.statsEntry}>
             # comments:
-            <span data-testid="num_comments">{postInfo.num_comments}</span>
+            <span data-testid="num_comments">{postInfo.comments.length}</span>
           </span>
         </div>
 
