@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, FormControl, Input, InputLabel } from "@mui/material";
+import { Button, FormControl, Input, InputLabel } from "@mui/material";
 import styles from "./NewComment.module.css";
 
 export default function NewComment({ addComment }) {
@@ -11,7 +11,7 @@ export default function NewComment({ addComment }) {
   };
   return (
     <>
-      <Box className={styles.newCommentContainer}>
+      <div className={styles.newCommentContainer}>
         <h3>Make a new comment</h3>
         <div className={styles.entryHolder}>
           <FormControl
@@ -22,6 +22,7 @@ export default function NewComment({ addComment }) {
           >
             <InputLabel htmlFor="standard-adornment-amount">Comment</InputLabel>
             <Input
+              className={styles.inputBox}
               onChange={(e) => setNewComment(e.target.value)}
               value={newComment}
               id="standard-adornment-amount"
@@ -35,7 +36,7 @@ export default function NewComment({ addComment }) {
             submit
           </Button>
         </div>
-      </Box>
+      </div>
     </>
   );
 }
