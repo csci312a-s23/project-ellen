@@ -1,20 +1,14 @@
-import { useState } from "react";
+// import { useState } from "react";
 import PostCreator from "@/components/post/PostCreator";
-import FilterBar from "@/components/homepage/filterBar";
 import PostList from "@/components/homepage/postsList";
 
 import PropTypes from "prop-types";
 
-import { styled } from "@mui/material/styles";
+// import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
-
-const Container = styled("div")({
-  display: "flex",
-  width: "40%",
-  flexDirection: "column",
-  margin: "2%",
-  marginLeft: "20%",
-});
+import FilterBar from "@/components/homepage/filterBar";
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
 
 export default function Home({ posts, refreshPosts }) {
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
@@ -25,22 +19,22 @@ export default function Home({ posts, refreshPosts }) {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <Typography variant="h2" align="center">
         Feed
       </Typography>
-      <Container>
-        <FilterBar
-          currentSortFilter={currentSortFilter}
-          setCurrentSortFilter={changeSortFilter}
-        />
+      <FilterBar
+        currentSortFilter={currentSortFilter}
+        setCurrentSortFilter={changeSortFilter}
+      />
+      <div style={{ width: "80%" }}>
         <PostList
           posts={posts}
           sortingFilter={currentSortFilter}
           refreshPosts={refreshPosts}
         />
         <PostCreator refresh={refreshPosts} />
-      </Container>
+      </div>
     </div>
   );
 }

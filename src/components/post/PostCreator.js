@@ -20,10 +20,13 @@ export default function PostCreator({ refresh }) {
   const { data: session } = useSession({ required: false });
 
   const options = [
-    { label: "Food" },
-    { label: "Registration" },
+    { label: "None" },
+    { label: "Academics" },
+    { label: "Athletics" },
+    { label: "Social" },
     { label: "Professors" },
-    { label: "Teachers" },
+    { label: "Housing" },
+    { label: "Dining" },
     { label: "Other" },
   ];
 

@@ -1,0 +1,23 @@
+.container {
+  border: 3px solid black;
+  padding: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 0.4px -1px;
+}
+
+.content {
+  margin-bottom: 0px;
+  display: flex;
+  flex-direction: row;
+  color: grey;
+}
+
+.postTitle {
+  font-size: 35px;
+  margin: 0px;
+}
+
+.stats {
+  margin-top: 10px;
+  color: gray;
+  font-size: 15px;
+}

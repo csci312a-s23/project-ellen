@@ -3,11 +3,12 @@ import IndividualPost from "@/components/post/IndividualPost";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Fab from "@mui/material/Fab";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import Fab from "@mui/material/Fab";
 import "@/styles/globals.css";
 
 import NewComment from "@/components/comment/NewComment";
+import FilterBar from "@/components/homepage/filterBar";
 
 export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
@@ -78,6 +79,12 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     getComments();
   };
 
+  const [currentSortFilter, setCurrentSortFilter] = useState("new");
+
+  //handles filter change
+  const changeSortFilter = (newFilter) => {
+    setCurrentSortFilter(newFilter);
+  };
   return (
     <div
       style={{
@@ -86,6 +93,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         justifyContent: "center",
       }}
     >
+      {/* <<<<<<< HEAD
       <Fab
         variant="extended"
         // style={}
@@ -129,6 +137,34 @@ export default function ShowPost({ currentPost, refreshPosts }) {
           )}
           <NewComment addComment={addComment} />
         </div>
+======= */}
+      <div
+        style={{
+          // width: 1000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          // padding: 10,
+          borderRadius: 10,
+        }}
+      >
+        <FilterBar
+          currentSortFilter={currentSortFilter}
+          setCurrentSortFilter={changeSortFilter}
+          currentPost={currentPost}
+        />
+        {!!currentPost && <IndividualPost post={currentPost} />}
+        {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
+        <h2>Comments:</h2>
+        <NewComment addComment={addComment} />
+        {!!comments && (
+          <CommentsContainer
+            comments={comments}
+            vote={vote}
+            whereis="postViewer"
+          />
+        )}
       </div>
     </div>
   );
