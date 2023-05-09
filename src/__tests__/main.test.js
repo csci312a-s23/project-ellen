@@ -1,6 +1,7 @@
 import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[username]";
+import Post from "@/components/post/post.js";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -12,6 +13,7 @@ import { act } from "react-dom/test-utils";
 import { useSession } from "next-auth/react";
 // import { SessionProvider } from "next-auth/react";
 import { waitFor } from "@testing-library/react";
+import { within } from "@testing-library/dom";
 
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
@@ -146,7 +148,7 @@ describe("General Tests", () => {
       const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const catInput = screen.getByTestId("cat-input");
-      const test = "Food";
+      const test = "Academics";
       fireEvent.change(catInput, { target: { value: test } });
       expect(catInput.value).toBe(test);
     });
@@ -237,6 +239,36 @@ describe("General Tests", () => {
       mockRouter.setCurrentUrl(`/profile/test1`);
       render(<Profile />);
       expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+    });
+  });
+
+  describe("view counts", () => {
+    test("number of comments is showing", async () => {
+      const examplePost = {
+        category: "Athletics",
+        content: "this is my issue",
+        created_at: "2023-05-07T19:25:14.995Z",
+        id: 6,
+        myVote: 0,
+        num_votes: 1,
+        num_comments: 10,
+        posterID: "11111",
+        title: "new post 2",
+      };
+      render(<Post postInfo={examplePost} />);
+      // const find = screen.getByTestId("num_votes")
+      // const find2 = within(find).getByText("1")
+      const {getByText} = within(screen.getByTestId("num_votes"));
+      expect(getByText("1")).toBeInTheDocument();
+
+      const getByText2 = within(screen.getByTestId("num_comments")).getByText;
+      expect(getByText2("10")).toBeInTheDocument();
+
+      // const find = await screen.findByText("# votes: 1")
+      // console.log("find", find)
+      // console.log("find2", find2)
+      // expect(screen.findByText("# votes: 1")).toBeInTheDocument()
+      // expect(screen.findByText("# comments: 10")).toBeInTheDocument()
     });
   });
 });

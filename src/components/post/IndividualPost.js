@@ -1,6 +1,8 @@
 import VoteSlider from "./VoteSlider.js";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import { categoryColors } from "../../../data/CategoryColorData.js";
+import styles from "./IndividualPost.module.css";
 
 export default function IndividualPost({ post }) {
   const [voteVal, setVoteVal] = useState(0);
@@ -39,30 +41,27 @@ export default function IndividualPost({ post }) {
   };
 
   return (
-    <Box
-      sx={{
-        width: 800,
-        bgcolor: "lightgray",
-        padding: 2,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 10,
-        marginTop: 2,
-        marginBottom: 2,
-      }}
-    >
+    <Box className={styles.postContainer}>
       {/* <div data-testid="post"> */}
-      <h1>{post.title}</h1>
+      <h1 className={styles.title}>
+        <div style={{ paddingRight: "20px" }}>{post.title}</div>
+        <div
+          className={styles.categoryIcon}
+          style={{
+            backgroundColor: categoryColors[post.category],
+          }}
+        >
+          {post.category}
+        </div>
+      </h1>
+      <div>by: {post?.poster?.username}</div>
+      <div>at: {new Date(post.created_at).toISOString().substring(0, 10)}</div>
       <p>{post.content}</p>
-      <p>category: {post.category}</p>
-      <p>by: {post?.poster?.username}</p>
-      <p>created at: {post.created_at}</p>
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />
       </Box>
-      <p>total votes: {voteSum}</p>
+      <span>score: {voteSum}</span>
+      <span>number of votes: {post.num_votes}</span>
       {/* </div> */}
     </Box>
   );

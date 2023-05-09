@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 import Post from "@/components/post/post.js";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
 
 const Container = styled("div")({
-  width: "150%",
+  // width: "150%",
   margin: "5% 0 5% 0",
   // align: "center",
 });
@@ -22,6 +23,8 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
       } else if (sortingFilter === "hot") {
         //sort by date
         return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
+      } else {
+        return post.category === sortingFilter;
       }
     });
   } else {
@@ -37,7 +40,12 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
       {filteredPosts.map((post) => {
         return (
           <PostContainer key={post.id}>
-            <Post postInfo={post} refreshPosts={refreshPosts} />
+            <Link
+              href={`/posts/${post.id}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Post postInfo={post} refreshPosts={refreshPosts} />
+            </Link>
           </PostContainer>
         );
       })}
@@ -49,5 +57,15 @@ export default PostList;
 
 PostList.propTypes = {
   posts: PropTypes.array,
-  sortingFilter: PropTypes.oneOf(["new", "hot"]).isRequired,
+  sortingFilter: PropTypes.oneOf([
+    "new",
+    "hot",
+    "Academics",
+    "Athletics",
+    "Social",
+    "Professors",
+    "Housing",
+    "Dining",
+    "Other",
+  ]),
 };
