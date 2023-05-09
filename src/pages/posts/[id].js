@@ -20,16 +20,13 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
   useEffect(() => {
-    console.log("status", status);
     if (status === "authenticated") {
       if (
         !!currentPost &&
         (session.user.id === currentPost.posterID || session.user.isAdmin === 1)
       ) {
-        console.log("setitng ture");
         setCanDelete(true);
       } else {
-        console.log("staying false", !!currentPost, session.user.isAdmin);
       }
     }
   }, [status, currentPost]);
