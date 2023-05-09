@@ -11,7 +11,6 @@ export default function Post({
   postInfo,
   // refreshPosts
 }) {
-  console.log("postinfo", postInfo);
   return (
     <div data-testid="post">
       <div className={styles.container}>

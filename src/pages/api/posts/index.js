@@ -25,8 +25,8 @@ const handler = nc({ onError })
     // })
     // const count = posts.count("comments")
 
-    console.log("posts:", posts);
-    console.log("singular:", posts[0]);
+    // console.log("posts:", posts);
+    // console.log("singular:", posts[0]);
     // console.log("num comments:", count)
     res.status(200).json(posts);
   })
