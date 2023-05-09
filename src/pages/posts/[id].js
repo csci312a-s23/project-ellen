@@ -19,8 +19,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
 
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
-  console.log("session:", session);
-  console.log("status:", status);
   useEffect(() => {
     console.log("status", status);
     if (status === "authenticated") {
