@@ -3,8 +3,6 @@ const { loadEnvConfig } = require("@next/env");
 // Adapted from NextJS knex example
 const dev = process.env.NODE_ENV !== "production";
 const { DATABASE_URL } = loadEnvConfig("./", dev).combinedEnv;
-// console.log("db url", DATABASE_URL)
-// console.log("env", dev)
 
 const defaultSettings = {
   migrations: {

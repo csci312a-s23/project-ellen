@@ -13,6 +13,5 @@ export const knex =
   createKnex(
     knexConfig[process.env.KNEX_ENV || process.env.NODE_ENV || "development"]
   );
-console.log(process.env.NODE_ENV);
 
 if (process.env.NODE_ENV !== "production") globalForKnex.knex = knex;
