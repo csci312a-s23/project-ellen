@@ -79,6 +79,7 @@ export default function Profile() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginBottom: "50px",
         }}
       >
         <Button
@@ -89,14 +90,23 @@ export default function Profile() {
           Edit
         </Button>
       </div>
-      {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
-      {userComments && (
-        <CommentsContainer
-          comments={userComments}
-          vote={vote}
-          whereis="profile"
-        />
-      )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
+        {userComments && (
+          <CommentsContainer
+            comments={userComments}
+            vote={vote}
+            whereis="profile"
+          />
+        )}
+      </div>
     </div>
   );
 }
