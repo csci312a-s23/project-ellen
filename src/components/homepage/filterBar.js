@@ -70,11 +70,14 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
             >
               {currentSortFilter === "new" || currentSortFilter === "hot" ? (
                 <div className={styles.filterButtonDropdown}>
-                  <span>Category</span>
+                  <span>All</span>
                   <KeyboardArrowDownIcon />
                 </div>
               ) : (
-                currentSortFilter
+                <div className={styles.filterButtonDropdown}>
+                  <span>{currentSortFilter}</span>
+                  <KeyboardArrowDownIcon />
+                </div>
               )}
             </Button>
             <Menu
@@ -86,6 +89,7 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
                 "aria-labelledby": "basic-button",
               }}
             >
+              <MenuItem onClick={changeCategory}>All</MenuItem>
               <MenuItem onClick={changeCategory}>Academics</MenuItem>
               <MenuItem onClick={changeCategory}>Athletics</MenuItem>
               <MenuItem onClick={changeCategory}>Social</MenuItem>
@@ -107,6 +111,7 @@ FilterBar.propTypes = {
   currentSortFilter: PropTypes.oneOf([
     "new",
     "hot",
+    "All",
     "Academics",
     "Athletics",
     "Social",
