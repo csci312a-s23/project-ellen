@@ -49,6 +49,7 @@ export const authOptions = {
         // Add user id to the token
         token.name = localUser.username;
         token.id = localUser.id;
+        token.isAdmin = localUser.isAdmin;
       }
       return token;
     },
@@ -56,6 +57,7 @@ export const authOptions = {
       // Add user id to the session
       session.user.name = token.name;
       session.user.id = token.id;
+      session.user.isAdmin = token.isAdmin;
       return session;
     },
   },

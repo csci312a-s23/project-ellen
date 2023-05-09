@@ -17,7 +17,10 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
   if (status === "authenticated") {
-    if (!!currentPost && session.user.id === currentPost.posterID) {
+    if (
+      (!!currentPost && session.user.id === currentPost.posterID) ||
+      session.user.isAdmin === 1
+    ) {
       canDelete = true;
     }
   }

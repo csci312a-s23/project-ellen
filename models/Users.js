@@ -24,6 +24,7 @@ export default class User extends BaseModel {
         major: { type: "string" },
         department: { type: "string" },
         title: { type: "string" },
+        isAdmin: { type: "boolean", default: false },
       },
     };
   }
