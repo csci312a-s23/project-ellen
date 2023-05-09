@@ -11,6 +11,7 @@ export default function Post({
   postInfo,
   // refreshPosts
 }) {
+  console.log("postinfo", postInfo);
   return (
     <div data-testid="post">
       <div className={styles.container}>
@@ -32,12 +33,12 @@ export default function Post({
         <div className={styles.stats}>
           <span className={styles.statsEntry}>
             # votes:
-            <span>{postInfo.num_votes}</span>
+            <span data-testid="num_votes">{postInfo.num_votes}</span>
           </span>
 
           <span className={styles.statsEntry}>
             # comments:
-            <span>{postInfo.num_comments}</span>
+            <span data-testid="num_comments">{postInfo.num_comments}</span>
           </span>
         </div>
 
