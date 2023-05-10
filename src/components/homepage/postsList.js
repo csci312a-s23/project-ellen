@@ -18,11 +18,11 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
 
   if (posts) {
     filteredPosts = posts.filter((post) => {
-      if (sortingFilter === "new") {
+      if (sortingFilter === "new" || sortingFilter === "All") {
         return true; //returns all posts
       } else if (sortingFilter === "hot") {
         //sort by date
-        return parseInt(post.votes) > 5; //need to implement this once we start scoring posts
+        return parseInt(post.num_votes) > 5; //need to implement this once we start scoring posts
       } else {
         return post.category === sortingFilter;
       }
@@ -60,6 +60,7 @@ PostList.propTypes = {
   sortingFilter: PropTypes.oneOf([
     "new",
     "hot",
+    "All",
     "Academics",
     "Athletics",
     "Social",
