@@ -54,8 +54,6 @@ const handler = nc({ onError })
     res.status(200).json(comment);
   })
   .patch(authenticated, async (req, res) => {
-    // const { id } = req.query;
-
     const { postID } = req.body;
     const { commentID } = req.body;
     const { vote } = req.body;
@@ -109,6 +107,27 @@ const handler = nc({ onError })
     });
 
     res.status(200).end(JSON.stringify({ newVoteSum: comment.likes }));
+  })
+  .delete(authenticated, async (req, res) => {
+    const { postID } = req.body;
+    const { commentID } = req.body;
+    console.log(postID, commentID);
+    if (!!commentID) {
+      const comment = await Comments.query()
+        .findById(parseInt(commentID))
+        .throwIfNotFound();
+
+      if (comment.commenterID === req.user.id) {
+        await Comments.query()
+          .deleteById(parseInt(commentID))
+          .throwIfNotFound();
+        res.status(200).json({ message: "Comment deleted" });
+      } else {
+        res
+          .status(403)
+          .json({ message: "Not authorized to delete this comment" });
+      }
+    }
   });
 
 export default handler;

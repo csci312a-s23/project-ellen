@@ -233,6 +233,24 @@ describe("API tests", () => {
         },
       });
     });
+
+    test("deleteComment should delete the correct comment", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true,
+        handler: postComments_endpoint,
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (
+          (params.userID = 1), (params.commentID = 1)
+        ),
+        test: async ({ fetch }) => {
+          const res = await fetch({
+            method: "DELETE",
+          });
+          const response = await res.json();
+          expect(response.message).toBe("Comment deleted");
+        },
+      });
+    });
   });
 
   describe("User API tests", () => {
