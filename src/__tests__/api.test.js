@@ -668,7 +668,6 @@ describe("API tests", () => {
             }),
           });
 
-          // console.log("initresponse", res)
           const finalComment = await knex("comments")
             .where({ postID: "1", id: "1" })
             .first();

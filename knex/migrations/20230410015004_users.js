@@ -15,6 +15,7 @@ exports.up = function (knex) {
     table.string("major");
     table.string("department");
     table.string("title");
+    table.boolean("isAdmin").defaultTo(0);
   });
 };
 

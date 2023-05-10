@@ -1,4 +1,4 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/navigation/NavBar";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { CacheProvider } from "@emotion/react";
 import theme from "@/material/theme";
 import createEmotionCache from "@/material/createEmotionCache";
 import Container from "@mui/material/Container";
+// import { Box } from "@mui/material";
 // import Typography from "@mui/material/Typography";
 // import { styled } from "@mui/material/styles";
 
@@ -90,10 +91,12 @@ export default function App({
         <CssBaseline />
         <main>
           <SessionProvider session={session}>
-            <NavBar />
-            <Container>
-              <Component {...props} />
-            </Container>
+            <div style={{ display: "flex" }}>
+              <NavBar />
+              <Container>
+                <Component {...props} />
+              </Container>
+            </div>
           </SessionProvider>
         </main>
       </ThemeProvider>

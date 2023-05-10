@@ -1,6 +1,7 @@
 import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
+import Users from "../../../../../models/Users.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth/next";
@@ -41,7 +42,9 @@ const handler = nc({ onError })
 
       const newPost = {
         ...post,
-        voteSum: getVotes[0]["sum(`value`)"],
+        voteSum: !!getVotes[0]["sum(`value`)"]
+          ? getVotes[0]["sum(`value`)"]
+          : 0,
         myVote: myVote,
       };
 
@@ -61,7 +64,14 @@ const handler = nc({ onError })
         .first()
         .throwIfNotFound();
 
-      if (!!session && session.user.id === post.posterID) {
+      const user = await Users.query()
+        .findById(session.user.id)
+        .select("isAdmin");
+
+      if (
+        (!!session && session.user.id === post.posterID) ||
+        user.isAdmin === 1
+      ) {
         await Posts.query().deleteById(parseInt(id)).first().throwIfNotFound();
         res.status(200).json({ message: "Post deleted" });
       } else {
