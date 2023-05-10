@@ -311,7 +311,9 @@ describe("General Tests", () => {
         voteSum: 0,
       };
       mockRouter.setCurrentUrl(`/posts/1`);
-      render(<ShowPost currentPost={examplePost} />);
+      await waitFor(() => {
+        render(<ShowPost currentPost={examplePost} />);
+      });
       // screen.getByText()
       expect(screen.getByText("Delete Post")).toBeInTheDocument();
     });
