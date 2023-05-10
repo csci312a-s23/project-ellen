@@ -49,6 +49,7 @@ describe("General Tests", () => {
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);
     fetchMock.get("/api/users/test1", data.UserSeedData[0]);
+    fetchMock.get("/api/users/test2", data.UserSeedData[1]);
     fetchMock.get(
       "/api/users/test1/posts",
       data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
@@ -57,6 +58,16 @@ describe("General Tests", () => {
       "/api/users/test1/comments",
       data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
+      )
+    );
+    fetchMock.get(
+      "/api/users/test2/posts",
+      data.PostSeedData.filter((post) => parseInt(post.posterID) === 2)
+    );
+    fetchMock.get(
+      "/api/users/test2/comments",
+      data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 2
       )
     );
     mockRouter.setCurrentUrl("/");
@@ -225,13 +236,13 @@ describe("General Tests", () => {
       expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
 
-    test("a signed in user can't view another user's profile", async () => {
+    test("a signed in user can view another user's profile", async () => {
       mockRouter.setCurrentUrl(`/profile/test2`);
       render(<Profile />);
-      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
 
-    test("a user who isn't signed in can't view another user's profile", async () => {
+    test("a user who isn't signed in can view another user's profile", async () => {
       useSession.mockImplementation(() => {
         return {
           data: undefined,
@@ -240,7 +251,7 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test1`);
       render(<Profile />);
-      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
   });
 
