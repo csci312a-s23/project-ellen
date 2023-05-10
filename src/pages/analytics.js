@@ -32,7 +32,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-// ! combine these two?
 ChartJS.register(
   TimeScale,
   LinearScale,
@@ -43,15 +42,8 @@ ChartJS.register(
   Legend
 );
 
-//! note: graph category widget label doesnt work atm
-
-export default function page() {
-  return <AnalyticsDisplay />;
-}
-function AnalyticsDisplay() {
-  const controlPanelWidth = 25; // %
-  // Class, Athlete, 1st Gen, Gender, ...
-
+export default function AnalyticsDisplay({ renderChart = true }) {
+  const controlPanelWidth = 25; // UI mod
   // stores the current issue to be analyzed
   const [compare, setCompare] = useState("Housing");
 
@@ -76,6 +68,7 @@ function AnalyticsDisplay() {
   let key = 0;
   return (
     <div
+      data-testid="wholepage"
       style={{
         width: "100vw",
         height: "90vh",
@@ -157,19 +150,19 @@ function AnalyticsDisplay() {
             </Button>
           </div>
         </Paper>
-
         <div style={{ width: `${100 - controlPanelWidth}%`, height: "100%" }}>
           <LineChart
             categories={categories}
             compare={compare}
             setCompare={setCompare}
+            renderChart={renderChart}
           />
         </div>
       </Paper>
     </div>
   );
 }
-function MakeGroup({ c, categories, setCategories }) {
+export function MakeGroup({ c, categories, setCategories }) {
   const groups = [
     ["classes", ["2023", "2024", "2025", "2026"]],
     ["majors", ["ECON", "CSCI", "PSCI", "NSCI", "ENVS"]],
@@ -185,6 +178,7 @@ function MakeGroup({ c, categories, setCategories }) {
         <Box sx={{ "& button": { m: 1 } }}>
           <IconButton
             variant="contained"
+            data-testid="deletebtn"
             size="small"
             style={{ backgroundColor: "", marginRight: 0 }}
             onClick={() => {
@@ -199,7 +193,10 @@ function MakeGroup({ c, categories, setCategories }) {
         </Box>
       </AccordionSummary>
 
-      <AccordionDetails style={{ backgroundColor: "white" }}>
+      <AccordionDetails
+        data-testid="accordiondetails"
+        style={{ backgroundColor: "white" }}
+      >
         {groups.map((g) => {
           key++;
           return (
@@ -240,6 +237,7 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
     <FormControl sx={{ width: "100%", marginTop: "5%" }}>
       <InputLabel>{label}</InputLabel>
       <Select
+        data-testid={"dropdown-select"}
         multiple
         value={c.filters[label]} // values
         onChange={(e) => handleChange(e, label)}
@@ -247,7 +245,7 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
-              <Chip key={value} label={value} />
+              <Chip key={value} label={value} data-testid={`group-${value}`} />
             ))}
           </Box>
         )}
@@ -256,6 +254,7 @@ function MakeDropDown({ options, label, c, categories, setCategories }) {
           key++;
           return (
             <MenuItem
+              data-testid={`options-dropdown`}
               key={`${option}_${c}_${key}`}
               value={option.substring(0, 4)}
             >
@@ -274,18 +273,20 @@ function filterUser(user, filter) {
   };
   // filtering by user information
   // run checks through each key of the filter, make sure the user possesses at least one property as specified
-  for (const [key, value] of Object.entries(filter)) {
-    // iterate through the filter object: key = classes, majors, etc.
-    let passes = value.length === 0; // if that filter category is empty, let it pass
-    if (!passes) {
-      // loop through the filter category and see if the user matches any of the specified options
-      value.forEach((element) => {
-        // check if the element belongs to the user s.t. element = "2023" or "CSCI" etc.
-        passes = element === user[idMappings[key]].toString() ? true : passes;
-      });
-      // if the datapoint doesn't pass the filter, don't include it
+  if (!!user) {
+    for (const [key, value] of Object.entries(filter)) {
+      // iterate through the filter object: key = classes, majors, etc.
+      let passes = value.length === 0; // if that filter category is empty, let it pass
       if (!passes) {
-        return false;
+        // loop through the filter category and see if the user matches any of the specified options
+        value.forEach((element) => {
+          // check if the element belongs to the user s.t. element = "2023" or "CSCI" etc.
+          passes = element === user[idMappings[key]].toString() ? true : passes;
+        });
+        // if the datapoint doesn't pass the filter, don't include it
+        if (!passes) {
+          return false;
+        }
       }
     }
   }
@@ -330,7 +331,6 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
       // ^ get activity for posts on that day
       let countPassing = posts.reduce((count, post) => {
         // get the corresponding user
-        //! eventually make this more efficient by querying the api direcly by user id
         return (
           count +
           (new Date(post.created_at).toLocaleDateString() ===
@@ -342,7 +342,6 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
 
       //^ get activity for comments on that day
       countPassing += comments.reduce((count, comment) => {
-        //! access API endpoint to query all the comments
         return (
           count +
           (new Date(comment.created_at).toLocaleDateString() ===
@@ -353,13 +352,13 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
         );
       }, 0);
 
-      //^ get activity for votes on that day -- works.. but is very slow for directly accessing the JSON seed file
+      //^ get activity for votes on that day
       countPassing += votes.reduce((count, vote) => {
         return (
           count +
           (new Date(vote.created_at).toLocaleDateString() ===
             currDate.toLocaleDateString() &&
-            filterUser(vote.post, f.filters) &&
+            filterUser(vote.poster, f.filters) &&
             vote.post.category === categoryFilter) /
             10
         );
@@ -390,8 +389,9 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
     }),
   ];
 }
-
 /*
+saved old code for formatData that creates the data on a day-by-day basis instead of monthly
+
     let dates = []
     let lineData = [];
     
@@ -412,8 +412,7 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
       currDate.setDate(currDate.getDate() + 1);
     }
 */
-function LineChart({ categories, compare, setCompare }) {
-  //! it could be worth creating an API endpoint exclusively for the analytics page to access the DB
+export function LineChart({ categories, compare, setCompare, renderChart }) {
   const [posts, setPosts] = useState([]); // keeps track of all the posts
 
   // ? temporary implementation ~ tb replaced w/ direct queries:
@@ -428,21 +427,21 @@ function LineChart({ categories, compare, setCompare }) {
       .then((response) => {
         setPosts(response);
       })
-      .catch((error) => console.log(error));
+      .catch(() => {});
 
     fetch(`/api/analytics/comments`)
       .then((res) => res.json())
       .then((response) => {
         setComments(response);
       })
-      .catch((error) => console.log(error));
+      .catch(() => {});
 
     fetch(`/api/analytics/votes`)
       .then((res) => res.json())
       .then((response) => {
         setVotes(response);
       })
-      .catch((error) => console.log(error));
+      .catch(() => {});
   }, []);
 
   const [lineData, setLineData] = useState([[], []]);
@@ -450,7 +449,7 @@ function LineChart({ categories, compare, setCompare }) {
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     (async () => {
-      if (posts !== []) {
+      if (posts !== [] && renderChart) {
         // make sure posts is defined before calling this
         const updated = await formatData(
           categories,
@@ -529,9 +528,9 @@ function LineChart({ categories, compare, setCompare }) {
             }}
           >
             {metrics.map((m) => {
-              key++;
+              key += 1;
               return (
-                <MenuItem key={`menuItem${key.toString()}`} value={m}>
+                <MenuItem key={`metricDropdown_${key}`} value={m}>
                   {" "}
                   {m}{" "}
                 </MenuItem>
@@ -542,10 +541,10 @@ function LineChart({ categories, compare, setCompare }) {
 
         <p style={{ margin: "1vw" }}> x </p>
 
-        <FormControl fullWidth>
+        <FormControl fullWidth data-testid="labelChange">
           <InputLabel> Topic </InputLabel>
           <Select
-            data-testid="topicSel"
+            data-testid="labelselect"
             value={compare}
             label="Topic"
             onChange={(e) => {
@@ -553,8 +552,13 @@ function LineChart({ categories, compare, setCompare }) {
             }}
           >
             {issues.map((i) => {
+              key += 1;
               return (
-                <MenuItem key={`menuItem_${key}`} value={i}>
+                <MenuItem
+                  key={`topicItem_${key}`}
+                  value={i}
+                  data-testid={`labelselect-${i}`}
+                >
                   {" "}
                   {i}{" "}
                 </MenuItem>
@@ -563,7 +567,7 @@ function LineChart({ categories, compare, setCompare }) {
           </Select>
         </FormControl>
       </div>
-      <Line data={chartData} options={chartOptions} />
+      {renderChart && <Line data={chartData} options={chartOptions} />}
     </div>
   );
 }

@@ -10,6 +10,9 @@ import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
 import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
+import analytics_post_endpoint from "../pages/api/analytics/posts.js";
+import analytics_comm_endpoint from "../pages/api/analytics/comments.js";
+import analytics_votes_endpoint from "../pages/api/analytics/comments.js";
 // import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/users/index.js";
 import individualUser_endpoint from "../pages/api/users/[username]/index.js";
@@ -536,6 +539,7 @@ describe("API tests", () => {
       });
     });
   });
+
   describe("Voting tests", () => {
     beforeEach(() => {
       // Ensure test database is initialized before an tests
@@ -726,6 +730,92 @@ describe("API tests", () => {
             .where({ postID: "1", id: "1" })
             .first();
           expect(finalComment.likes).toEqual(1);
+        },
+      });
+    });
+  });
+
+  describe("Analytics API endpoints", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
+
+    test("GET /api/analytics/posts should return all posts linked with related users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true,
+        handler: analytics_post_endpoint,
+        url: "/api/analytics/posts",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          const response = await res.json();
+          expect(response).toHaveLength(data["PostSeedData"].length);
+          expect(response[0]).toEqual(
+            expect.objectContaining({
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              }),
+            })
+          );
+        },
+      });
+    });
+    test("GET /api/analytics/comments should return all comments linked with related posts and users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: analytics_comm_endpoint,
+        url: "/api/analytics/comments",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          const response = await res.json();
+          expect(response).toHaveLength(data["CommentSeedData"].length);
+          /*expect(response[0]).toEqual(expect.objectContaining(
+            {
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              }),
+              post: expect.objectContaining(
+                {
+                  id: 1,
+                  poster: expect.objectContaining({
+                    id: "1",
+                    username: "test1",
+                  })
+                }
+              )
+            }
+        ));*/
+        },
+      });
+    });
+    test.skip("GET /api/analytics/votes should return all votes linked with related posts and users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true,
+        handler: analytics_votes_endpoint,
+        url: "/api/analytics/votes",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          console.log(res);
+          const response = await res.json();
+          expect(response).toHaveLength(data["VoteSeedData"].length);
+          /*expect(response[0]).toEqual(expect.objectContaining(
+            {
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              })
+            }
+        ));*/
         },
       });
     });
