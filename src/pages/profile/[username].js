@@ -2,7 +2,6 @@ import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
 import CommentsContainer from "@/components/comment/CommentsContainer";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 export default function Profile() {
@@ -14,8 +13,6 @@ export default function Profile() {
 
   const { username } = router.query;
 
-  const { data: session } = useSession({ required: true });
-
   const getComments = async () => {
     const commentsResponse = await fetch(`/api/users/${username}/comments`);
     if (commentsResponse.ok) {
@@ -25,7 +22,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    if (username && session) {
+    if (username) {
       const getUserInfo = async () => {
         const detailsResponse = await fetch(`/api/users/${username}`);
         if (detailsResponse.ok) {
@@ -41,11 +38,7 @@ export default function Profile() {
         getComments();
       };
 
-      if (
-        (!currentUser || username !== currentUser.username) &&
-        router.pathname.includes("profile") &&
-        session.user.name === username
-      ) {
+      if (router.pathname.includes("profile")) {
         getUserInfo();
       }
     } else {
@@ -53,7 +46,7 @@ export default function Profile() {
       setUserPosts(undefined);
       setUserComments(undefined);
     }
-  }, [username, currentUser, router.pathname, session]);
+  }, [username, currentUser, router.pathname]);
 
   const vote = async (action, commentID, postID) => {
     await fetch(`/api/posts/${postID}/comments`, {
