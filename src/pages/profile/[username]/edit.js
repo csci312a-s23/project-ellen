@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import EditForm from "./editForm";
+import EditForm from "../../../components/profile/editForm";
 
 export default function EditProfile() {
   const router = useRouter();

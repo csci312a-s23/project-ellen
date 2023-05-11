@@ -15,14 +15,14 @@ export default function EditForm({ username }) {
   const [classYear, setClass] = useState("");
   const [id, setId] = useState("");
 
-  async function getUserInfo(name) {
+  const getUserInfo = async (name) => {
     const res = await fetch(`/api/users/${name}`);
     const json = await res.json();
     const jsonStr = JSON.stringify(json);
     const user = JSON.parse(jsonStr);
 
     return user;
-  }
+  };
 
   useEffect(() => {
     const fetchInfo = async () => {

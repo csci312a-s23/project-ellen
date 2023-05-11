@@ -253,6 +253,51 @@ describe("General Tests", () => {
       render(<Profile />);
       expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
+
+    test("Edit button renders when user is on their own page", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      await waitFor(() => render(<Profile />));
+
+      const editButton = screen.queryByText("Edit");
+      await waitFor(() => expect(editButton).toBeInTheDocument());
+    });
+
+    test("Edit button won't render when user is on different page", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test2`);
+
+      await waitFor(() => render(<Profile />));
+      const editButton = screen.queryByText("Edit");
+      await waitFor(() => expect(editButton).not.toBeInTheDocument());
+    });
+
+    test("Edit button routes to new page", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      await waitFor(() => render(<Profile />));
+      const editButton = screen.queryByText("Edit");
+      await waitFor(() => expect(editButton).toBeInTheDocument());
+
+      fireEvent.click(editButton);
+
+      await waitFor(() =>
+        expect(mockRouter.asPath).toEqual(`/profile/test1/edit`)
+      );
+    });
   });
 
   describe("view counts", () => {
