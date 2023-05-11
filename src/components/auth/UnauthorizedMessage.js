@@ -7,7 +7,7 @@ export default function UnauthorizedPopup({ unauthrozied, onClose, message }) {
   return (
     <Popup open={unauthrozied} modal onClose={onClose}>
       <div className={styles.modal}>
-        <a className={styles.close} onClick={onClose}>
+        <a data-testid="close" className={styles.close} onClick={onClose}>
           &times;
         </a>
         <div className={styles.content}>
