@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import LoginButton from "../LoginButton";
 import styles from "./UnauthorizedMessage.module.css";
 
-export default function UnauthorizedPopup({ unauthrozied, onClose }) {
+export default function UnauthorizedPopup({ unauthrozied, onClose, message }) {
   return (
     <Popup open={unauthrozied} modal onClose={onClose}>
       <div className={styles.modal}>
@@ -12,10 +12,7 @@ export default function UnauthorizedPopup({ unauthrozied, onClose }) {
         </a>
         <div className={styles.content}>
           <h1>Unauthorized</h1>
-          <p>
-            You cannot access this resource. Please log in or sign in to an
-            authorized account.
-          </p>
+          <p>{message}</p>
           <LoginButton />
         </div>
       </div>

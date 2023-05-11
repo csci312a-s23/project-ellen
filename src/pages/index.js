@@ -39,6 +39,7 @@ export default function Home({ posts, refreshPosts }) {
         <UnauthorizedPopup
           unauthrozied={unauthorized}
           onClose={() => setUnauthorized(false)}
+          message={"You must be logged in to create a post."}
         />
       </div>
     </div>
