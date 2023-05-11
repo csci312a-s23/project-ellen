@@ -1,17 +1,23 @@
 import PropTypes from "prop-types";
 import Popup from "reactjs-popup";
 import LoginButton from "../LoginButton";
+import styles from "./UnauthorizedMessage.module.css";
 
 export default function UnauthorizedPopup({ unauthrozied, onClose }) {
   return (
     <Popup open={unauthrozied} modal onClose={onClose}>
-      <div>
-        <h1>
-          {
-            "You are not authorized to use this resource. Please sign in to your account"
-          }
-        </h1>
-        <LoginButton />
+      <div className={styles.modal}>
+        <a className={styles.close} onClick={onClose}>
+          &times;
+        </a>
+        <div className={styles.content}>
+          <h1>Unauthorized</h1>
+          <p>
+            You cannot access this resource. Please log in or sign in to an
+            authorized account.
+          </p>
+          <LoginButton />
+        </div>
       </div>
     </Popup>
   );
