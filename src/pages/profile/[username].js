@@ -1,6 +1,7 @@
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
 import CommentsContainer from "@/components/comment/CommentsContainer";
+import styles from "@/styles/Profile.module.css";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
@@ -78,14 +79,7 @@ export default function Profile() {
   return (
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "50px",
-        }}
-      >
+      <div className={styles.editButton}>
         {allowEdit && (
           <Button
             variant="contained"
@@ -98,13 +92,7 @@ export default function Profile() {
         )}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className={styles.userContent}>
         {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
         {userComments && (
           <CommentsContainer
