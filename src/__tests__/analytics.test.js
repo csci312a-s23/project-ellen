@@ -114,7 +114,6 @@ describe("Analytics Page Tests", () => {
       expect(screen.getByTestId("accordiondetails")).toBeInTheDocument(); // check that the accordian is open
       const dSels = screen.getAllByTestId("dropdown-select");
       const DSclass = dSels[0].querySelector("div"); // get the dropdown button
-      const DSmajor = dSels[0].querySelector("div"); // get the dropdown button
       expect(DSclass).toBeInTheDocument();
       fireEvent.mouseDown(DSclass); // open the dropdown
 
@@ -122,7 +121,6 @@ describe("Analytics Page Tests", () => {
       expect(option).toBeInTheDocument(); // expect the dropdown display to be open
       fireEvent.mouseDown(option); // select an item from the dropdown
       fireEvent.mouseDown(DSclass); // close the dropdown
-      fireEvent.mouseDown(DSmajor); // close the dropdown
       expect(screen.getByText("2023")).toBeInTheDocument(); // check that the chip is still displayed
     });
   });

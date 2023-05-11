@@ -2,6 +2,7 @@ import random
 import json
 from datetime import date
 import pandas as pd
+import uuid
 
 daterange = pd.date_range(start="2022-09-01",end="2023-04-01")
 
@@ -13,10 +14,11 @@ majors = [
     'NSCI',
     'ENVS'
 ]
+
 for i in range(50):
     users.append({
         'username':'TESTUSER_'+str(i),
-        'id': i,
+        'id': str(uuid.uuid4()),
         'email': 'testuser_$'+str(i)+'@gmail.com',
         'googleID': 'TESTUSERGOOGLEID_'+str(i),
 
