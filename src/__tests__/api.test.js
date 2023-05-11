@@ -41,6 +41,7 @@ jest.mock("directory.js", () => {
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
+// console.log(data);
 
 describe("API tests", () => {
   beforeAll(() => {
@@ -233,24 +234,6 @@ describe("API tests", () => {
         },
       });
     });
-
-    test("deleteComment should delete the correct comment", async () => {
-      await testApiHandler({
-        rejectOnHandlerError: true,
-        handler: postComments_endpoint,
-        url: "/api/posts/1/comments",
-        paramsPatcher: (params) => (
-          (params.userID = 1), (params.commentID = 1)
-        ),
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: "DELETE",
-          });
-          const response = await res.json();
-          expect(response.message).toBe("Comment deleted");
-        },
-      });
-    });
   });
 
   describe("User API tests", () => {
@@ -406,6 +389,30 @@ describe("API tests", () => {
         },
       });
     });
+    test("DELETE /api/posts/[id]/comments should delete comment", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              commentID: 1,
+            }),
+          });
+          // console.log(res);
+          const response = await res.json();
+          expect(response.message).toBe("Comment deleted");
+        },
+      });
+    });
+
     test("POST new to /api/posts/[id]/comments", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors

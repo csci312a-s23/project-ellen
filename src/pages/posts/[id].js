@@ -53,7 +53,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   };
 
   const deleteComment = async (commentID, postID) => {
-    console.log(commentID);
     await fetch(`/api/posts/${postID.id}/comments/`, {
       method: "DELETE",
       headers: {

@@ -1,9 +1,11 @@
 import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
+import Users from "../../../../../models/Users";
 import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
+import { getServerSession, authOptions } from "next-auth";
 
 const handler = nc({ onError })
   .get(async (req, res) => {
@@ -109,15 +111,22 @@ const handler = nc({ onError })
     res.status(200).end(JSON.stringify({ newVoteSum: comment.likes }));
   })
   .delete(authenticated, async (req, res) => {
-    const { postID } = req.body;
+    // const { postID } = req.body;
     const { commentID } = req.body;
-    console.log(postID, commentID);
+    console.log(commentID);
+
+    const session = await getServerSession(req, res, authOptions);
+    console.log(session);
     if (!!commentID) {
       const comment = await Comments.query()
         .findById(parseInt(commentID))
         .throwIfNotFound();
 
-      if (comment.commenterID === req.user.id) {
+      const user = await Users.query()
+        .findById(session.user.id)
+        .select("isAdmin");
+
+      if (comment.commenterID === req.user.id || user.isAdmin === 1) {
         await Comments.query()
           .deleteById(parseInt(commentID))
           .throwIfNotFound();
