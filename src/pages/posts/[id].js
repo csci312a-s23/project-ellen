@@ -15,11 +15,15 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
 
+  console.log("post:", currentPost);
+
   const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
   //for conditionally rendering the deletePost button
   useEffect(() => {
+    console.log("status:", status);
+    console.log("user:", session);
     if (status === "authenticated") {
       if (
         !!currentPost &&
