@@ -63,7 +63,7 @@ export default function Profile() {
         setAllow(true);
       }
     }
-  }, [username, currentUser, router.pathname, session]);
+  }, [username, router.pathname, session]);
 
   const vote = async (action, commentID, postID) => {
     await fetch(`/api/posts/${postID}/comments`, {
