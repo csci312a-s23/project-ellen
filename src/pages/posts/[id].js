@@ -9,10 +9,12 @@ import styles from "@/styles/ShowPost.module.css";
 
 import NewComment from "@/components/comment/NewComment";
 import FilterBar from "@/components/homepage/filterBar";
+import UnauthorizedPopup from "@/components/auth/UnauthorizedMessage";
 
 export default function ShowPost({ currentPost, refreshPosts }) {
   const [comments, setComments] = useState(null);
   const [canDelete, setCanDelete] = useState(false);
+  const [unauthrozied, setUnauthorized] = useState(false);
   const router = useRouter();
 
   const { data: session, status } = useSession({ required: false });
@@ -26,7 +28,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         (session.user.id === currentPost.posterID || session.user.isAdmin === 1)
       ) {
         setCanDelete(true);
-      } else {
+        setUnauthorized(false);
       }
     }
   }, [status, currentPost]);
@@ -43,17 +45,27 @@ export default function ShowPost({ currentPost, refreshPosts }) {
 
   const deletePost = async () => {
     if (!!currentPost) {
-      await fetch(`/api/posts/${currentPost.id}`, {
+      // await fetch(`/api/posts/${currentPost.id}`, {
+      //   method: "DELETE",
+      // }).then(() => {
+      //   router.push("/");
+      //   refreshPosts();
+      // });
+      const res = await fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
-      }).then(() => {
+      });
+      if (res.status === 200) {
         router.push("/");
         refreshPosts();
-      });
+      }
+      if (res.status === 401 || res.status === 403) {
+        setUnauthorized(true);
+      }
     }
   };
 
   const vote = async (action, commentID) => {
-    await fetch(`/api/posts/${currentPost.id}/comments`, {
+    const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -64,6 +76,10 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         vote: action,
       }),
     });
+    console.log(res);
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+    }
     getComments();
   };
 
@@ -72,7 +88,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   }, [getComments]);
 
   const addComment = async (comment) => {
-    await fetch(`/api/posts/${currentPost.id}/comments`, {
+    const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,6 +98,9 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         content: comment,
       }),
     });
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+    }
     getComments();
   };
 
@@ -132,7 +151,12 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             setCurrentSortFilter={changeSortFilter}
             currentPost={currentPost}
           />
-          {!!currentPost && <IndividualPost post={currentPost} />}
+          {!!currentPost && (
+            <IndividualPost
+              post={currentPost}
+              setUnauthorized={setUnauthorized}
+            />
+          )}
           {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
           <h2>Comments:</h2>
           <NewComment addComment={addComment} />
@@ -143,6 +167,11 @@ export default function ShowPost({ currentPost, refreshPosts }) {
               whereis="postViewer"
             />
           )}
+          <UnauthorizedPopup
+            unauthrozied={unauthrozied}
+            onClose={() => setUnauthorized(false)}
+            message={"You don't have access to this resource. Please log in."}
+          />
         </div>
       </div>
     </div>
