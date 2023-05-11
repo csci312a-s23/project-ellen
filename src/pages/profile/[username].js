@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 export default function Profile() {
   const router = useRouter();
 
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession({ required: false });
 
   const [currentUser, updateUser] = useState();
   const [userPosts, setUserPosts] = useState();
