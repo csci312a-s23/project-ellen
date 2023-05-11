@@ -1,6 +1,7 @@
 // import { useState } from "react";
 import PostCreator from "@/components/post/PostCreator";
 import PostList from "@/components/homepage/postsList";
+import UnauthorizedPopup from "@/components/auth/UnauthorizedMessage";
 
 import PropTypes from "prop-types";
 
@@ -12,6 +13,7 @@ import styles from "../styles/Home.module.css";
 
 export default function Home({ posts, refreshPosts }) {
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
+  const [unauthorized, setUnauthorized] = useState(false);
 
   //handles filter change
   const changeSortFilter = (newFilter) => {
@@ -33,7 +35,11 @@ export default function Home({ posts, refreshPosts }) {
           sortingFilter={currentSortFilter}
           refreshPosts={refreshPosts}
         />
-        <PostCreator refresh={refreshPosts} />
+        <PostCreator refresh={refreshPosts} setUnauthorized={setUnauthorized} />
+        <UnauthorizedPopup
+          unauthrozied={unauthorized}
+          onClose={() => setUnauthorized(false)}
+        />
       </div>
     </div>
   );
