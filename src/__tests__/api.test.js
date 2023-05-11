@@ -38,6 +38,24 @@ jest.mock("directory.js", () => {
   };
 });
 
+jest.mock("departments.js", () => {
+  return {
+    Scraper: jest.fn().mockImplementation(() => {
+      return {
+        init: jest.fn().mockResolvedValue(),
+        departments: [
+          {
+            name: "Computer Science",
+          },
+          {
+            name: "Mathematics",
+          },
+        ],
+      };
+    }),
+  };
+});
+
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
