@@ -20,6 +20,8 @@ export default function ShowPost({
   const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
 
+  console.log("post:", currentPost);
+
   const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
@@ -28,7 +30,7 @@ export default function ShowPost({
     if (status === "authenticated") {
       if (
         !!currentPost &&
-        (session.user.id === currentPost.posterID || session.user.isAdmin === 1)
+        (session.user.id === currentPost.posterID || session.user.isAdmin)
       ) {
         setCanDelete(true);
         setUnauthorized(false);
