@@ -1,4 +1,5 @@
 import NavBar from "@/components/navigation/NavBar";
+import UnauthorizedPopup from "@/components/auth/UnauthorizedMessage";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,6 +26,8 @@ export default function App({
 }) {
   const [currentPost, setCurrentPostState] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const [authMessage, setAuthMessage] = useState("");
   const router = useRouter();
   const id = +router.query.id;
 
@@ -72,11 +75,9 @@ export default function App({
     setCurrentPost,
     refreshPosts,
     posts,
+    setUnauthorized,
+    setAuthMessage,
   };
-  // console.log(session);
-
-  // TO TEST, I PUT USERID = 1 BELOW
-  // WHEN WE HAVE AUTHORIZATION, WE CAN SWITCH WITH CURRENT USER ID
 
   return (
     <CacheProvider value={emotionCache}>
@@ -96,6 +97,11 @@ export default function App({
               <Container>
                 <Component {...props} />
               </Container>
+              <UnauthorizedPopup
+                unauthorized={unauthorized}
+                message={authMessage}
+                onClose={() => setUnauthorized(false)}
+              />
             </div>
           </SessionProvider>
         </main>

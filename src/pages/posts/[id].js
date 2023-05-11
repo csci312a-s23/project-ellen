@@ -9,12 +9,15 @@ import styles from "@/styles/ShowPost.module.css";
 
 import NewComment from "@/components/comment/NewComment";
 import FilterBar from "@/components/homepage/filterBar";
-import UnauthorizedPopup from "@/components/auth/UnauthorizedMessage";
 
-export default function ShowPost({ currentPost, refreshPosts }) {
+export default function ShowPost({
+  currentPost,
+  refreshPosts,
+  setUnauthorized,
+  setAuthMessage,
+}) {
   const [comments, setComments] = useState(null);
   const [canDelete, setCanDelete] = useState(false);
-  const [unauthrozied, setUnauthorized] = useState(false);
   const router = useRouter();
 
   const { data: session, status } = useSession({ required: false });
@@ -60,6 +63,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
       }
       if (res.status === 401 || res.status === 403) {
         setUnauthorized(true);
+        setAuthMessage(res.statusText);
       }
     }
   };
@@ -79,6 +83,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     console.log(res);
     if (res.status === 401 || res.status === 403) {
       setUnauthorized(true);
+      setAuthMessage(res.statusText);
     }
     getComments();
   };
@@ -100,6 +105,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     });
     if (res.status === 401 || res.status === 403) {
       setUnauthorized(true);
+      setAuthMessage(res.statusText);
     }
     getComments();
   };
@@ -167,11 +173,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
               whereis="postViewer"
             />
           )}
-          <UnauthorizedPopup
-            unauthrozied={unauthrozied}
-            onClose={() => setUnauthorized(false)}
-            message={"You don't have access to this resource. Please log in."}
-          />
         </div>
       </div>
     </div>

@@ -8,7 +8,11 @@ import AddIcon from "@mui/icons-material/Add";
 
 import { useSession } from "next-auth/react";
 
-export default function PostCreator({ refresh, setUnauthorized }) {
+export default function PostCreator({
+  refresh,
+  setUnauthorized,
+  setAuthMessage,
+}) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
 
@@ -39,6 +43,7 @@ export default function PostCreator({ refresh, setUnauthorized }) {
     closeModal();
     if (!session) {
       setUnauthorized(true);
+      setAuthMessage("You must be logged in to create a post.");
       return;
     }
     const res = await fetch("/api/posts", {
@@ -56,6 +61,7 @@ export default function PostCreator({ refresh, setUnauthorized }) {
 
     if (res.status === 401 || res.status === 403) {
       setUnauthorized(true);
+      setAuthMessage(res.statusText);
     }
 
     setCategory(" ");

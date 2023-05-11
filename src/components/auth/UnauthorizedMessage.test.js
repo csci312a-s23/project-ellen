@@ -16,7 +16,7 @@ describe("UnauthorizedMessage Tests", () => {
     const { getByText } = render(
       <SessionProvider session={session}>
         <UnauthorizedPopup
-          unauthrozied
+          unauthorized
           onClose={() => {}}
           message={"You must be logged in to create a post."}
         />
@@ -31,7 +31,7 @@ describe("UnauthorizedMessage Tests", () => {
     render(
       <SessionProvider session={session}>
         <UnauthorizedPopup
-          unauthrozied
+          unauthorized
           onClose={onClose}
           message={"You must be logged in to create a post."}
         />
