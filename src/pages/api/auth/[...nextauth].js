@@ -35,6 +35,7 @@ export const authOptions = {
             const departmentList = await getDepartmentList({ season: "S23" });
             if (!departmentList.includes(info.department)) {
               info.type = "Administration";
+              info.isAdmin = true;
             }
           }
 
@@ -48,6 +49,7 @@ export const authOptions = {
             type: info.type,
             classYear: info.gradYear,
             department: info.department,
+            isAdmin: info.isAdmin ? info.isAdmin : false,
           });
         }
         // Add user id to the token
