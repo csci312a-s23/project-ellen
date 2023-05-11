@@ -21,23 +21,27 @@ export default function Profile() {
     }
   };
 
+  const getPosts = async () => {
+    const postsResponse = await fetch(`/api/users/${username}/posts`);
+    if (postsResponse.ok) {
+      const fetchedUserPosts = await postsResponse.json();
+      setUserPosts(fetchedUserPosts);
+    }
+  };
+
+  const getUserInfo = async () => {
+    const detailsResponse = await fetch(`/api/users/${username}`);
+    if (detailsResponse.ok) {
+      const fetchedUserDetails = await detailsResponse.json();
+      updateUser(fetchedUserDetails);
+    }
+    getPosts();
+
+    getComments();
+  };
+
   useEffect(() => {
     if (username) {
-      const getUserInfo = async () => {
-        const detailsResponse = await fetch(`/api/users/${username}`);
-        if (detailsResponse.ok) {
-          const fetchedUserDetails = await detailsResponse.json();
-          updateUser(fetchedUserDetails);
-        }
-        const postsResponse = await fetch(`/api/users/${username}/posts`);
-        if (postsResponse.ok) {
-          const fetchedUserPosts = await postsResponse.json();
-          setUserPosts(fetchedUserPosts);
-        }
-
-        getComments();
-      };
-
       if (router.pathname.includes("profile")) {
         getUserInfo();
       }
@@ -46,7 +50,7 @@ export default function Profile() {
       setUserPosts(undefined);
       setUserComments(undefined);
     }
-  }, [username, currentUser, router.pathname]);
+  }, [username, router.pathname]);
 
   const vote = async (action, commentID, postID) => {
     await fetch(`/api/posts/${postID}/comments`, {
