@@ -1,15 +1,21 @@
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import PostList from "@/components/homepage/postsList";
 import CommentsContainer from "@/components/comment/CommentsContainer";
+import styles from "@/styles/Profile.module.css";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { Button } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 export default function Profile() {
   const router = useRouter();
 
+  const { data: session } = useSession({ required: false });
+
   const [currentUser, updateUser] = useState();
   const [userPosts, setUserPosts] = useState();
   const [userComments, setUserComments] = useState();
+  const [allowEdit, setAllow] = useState(false);
 
   const { username } = router.query;
 
@@ -50,7 +56,14 @@ export default function Profile() {
       setUserPosts(undefined);
       setUserComments(undefined);
     }
-  }, [username, router.pathname]);
+
+    //Only allow edit if same profile
+    if (username && session) {
+      if (session.user.name === username) {
+        setAllow(true);
+      }
+    }
+  }, [username, currentUser, router.pathname, session]);
 
   const vote = async (action, commentID, postID) => {
     await fetch(`/api/posts/${postID}/comments`, {
@@ -70,14 +83,29 @@ export default function Profile() {
   return (
     <div>
       {currentUser && <ProfileInfo user={currentUser} />}
-      {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
-      {userComments && (
-        <CommentsContainer
-          comments={userComments}
-          vote={vote}
-          whereis="profile"
-        />
-      )}
+      <div className={styles.editButton}>
+        {allowEdit && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => router.push(`/profile/${username}/edit`)}
+            aria-label="Edit"
+          >
+            Edit
+          </Button>
+        )}
+      </div>
+
+      <div className={styles.userContent}>
+        {userPosts && <PostList posts={userPosts} sortingFilter="new" />}
+        {userComments && (
+          <CommentsContainer
+            comments={userComments}
+            vote={vote}
+            whereis="profile"
+          />
+        )}
+      </div>
     </div>
   );
 }
