@@ -21,6 +21,21 @@ export default function Profile() {
     }
   };
 
+  const deleteComment = async (commentID, postID) => {
+    console.log(commentID);
+    await fetch(`/api/posts/${postID.id}/comments/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: postID,
+        commentID: commentID,
+      }),
+    });
+    getComments();
+  };
+
   useEffect(() => {
     if (username) {
       const getUserInfo = async () => {
@@ -71,6 +86,7 @@ export default function Profile() {
         <CommentsContainer
           comments={userComments}
           vote={vote}
+          deleteComment={deleteComment}
           whereis="profile"
         />
       )}

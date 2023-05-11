@@ -54,7 +54,22 @@ export default function ShowPost({ currentPost, refreshPosts }) {
     }
   };
 
+  const deleteComment = async (commentID, postID) => {
+    await fetch(`/api/posts/${postID.id}/comments/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: currentPost.id,
+        commentID: commentID,
+      }),
+    });
+    getComments();
+  };
+
   const vote = async (action, commentID) => {
+    console.log(action, commentID);
     await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {
@@ -142,6 +157,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             <CommentsContainer
               comments={comments}
               vote={vote}
+              deleteComment={deleteComment}
               whereis="postViewer"
             />
           )}
