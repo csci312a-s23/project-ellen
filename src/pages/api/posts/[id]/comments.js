@@ -5,7 +5,8 @@ import Users from "../../../../../models/Users";
 import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
-import { getServerSession, authOptions } from "next-auth";
+import { authOptions } from "../../../api/auth/[...nextauth].js";
+import { getServerSession } from "next-auth";
 
 const handler = nc({ onError })
   .get(async (req, res) => {
