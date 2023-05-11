@@ -20,8 +20,6 @@ export default function ShowPost({
   const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
 
-  console.log("post:", currentPost);
-
   const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
@@ -82,7 +80,7 @@ export default function ShowPost({
         vote: action,
       }),
     });
-    console.log(res);
+
     if (res.status === 401 || res.status === 403) {
       setUnauthorized(true);
       setAuthMessage(res.statusText);
