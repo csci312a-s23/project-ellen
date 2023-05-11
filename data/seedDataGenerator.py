@@ -39,7 +39,7 @@ topics = [
 for i in range(len(users)*3):
     posts.append({
         'id': i,
-        'posterID': random.randint(0, len(users)-1),
+        'posterID': users[random.randint(0, len(users)-1)]['id'],
         'title': "SEED DATA POST",
         'content': "seed data post ~~ content",
         'category': topics[random.randint(0, len(topics)-1)],
@@ -52,7 +52,7 @@ for i in range(len(users)*4):
     postID = random.randint(0, len(posts)-1)
     comments.append({
         'id': i,
-        'commenterID': random.randint(0, len(users)-1),
+        'commenterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'created_at': posts[postID]['created_at'],
     })
@@ -63,7 +63,7 @@ for i in range(len(users)*2):
     postID =  random.randint(0, len(posts)-1)
     votes.append({
         'id': i,
-        'voterID': random.randint(0, len(users)-1),
+        'voterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'value': random.randint(-3,4),
         'created_at': posts[postID]['created_at'],

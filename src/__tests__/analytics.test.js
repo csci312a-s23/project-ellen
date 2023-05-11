@@ -1,5 +1,5 @@
 import AnalyticsDisplay from "../pages/analytics";
-import LineChart from "../pages/analytics";
+import LineChart from "../components/analytics/LineChart";
 import MakeGroup from "../pages/analytics";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { knex } from "../../knex/knex";
