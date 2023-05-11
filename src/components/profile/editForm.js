@@ -41,7 +41,7 @@ export default function EditForm({ username }) {
     fetchInfo();
   }, [username]);
 
-  async function handleClick(choice) {
+  const handleClick = async (choice) => {
     if (choice === "Submit") {
       // Put request
       await fetch(`/api/users/${username}`, {
@@ -70,7 +70,7 @@ export default function EditForm({ username }) {
       // Return nothing
       router.back();
     }
-  }
+  };
 
   return (
     <form>
