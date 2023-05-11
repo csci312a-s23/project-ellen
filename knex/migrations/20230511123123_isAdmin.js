@@ -12,6 +12,8 @@ exports.up = function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function () {
-  return;
+exports.down = function (knex) {
+  return knex.schema.table("users", (table) => {
+    table.dropColumn("isAdmin");
+  });
 };
