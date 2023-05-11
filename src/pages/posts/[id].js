@@ -67,7 +67,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   };
 
   const vote = async (action, commentID) => {
-    console.log(action, commentID);
+    // console.log(action, commentID);
     await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {

@@ -20,7 +20,7 @@ export default function Comment({ data, vote, deleteComment }) {
   }, [status, data]);
 
   const handleDelete = () => {
-    console.log(data);
+    // console.log(data);
     deleteComment(data.id, data.postID);
   };
 

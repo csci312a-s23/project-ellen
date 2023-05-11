@@ -114,10 +114,9 @@ const handler = nc({ onError })
   .delete(authenticated, async (req, res) => {
     // const { postID } = req.body;
     const { commentID } = req.body;
-    console.log(commentID);
 
     const session = await getServerSession(req, res, authOptions);
-    console.log(session);
+
     if (!!commentID) {
       const comment = await Comments.query()
         .findById(parseInt(commentID))
