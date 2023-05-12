@@ -13,7 +13,7 @@ export default function Comment({ data, vote, deleteComment }) {
   //for conditionally rendering the delete comment button
   useEffect(() => {
     if (status === "authenticated") {
-      if (session.user.id === data.commenterID || session.user.isAdmin === 1) {
+      if (session.user.id === data.commenterID || !!session.user.isAdmin) {
         setCanDelete(true);
       }
     }
