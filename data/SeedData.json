@@ -1,39 +1,30 @@
 {
   "PostSeedData": [
     {
-      "title": "No Peanut Free Dining Hall",
-      "posterID": 1,
-      "content": "I am deathly alergic to peanuts but all the dining halls serve peanuts of some sort. Would other students support Midd making a peanut free dining hall?",
-      "category": "Dining",
-      "num_votes": 2,
-      "id": 1,
-      "created_at": "2023-04-17T13:46:11.125Z"
-    },
-    {
       "title": "Living at Breadloaf",
       "posterID": 1,
       "content": "I went into summer housing draw and am now forced to live in Breadoaf for the fall semester. As I do not have a car, this will be incredibly inconvient for me and I expect my grades to fall. Does anyone else think Middlebury needs to focus more on supporting its current students rather than prioritizing incoming first years?",
       "category": "Housing",
       "num_votes": 10,
-      "id": 2,
+      "id": 1,
       "created_at": "2023-04-17T18:07:54.472Z"
     },
     {
-      "title": "Lack of Nutella",
+      "title": "No Nutella??",
       "posterID": 2,
       "content": "Recently there has been no Nutella in the dining halls. I know it is a small thing, but it seems like something small that really makes students happier? Does anyone agree?",
       "category": "Dining",
       "num_votes": 2,
-      "id": 3,
+      "id": 2,
       "created_at": "2023-04-17T13:46:11.125Z"
     },
     {
-      "title": "Midd registration",
+      "title": "O for Registration",
       "posterID": 3,
       "content": "I got 0/4 courses for fall course registration. It is outrageous that as a junior I cannot get classes to fuffil my major!",
       "category": "Academics",
       "num_votes": 8,
-      "id": 4,
+      "id": 3,
       "created_at": "2023-04-17T12:54:00.364Z"
     },
     {
@@ -42,7 +33,7 @@
       "content": "I'm very frustrated that Davis and Armstrong close at 5pm on Friday and Saturday. It seems that this is the sort of thing that Midd does so they do not need to pay students to keep the library open. I'm sure there are students would would be willing to work in the evenings (like me!). ",
       "category": "Academics",
       "num_votes": 6,
-      "id": 5,
+      "id": 4,
       "created_at": "2023-04-17T12:54:00.124Z"
     }
   ],
@@ -50,10 +41,10 @@
     {
       "id": 1,
       "googleID": "3253415415415458",
-      "username": "ebachman",
+      "username": "test1",
       "email": "test1@test.com",
-      "firstName": "Erlich",
-      "lastName": "Bachman",
+      "firstName": "test1",
+      "lastName": "test1",
       "type": "Student",
       "classYear": 2024,
       "major": "Computer Science"
@@ -61,10 +52,10 @@
     {
       "id": 2,
       "googleID": "78964132184567",
-      "username": "rhendrics",
+      "username": "test2",
       "email": "test2@test.com",
-      "firstName": "Richard",
-      "lastName": "Hendrics",
+      "firstName": "test2",
+      "lastName": "test2",
       "type": "Student",
       "classYear": 2024,
       "major": "Computer Science"
