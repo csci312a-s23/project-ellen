@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { categoryColors } from "../../../data/CategoryColorData.js";
 import styles from "./IndividualPost.module.css";
 
-export default function IndividualPost({ post }) {
+export default function IndividualPost({ post, setUnauthorized }) {
   const [voteVal, setVoteVal] = useState(0);
   const [voteSum, setVoteSum] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
@@ -18,8 +18,8 @@ export default function IndividualPost({ post }) {
     setVoteVal(vote);
     clearTimeout(stateTimeout);
     setStateTimeout(
-      setTimeout(() => {
-        fetch(`/api/posts/${post.id}/vote`, {
+      setTimeout(async () => {
+        const res = await fetch(`/api/posts/${post.id}/vote`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -27,12 +27,14 @@ export default function IndividualPost({ post }) {
           body: JSON.stringify({
             value: vote,
           }),
-        })
-          .then((res) => res.json())
-          .then((response) => {
-            // console.log("response", response);
-            setVoteSum(response.newVoteSum);
-          });
+        });
+        if (res.status === 200) {
+          const response = await res.json();
+          setVoteSum(response.newVoteSum);
+        }
+        if (res.status === 401 || res.status === 403) {
+          setUnauthorized(true);
+        }
       }, 2000)
     );
   };

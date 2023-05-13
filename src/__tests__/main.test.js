@@ -357,7 +357,13 @@ describe("General Tests", () => {
       };
       mockRouter.setCurrentUrl(`/posts/1`);
       await waitFor(() => {
-        render(<ShowPost currentPost={examplePost} />);
+        render(
+          <ShowPost
+            currentPost={examplePost}
+            setUnauthorized={jest.fn()}
+            setAuthMessage={jest.fn()}
+          />
+        );
       });
       // screen.getByText()
       expect(screen.getByText("Delete Post")).toBeInTheDocument();
