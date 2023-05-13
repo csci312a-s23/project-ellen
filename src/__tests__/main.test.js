@@ -264,7 +264,7 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test1`);
 
-      await waitFor(() => render(<Profile />));
+      render(<Profile />);
 
       const editButton = screen.queryByText("Edit");
       await waitFor(() => expect(editButton).toBeInTheDocument());
@@ -280,7 +280,7 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test2`);
 
-      await waitFor(() => render(<Profile />));
+      render(<Profile />);
       const editButton = screen.queryByText("Edit");
       await waitFor(() => expect(editButton).not.toBeInTheDocument());
     });
@@ -288,7 +288,7 @@ describe("General Tests", () => {
     test("Edit button routes to new page", async () => {
       mockRouter.setCurrentUrl(`/profile/test1`);
 
-      await waitFor(() => render(<Profile />));
+      render(<Profile />);
       const editButton = screen.queryByText("Edit");
       await waitFor(() => expect(editButton).toBeInTheDocument());
 

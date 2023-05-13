@@ -15,8 +15,6 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
 
-  console.log("post:", currentPost);
-
   const { data: session, status } = useSession({ required: false });
 
   //additionally confirms in the backend
