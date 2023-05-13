@@ -89,7 +89,8 @@
       "firstName": "test5",
       "lastName": "test5",
       "type": "Administration",
-      "title": "Dean1"
+      "title": "Dean1",
+      "department": "Dean of Students"
     }
   ],
   "CommentSeedData": [
