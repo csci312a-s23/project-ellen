@@ -4,6 +4,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import styles from "./Comment.module.css";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Comment({ data, vote, deleteComment }) {
   const [canDelete, setCanDelete] = useState(false);
@@ -28,8 +29,10 @@ export default function Comment({ data, vote, deleteComment }) {
     <div data-testid="comment">
       <Box className={styles.indivCommentContainer}>
         <Box className={styles.leftSide}>
-          <h3>by: {data?.poster?.username}</h3>
-          <div>{data.content}</div>
+          <Link href={`/posts/${data.postID}`}>
+            <h3>by: {data?.poster?.username}</h3>
+            <div>{data.content}</div>
+          </Link>
         </Box>
 
         <Box className={styles.rightSide}>

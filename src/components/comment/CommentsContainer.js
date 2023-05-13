@@ -1,4 +1,4 @@
-import Link from "next/link";
+// import Link from "next/link";
 import Comment from "./Comment";
 
 export default function CommentsContainer({
@@ -16,13 +16,11 @@ export default function CommentsContainer({
           {(() => {
             if (whereis === "profile") {
               return (
-                <Link href={`/posts/${comment.postID}`}>
-                  <Comment
-                    data={comment}
-                    vote={vote}
-                    deleteComment={deleteComment}
-                  />
-                </Link>
+                <Comment
+                  data={comment}
+                  vote={vote}
+                  deleteComment={deleteComment}
+                />
               );
             } else {
               return (
