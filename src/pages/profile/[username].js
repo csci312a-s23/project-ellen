@@ -40,6 +40,7 @@ export default function Profile() {
       }),
     });
     getComments();
+    router.push(`/profile/${currentUser.username}`);
   };
 
   useEffect(() => {
