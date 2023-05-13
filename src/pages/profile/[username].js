@@ -24,6 +24,8 @@ export default function Profile() {
     if (commentsResponse.ok) {
       const fetchedUserComments = await commentsResponse.json();
       setUserComments(fetchedUserComments);
+    } else {
+      setUserComments();
     }
   };
 
