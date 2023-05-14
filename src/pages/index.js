@@ -11,6 +11,7 @@ import { useState } from "react";
 import styles from "../styles/Home.module.css";
 
 export default function Home({ posts, refreshPosts }) {
+  console.log("posts:", posts);
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
 
   //handles filter change

@@ -68,17 +68,28 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
             >
-              {currentSortFilter === "new" || currentSortFilter === "hot" ? (
-                <div className={styles.filterButtonDropdown}>
-                  <span>All</span>
-                  <KeyboardArrowDownIcon />
-                </div>
-              ) : (
-                <div className={styles.filterButtonDropdown}>
-                  <span>{currentSortFilter}</span>
-                  <KeyboardArrowDownIcon />
-                </div>
-              )}
+              {/* https://blog.mgechev.com/2012/08/29/self-invoking-functions-in-javascript-or-immediately-invoked-function-expression/ */}
+              {(function () {
+                switch (currentSortFilter) {
+                  case "new":
+                  case "hot": {
+                    return (
+                      <div className={styles.filterButtonDropdown}>
+                        <span>All</span>
+                        <KeyboardArrowDownIcon />
+                      </div>
+                    );
+                  }
+                  default: {
+                    return (
+                      <div className={styles.filterButtonDropdown}>
+                        <span>{currentSortFilter}</span>
+                        <KeyboardArrowDownIcon />
+                      </div>
+                    );
+                  }
+                }
+              })()}
             </Button>
             <Menu
               id="basic-menu"
