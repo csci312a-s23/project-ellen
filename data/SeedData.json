@@ -114,5 +114,37 @@
       "content": "Really missing the Nutella. Please bring it back Midd",
       "likes": 3
     }
+  ],
+  "VoteSeedData": [
+    {
+      "voterID": 1,
+      "postID": 1,
+      "value": 3,
+      "typeOf": "post"
+    },
+    {
+      "voterID": 2,
+      "postID": 1,
+      "value": 2,
+      "typeOf": "post"
+    },
+    {
+      "voterID": 3,
+      "postID": 1,
+      "value": -2,
+      "typeOf": "post"
+    },
+    {
+      "voterID": 1,
+      "postID": 2,
+      "value": -2,
+      "typeOf": "post"
+    },
+    {
+      "voterID": 2,
+      "postID": 3,
+      "value": -1,
+      "typeOf": "post"
+    }
   ]
 }

@@ -62,34 +62,33 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
 
             <Button
               {...buttonStyle}
+              onClick={() => setCurrentSortFilter("controversial")}
+              disabled={currentSortFilter === "controversial"}
+            >
+              Controversial
+            </Button>
+
+            <Button
+              {...buttonStyle}
               id="basic-button"
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
             >
-              {/* https://blog.mgechev.com/2012/08/29/self-invoking-functions-in-javascript-or-immediately-invoked-function-expression/ */}
-              {(function () {
-                switch (currentSortFilter) {
-                  case "new":
-                  case "hot": {
-                    return (
-                      <div className={styles.filterButtonDropdown}>
-                        <span>All</span>
-                        <KeyboardArrowDownIcon />
-                      </div>
-                    );
-                  }
-                  default: {
-                    return (
-                      <div className={styles.filterButtonDropdown}>
-                        <span>{currentSortFilter}</span>
-                        <KeyboardArrowDownIcon />
-                      </div>
-                    );
-                  }
-                }
-              })()}
+              {currentSortFilter === "new" ||
+              currentSortFilter === "hot" ||
+              currentSortFilter === "controversial" ? (
+                <div className={styles.filterButtonDropdown}>
+                  <span>All</span>
+                  <KeyboardArrowDownIcon />
+                </div>
+              ) : (
+                <div className={styles.filterButtonDropdown}>
+                  <span>{currentSortFilter}</span>
+                  <KeyboardArrowDownIcon />
+                </div>
+              )}
             </Button>
             <Menu
               id="basic-menu"
@@ -121,6 +120,7 @@ export default FilterBar;
 FilterBar.propTypes = {
   currentSortFilter: PropTypes.oneOf([
     "new",
+    "controversial",
     "hot",
     "All",
     "Academics",
