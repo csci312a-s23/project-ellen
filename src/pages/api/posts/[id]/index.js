@@ -56,6 +56,7 @@ const handler = nc({ onError })
   })
   .delete(async (req, res) => {
     const session = await getServerSession(req, res, authOptions);
+
     const { id } = req.query;
 
     if (!!id) {

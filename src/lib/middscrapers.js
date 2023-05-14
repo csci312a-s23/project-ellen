@@ -18,7 +18,7 @@ export async function getDepartmentList({ season }) {
 
   await S.init();
 
-  const {departments} = S;
+  const { departments } = S;
 
   //build list of departments from department names
   const departmentList = departments.map((department) => {
