@@ -779,9 +779,10 @@ describe("API tests", () => {
             }),
           });
 
-          // const finalComment = await knex("comments")
-          // 	.where({ postID: "1", id: "1" })
-          // 	.first();
+          const finalComment = await knex("comments")
+            .where({ postID: "1", id: "1" })
+            .first();
+          expect(finalComment.likes).toEqual(1);
         },
       });
     });
