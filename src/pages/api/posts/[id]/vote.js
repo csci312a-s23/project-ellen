@@ -1,6 +1,5 @@
 import nc from "next-connect";
 import Votes from "../../../../../models/Votes.js";
-import Posts from "../../../../../models/Posts.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
 
@@ -38,17 +37,6 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     .where("voterID", userID)
     .where("typeOf", "post");
 
-  // they have not voted before
-  if (delVote === 0) {
-    // add their vote to total number of votes
-    const post = await Posts.query().findById(postID).throwIfNotFound();
-
-    post.num_votes++;
-    await Posts.query().patchAndFetchById(parseInt(postID), {
-      num_votes: post.num_votes,
-    });
-  }
-
   //then insert new vote
   await Votes.query().insert({
     postID: postID,
@@ -63,9 +51,12 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
     .where("typeOf", "post")
     .sum("value");
 
-  res
-    .status(200)
-    .end(JSON.stringify({ newVoteSum: getVotes[0]["sum(`value`)"] }));
+  res.status(200).end(
+    JSON.stringify({
+      newVoteSum: getVotes[0]["sum(`value`)"],
+      isNew: !delVote,
+    })
+  );
 });
 
 export default handler;

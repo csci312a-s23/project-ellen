@@ -17,6 +17,7 @@ export default function Home({
   setAuthMessage,
 }) {
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
+  console.log("posts", posts);
 
   //handles filter change
   const changeSortFilter = (newFilter) => {

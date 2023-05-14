@@ -5,13 +5,16 @@ import { categoryColors } from "../../../data/CategoryColorData.js";
 import styles from "./IndividualPost.module.css";
 
 export default function IndividualPost({ post, setUnauthorized }) {
+  console.log("post", post);
   const [voteVal, setVoteVal] = useState(0);
   const [voteSum, setVoteSum] = useState(0);
+  const [numVotes, setNumVotes] = useState(0);
   const [stateTimeout, setStateTimeout] = useState();
 
   useEffect(() => {
-    setVoteSum(post.voteSum);
+    setVoteSum(post.score);
     setVoteVal(post.myVote);
+    setNumVotes(post.num_votes);
   }, []);
 
   const setVote = (vote) => {
@@ -31,6 +34,9 @@ export default function IndividualPost({ post, setUnauthorized }) {
         if (res.status === 200) {
           const response = await res.json();
           setVoteSum(response.newVoteSum);
+          if (!!response.isNew) {
+            setNumVotes(post.num_votes + 1);
+          }
         }
         if (res.status === 401 || res.status === 403) {
           setUnauthorized(true);
@@ -60,7 +66,7 @@ export default function IndividualPost({ post, setUnauthorized }) {
         <VoteSlider voteVal={voteVal} setVote={setVote} />
       </Box>
       <span>score: {voteSum}</span>
-      <span>number of votes: {post.num_votes}</span>
+      <span>number of votes: {numVotes} </span>
       {/* </div> */}
     </Box>
   );

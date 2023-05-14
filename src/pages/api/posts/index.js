@@ -22,6 +22,7 @@ const handler = nc({ onError })
 
     posts = posts.map((post) => {
       // https://stackoverflow.com/questions/1230233/how-to-find-the-sum-of-an-array-of-numbers
+      const num_votes = post["votes"].length;
       const sum = post["votes"].reduce(
         (partialSum, a) => partialSum + a.value,
         0
@@ -29,6 +30,7 @@ const handler = nc({ onError })
       return {
         ...post,
         score: sum,
+        num_votes: num_votes,
       };
     });
     res.status(200).json(posts);
