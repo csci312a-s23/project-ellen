@@ -59,7 +59,6 @@ jest.mock("departments.js", () => {
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
-// console.log(data);
 
 describe("API tests", () => {
   beforeAll(() => {
