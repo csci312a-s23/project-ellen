@@ -16,7 +16,7 @@ describe("filterBar: filterBar tests", () => {
   test("FilterBar correctly renders hot,new,recent buttons", () => {
     const { getAllByRole } = render(<FilterBar />);
     const buttons = getAllByRole("button");
-    expect(buttons).toHaveLength(3);
+    expect(buttons).toHaveLength(4);
   });
 
   test("Current button is disabled when selected", () => {

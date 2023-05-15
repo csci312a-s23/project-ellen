@@ -24,7 +24,25 @@ export default function Profile() {
     if (commentsResponse.ok) {
       const fetchedUserComments = await commentsResponse.json();
       setUserComments(fetchedUserComments);
+    } else {
+      setUserComments();
     }
+  };
+
+  const deleteComment = async (commentID, postID) => {
+    console.log(commentID);
+    await fetch(`/api/posts/${postID.id}/comments/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: postID,
+        commentID: commentID,
+      }),
+    });
+    getComments();
+    router.push(`/profile/${currentUser.username}`);
   };
 
   useEffect(() => {
@@ -98,6 +116,7 @@ export default function Profile() {
           <CommentsContainer
             comments={userComments}
             vote={vote}
+            deleteComment={deleteComment}
             whereis="profile"
           />
         )}

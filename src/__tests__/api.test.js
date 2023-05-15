@@ -38,6 +38,24 @@ jest.mock("directory.js", () => {
   };
 });
 
+jest.mock("departments.js", () => {
+  return {
+    Scraper: jest.fn().mockImplementation(() => {
+      return {
+        init: jest.fn().mockResolvedValue(),
+        departments: [
+          {
+            name: "Computer Science",
+          },
+          {
+            name: "Mathematics",
+          },
+        ],
+      };
+    }),
+  };
+});
+
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
@@ -388,6 +406,30 @@ describe("API tests", () => {
         },
       });
     });
+    test("DELETE /api/posts/[id]/comments should delete comment", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              commentID: 1,
+            }),
+          });
+          // console.log(res);
+          const response = await res.json();
+          expect(response.message).toBe("Comment deleted");
+        },
+      });
+    });
+
     test("POST new to /api/posts/[id]/comments", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -548,8 +590,11 @@ describe("API tests", () => {
     });
 
     test("initial vote increments total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: vote_endpoint, // NextJS API function to test
@@ -568,15 +613,22 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+
+          expect(final.length).toBe(1);
         },
       });
     });
 
     test("duplicate vote increments does not increase total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
 
       // vote 1
       await testApiHandler({
@@ -597,8 +649,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
 
@@ -621,8 +676,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
     });

@@ -10,12 +10,15 @@ import styles from "@/styles/ShowPost.module.css";
 import NewComment from "@/components/comment/NewComment";
 import FilterBar from "@/components/homepage/filterBar";
 
-export default function ShowPost({ currentPost, refreshPosts }) {
+export default function ShowPost({
+  currentPost,
+  refreshPosts,
+  setUnauthorized,
+  setAuthMessage,
+}) {
   const [comments, setComments] = useState(null);
   const [canDelete, setCanDelete] = useState(false);
   const router = useRouter();
-
-  console.log("post:", currentPost);
 
   const { data: session, status } = useSession({ required: false });
 
@@ -28,7 +31,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         (session.user.id === currentPost.posterID || session.user.isAdmin)
       ) {
         setCanDelete(true);
-      } else {
+        setUnauthorized(false);
       }
     }
   }, [status, currentPost]);
@@ -45,17 +48,42 @@ export default function ShowPost({ currentPost, refreshPosts }) {
 
   const deletePost = async () => {
     if (!!currentPost) {
-      await fetch(`/api/posts/${currentPost.id}`, {
+      // await fetch(`/api/posts/${currentPost.id}`, {
+      //   method: "DELETE",
+      // }).then(() => {
+      //   router.push("/");
+      //   refreshPosts();
+      // });
+      const res = await fetch(`/api/posts/${currentPost.id}`, {
         method: "DELETE",
-      }).then(() => {
+      });
+      if (res.status === 200) {
         router.push("/");
         refreshPosts();
-      });
+      }
+      if (res.status === 401 || res.status === 403) {
+        setUnauthorized(true);
+        setAuthMessage(res.statusText);
+      }
     }
   };
 
+  const deleteComment = async (commentID, postID) => {
+    await fetch(`/api/posts/${postID.id}/comments/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: currentPost.id,
+        commentID: commentID,
+      }),
+    });
+    getComments();
+  };
+
   const vote = async (action, commentID) => {
-    await fetch(`/api/posts/${currentPost.id}/comments`, {
+    const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -66,6 +94,11 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         vote: action,
       }),
     });
+
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+      setAuthMessage(res.statusText);
+    }
     getComments();
   };
 
@@ -74,7 +107,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
   }, [getComments]);
 
   const addComment = async (comment) => {
-    await fetch(`/api/posts/${currentPost.id}/comments`, {
+    const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,6 +117,10 @@ export default function ShowPost({ currentPost, refreshPosts }) {
         content: comment,
       }),
     });
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+      setAuthMessage(res.statusText);
+    }
     getComments();
   };
 
@@ -134,7 +171,12 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             setCurrentSortFilter={changeSortFilter}
             currentPost={currentPost}
           />
-          {!!currentPost && <IndividualPost post={currentPost} />}
+          {!!currentPost && (
+            <IndividualPost
+              post={currentPost}
+              setUnauthorized={setUnauthorized}
+            />
+          )}
           {!!canDelete && <button onClick={deletePost}>Delete Post</button>}
           <h2>Comments:</h2>
           <NewComment addComment={addComment} />
@@ -142,6 +184,7 @@ export default function ShowPost({ currentPost, refreshPosts }) {
             <CommentsContainer
               comments={comments}
               vote={vote}
+              deleteComment={deleteComment}
               whereis="postViewer"
             />
           )}

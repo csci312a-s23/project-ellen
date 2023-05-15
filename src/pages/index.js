@@ -10,7 +10,12 @@ import FilterBar from "@/components/homepage/filterBar";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
 
-export default function Home({ posts, refreshPosts }) {
+export default function Home({
+  posts,
+  refreshPosts,
+  setUnauthorized,
+  setAuthMessage,
+}) {
   const [currentSortFilter, setCurrentSortFilter] = useState("new");
 
   //handles filter change
@@ -33,7 +38,11 @@ export default function Home({ posts, refreshPosts }) {
           sortingFilter={currentSortFilter}
           refreshPosts={refreshPosts}
         />
-        <PostCreator refresh={refreshPosts} />
+        <PostCreator
+          refresh={refreshPosts}
+          setUnauthorized={setUnauthorized}
+          setAuthMessage={setAuthMessage}
+        />
       </div>
     </div>
   );

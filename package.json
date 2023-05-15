@@ -28,6 +28,7 @@
     "@mui/material": "^5.13.0",
     "ajv-formats": "^2.1.1",
     "db-errors": "^0.2.3",
+    "departments.js": "^1.1.1",
     "directory.js": "^1.0.6",
     "knex": "^2.4.2",
     "next": "13.2.4",

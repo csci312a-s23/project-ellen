@@ -2,14 +2,13 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
+
+const fs = require("fs");
+const contents = fs.readFileSync("./data/SeedData.json");
+const data = JSON.parse(contents);
+
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex("votes").del();
-  await knex("votes").insert([
-    {
-      voterID: 1,
-      postID: 1,
-      value: 3,
-    },
-  ]);
+  await knex("votes").insert(data.VoteSeedData);
 };
