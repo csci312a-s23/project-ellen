@@ -590,8 +590,11 @@ describe("API tests", () => {
     });
 
     test("initial vote increments total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: vote_endpoint, // NextJS API function to test
@@ -610,15 +613,22 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+
+          expect(final.length).toBe(1);
         },
       });
     });
 
     test("duplicate vote increments does not increase total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
 
       // vote 1
       await testApiHandler({
@@ -639,8 +649,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
 
@@ -663,8 +676,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
     });
