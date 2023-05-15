@@ -15,17 +15,19 @@ const handler = nc({ onError })
       const post = await Posts.query()
         .findById(parseInt(id))
         .first()
-        .withGraphFetched("poster")
+        .withGraphFetched("[poster,votes]")
+        .modifyGraph("votes", (builder) => {
+          builder.select("value");
+        })
         .modifyGraph("poster", (builder) => {
           builder.select("username");
         })
 
         .throwIfNotFound();
 
-      const getVotes = await Votes.query()
-        .where("postID", parseInt(id))
-        .where("typeOf", "post")
-        .sum("value");
+      // const getVotes = await Votes.query() .where("postID", parseInt(id))
+      //   .where("typeOf", "post")
+      //   .sum("value");
 
       let myVote = 0;
 
@@ -39,16 +41,19 @@ const handler = nc({ onError })
           myVote = myVoteRow[0].value;
         }
       }
-
-      const newPost = {
+      const num_votes = post["votes"].length;
+      const sum = post["votes"].reduce(
+        (partialSum, a) => partialSum + a.value,
+        0
+      );
+      const returnPost = {
         ...post,
-        voteSum: !!getVotes[0]["sum(`value`)"]
-          ? getVotes[0]["sum(`value`)"]
-          : 0,
+        score: sum,
+        num_votes: num_votes,
         myVote: myVote,
       };
 
-      res.status(200).json(newPost);
+      res.status(200).json(returnPost);
     }
   })
   .put(async (req, res) => {
@@ -56,6 +61,7 @@ const handler = nc({ onError })
   })
   .delete(async (req, res) => {
     const session = await getServerSession(req, res, authOptions);
+
     const { id } = req.query;
 
     if (!!id) {
