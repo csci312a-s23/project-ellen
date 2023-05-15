@@ -49,11 +49,12 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
   const getVotes = await Votes.query()
     .where("postID", postID)
     .where("typeOf", "post")
-    .sum("value");
+    .sum("value as newVoteSum");
 
+  console.log(getVotes);
   res.status(200).end(
     JSON.stringify({
-      newVoteSum: getVotes[0]["sum(`value`)"],
+      newVoteSum: getVotes[0].newVoteSum,
       isNew: !delVote,
     })
   );
