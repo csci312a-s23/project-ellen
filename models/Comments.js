@@ -1,6 +1,8 @@
 import { Model } from "objection";
 import BaseModel from "./BaseModel";
 import User from "./Users.js";
+import Post from "./Posts.js";
+
 export default class Comment extends BaseModel {
   static get tableName() {
     return "comments";
@@ -23,7 +25,7 @@ export default class Comment extends BaseModel {
   }
 
   static get relationMappings() {
-    const Post = require("./Posts");
+    //const Post = require("./Posts");
 
     return {
       poster: {
