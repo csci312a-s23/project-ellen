@@ -15,6 +15,7 @@ import "chartjs-adapter-date-fns";
 import { enGB } from "date-fns/locale";
 //this sets the display language. In the documentation it uses "de", which will display dates in German.
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import styles from "./LineChart.module.css";
 
 ChartJS.register(
   TimeScale,
@@ -269,19 +270,13 @@ export default function LineChart({
     "MCAB",
     "Misc",
   ];
-  const metrics = ["Post Engagement"];
 
+  const metrics = ["Post Engagement"];
   let key = 0;
+
   return (
-    <div className="chart-container" style={{ margin: "5vh 5vh 5vh 5vh" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: "2vh",
-        }}
-      >
+    <div className={`chart-container ${styles.chartcontainer}`}>
+      <div className={styles.innerchartcontainer}>
         <FormControl fullWidth>
           <InputLabel> Metric </InputLabel>
           <Select
