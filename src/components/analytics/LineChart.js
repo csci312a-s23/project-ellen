@@ -298,7 +298,7 @@ export default function LineChart({
           </Select>
         </FormControl>
 
-        <p style={{ margin: "1vw" }}> x </p>
+        <p className={styles.xstyle}> x </p>
 
         <FormControl fullWidth data-testid="labelChange">
           <InputLabel> Topic </InputLabel>

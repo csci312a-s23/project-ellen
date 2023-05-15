@@ -10,7 +10,6 @@ exports.up = function (knex) {
     table.integer("commentID").references("id").inTable("comments");
     table.integer("value");
     table.text("typeOf");
-    table.string("created_at");
   });
 };
 

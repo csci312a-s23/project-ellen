@@ -41,6 +41,7 @@ ChartJS.register(
 );
 
 import LineChart from "@/components/analytics/LineChart";
+import styles from "../styles/AnalyticsDisplay.module.css";
 
 export default function AnalyticsDisplay({ renderChart = true }) {
   const controlPanelWidth = 25; // UI mod
@@ -67,33 +68,11 @@ export default function AnalyticsDisplay({ renderChart = true }) {
 
   let key = 0;
   return (
-    <div
-      data-testid="wholepage"
-      style={{
-        width: "auto",
-        height: "90vh",
-        backgroundColor: "grey",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Paper
-        style={{
-          width: "70%",
-          height: "80%",
-          display: "flex",
-          flexDirection: "row",
-        }}
-        elevation={10}
-      >
+    <div data-testid="wholepage" className={styles.pagewrapper}>
+      <Paper className={styles.outerpaper} elevation={10}>
         <Paper
-          style={{
-            width: `${controlPanelWidth}%`,
-            height: "100%",
-            backgroundColor: "#333333",
-            overflow: "auto",
-          }}
+          style={{ width: `${controlPanelWidth}%` }}
+          className={styles.innerpaper}
           elevation={20}
           varaint="outlined"
         >
@@ -102,7 +81,7 @@ export default function AnalyticsDisplay({ renderChart = true }) {
             return (
               <div
                 key={`analyticsGroup${key.toString()}`}
-                style={{ margin: "5% 5% 0% 5%" }}
+                className={styles.group}
               >
                 <MakeGroup
                   c={c}
@@ -112,17 +91,10 @@ export default function AnalyticsDisplay({ renderChart = true }) {
               </div>
             );
           })}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: "3vh",
-            }}
-          >
+          <div className={styles.categories}>
             <Button
               variant="outline"
-              style={{ backgroundColor: "white" }}
+              className={styles.whitebgnd}
               onClick={() => {
                 const newcolor = Math.floor(Math.random() * 16777215).toString(
                   16
@@ -150,7 +122,7 @@ export default function AnalyticsDisplay({ renderChart = true }) {
             </Button>
           </div>
         </Paper>
-        <div style={{ width: `${100 - controlPanelWidth}%`, height: "100%" }}>
+        <div style={{ width: `${100 - controlPanelWidth}%` }}>
           <LineChart
             categories={categories}
             compare={compare}
@@ -180,7 +152,6 @@ export function MakeGroup({ c, categories, setCategories }) {
             variant="contained"
             data-testid="deletebtn"
             size="small"
-            style={{ backgroundColor: "", marginRight: 0 }}
             onClick={() => {
               const withRemoved = [...categories].filter(
                 (obj) => JSON.stringify(obj) !== JSON.stringify(c)
@@ -195,7 +166,7 @@ export function MakeGroup({ c, categories, setCategories }) {
 
       <AccordionDetails
         data-testid="accordiondetails"
-        style={{ backgroundColor: "white" }}
+        className={styles.whitebgnd}
       >
         {groups.map((g) => {
           key++;
