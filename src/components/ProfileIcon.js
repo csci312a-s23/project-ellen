@@ -20,7 +20,7 @@ export default function ProfileIcon() {
   if (!session) {
     return (
       <div>
-        <PortraitIcon onClick={handleMenuClick} />
+        <PortraitIcon sx={{ fontSize: 48 }} onClick={handleMenuClick} />
 
         <Menu
           anchorEl={anchorEl}
@@ -40,7 +40,7 @@ export default function ProfileIcon() {
   } else {
     return (
       <div>
-        <PortraitIcon onClick={handleMenuClick} />
+        <PortraitIcon sx={{ fontSize: 48 }} onClick={handleMenuClick} />
 
         <Menu
           anchorEl={anchorEl}
