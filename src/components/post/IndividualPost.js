@@ -5,44 +5,37 @@ import { categoryColors } from "../../../data/CategoryColorData.js";
 import styles from "./IndividualPost.module.css";
 
 export default function IndividualPost({ post, setUnauthorized }) {
-  console.log("post", post);
   const [voteVal, setVoteVal] = useState(0);
   const [voteSum, setVoteSum] = useState(0);
   const [numVotes, setNumVotes] = useState(0);
-  const [stateTimeout, setStateTimeout] = useState();
 
   useEffect(() => {
     setVoteSum(post.score);
     setVoteVal(post.myVote);
     setNumVotes(post.num_votes);
-  }, []);
+  }, [post]);
 
-  const setVote = (vote) => {
+  const setVote = async (vote) => {
     setVoteVal(vote);
-    clearTimeout(stateTimeout);
-    setStateTimeout(
-      setTimeout(async () => {
-        const res = await fetch(`/api/posts/${post.id}/vote`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            value: vote,
-          }),
-        });
-        if (res.status === 200) {
-          const response = await res.json();
-          setVoteSum(response.newVoteSum);
-          if (!!response.isNew) {
-            setNumVotes(post.num_votes + 1);
-          }
-        }
-        if (res.status === 401 || res.status === 403) {
-          setUnauthorized(true);
-        }
-      }, 2000)
-    );
+    const res = await fetch(`/api/posts/${post.id}/vote`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        value: vote,
+      }),
+    });
+    if (res.status === 200) {
+      const response = await res.json();
+      setVoteSum(response.newVoteSum);
+      if (!!response.isNew) {
+        setNumVotes(post.num_votes + 1);
+      }
+    }
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+    }
   };
 
   return (
