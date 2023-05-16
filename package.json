@@ -27,6 +27,9 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.0",
     "ajv-formats": "^2.1.1",
+    "canvas": "^2.11.2",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^2.30.0",
     "db-errors": "^0.2.3",
     "departments.js": "^1.1.1",
     "directory.js": "^1.0.6",
@@ -39,9 +42,11 @@
     "objection": "^3.0.1",
     "pg": "^8.10.0",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-switch": "^7.0.0",
     "reactjs-popup": "^2.0.5",
+    "resize-observer": "^1.0.4",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.6"
   },
@@ -50,6 +55,7 @@
     "*.{js,css,md,json,jsx}": "prettier --write"
   },
   "devDependencies": {
+    "@react-hook/resize-observer": "^1.2.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "eslint": "8.36.0",
@@ -63,6 +69,7 @@
     "lint-staged": "^13.2.0",
     "next-router-mock": "^0.9.2",
     "node-fetch": "^2.6.7",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.7",
+    "use-resize-observer": "^9.1.0"
   }
 }

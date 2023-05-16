@@ -1,5 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import PortraitIcon from "@mui/icons-material/Portrait";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
 import Link from "next/link";
@@ -20,7 +21,7 @@ export default function ProfileIcon() {
   if (!session) {
     return (
       <div>
-        <PortraitIcon sx={{ fontSize: 48 }} onClick={handleMenuClick} />
+        <PersonOffIcon sx={{ fontSize: 48 }} onClick={handleMenuClick} />
 
         <Menu
           anchorEl={anchorEl}

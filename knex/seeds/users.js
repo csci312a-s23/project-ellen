@@ -8,10 +8,10 @@ const contents = fs.readFileSync("./data/newGenSeedData.json");
 const data = JSON.parse(contents);
 
 exports.seed = async function (knex) {
-  const postData = data.PostSeedData.map((entry) => {
+  const postData = data.UserSeedData.map((entry) => {
     return { ...entry };
   });
 
-  await knex("posts").del();
-  await knex("posts").insert(postData);
+  await knex("users").del();
+  await knex("users").insert(postData);
 };
