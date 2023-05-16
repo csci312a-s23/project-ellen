@@ -7,7 +7,7 @@ import Post from "@/components/post/post.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
-import fetchMock from "fetch-mock-jest";
+// import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
@@ -35,6 +35,12 @@ mockRouter.useParser(
     "/",
   ])
 );
+
+jest.mock("next/dist/compiled/node-fetch", () =>
+  require("fetch-mock-jest").sandbox()
+);
+//jest.mock("node-fetch", () => require("fetch-mock-jest").sandbox());
+const fetchMock = require("next/dist/compiled/node-fetch");
 
 describe("General Tests", () => {
   beforeAll(() => {
