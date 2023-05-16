@@ -74,10 +74,7 @@ const handler = nc({ onError })
         .findById(session.user.id)
         .select("isAdmin");
 
-      if (
-        (!!session && session.user.id === post.posterID) ||
-        user.isAdmin === 1
-      ) {
+      if ((!!session && session.user.id === post.posterID) || !!user.isAdmin) {
         await Posts.query().deleteById(parseInt(id)).first().throwIfNotFound();
         res.status(200).json({ message: "Post deleted" });
       } else {
