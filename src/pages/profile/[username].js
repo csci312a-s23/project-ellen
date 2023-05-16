@@ -24,30 +24,44 @@ export default function Profile() {
     if (commentsResponse.ok) {
       const fetchedUserComments = await commentsResponse.json();
       setUserComments(fetchedUserComments);
+    } else {
+      setUserComments();
     }
   };
 
-  const getPosts = async () => {
-    const postsResponse = await fetch(`/api/users/${username}/posts`);
-    if (postsResponse.ok) {
-      const fetchedUserPosts = await postsResponse.json();
-      setUserPosts(fetchedUserPosts);
-    }
-  };
-
-  const getUserInfo = async () => {
-    const detailsResponse = await fetch(`/api/users/${username}`);
-    if (detailsResponse.ok) {
-      const fetchedUserDetails = await detailsResponse.json();
-      updateUser(fetchedUserDetails);
-    }
-    getPosts();
-
+  const deleteComment = async (commentID, postID) => {
+    console.log(commentID);
+    await fetch(`/api/posts/${postID.id}/comments/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: postID,
+        commentID: commentID,
+      }),
+    });
     getComments();
+    router.push(`/profile/${currentUser.username}`);
   };
 
   useEffect(() => {
     if (username) {
+      const getUserInfo = async () => {
+        const detailsResponse = await fetch(`/api/users/${username}`);
+        if (detailsResponse.ok) {
+          const fetchedUserDetails = await detailsResponse.json();
+          updateUser(fetchedUserDetails);
+        }
+        const postsResponse = await fetch(`/api/users/${username}/posts`);
+        if (postsResponse.ok) {
+          const fetchedUserPosts = await postsResponse.json();
+          setUserPosts(fetchedUserPosts);
+        }
+
+        getComments();
+      };
+
       if (router.pathname.includes("profile")) {
         getUserInfo();
       }
@@ -63,7 +77,7 @@ export default function Profile() {
         setAllow(true);
       }
     }
-  }, [username, router.pathname, session]);
+  }, [username, currentUser, router.pathname, session]);
 
   const vote = async (action, commentID, postID) => {
     await fetch(`/api/posts/${postID}/comments`, {
@@ -102,6 +116,7 @@ export default function Profile() {
           <CommentsContainer
             comments={userComments}
             vote={vote}
+            deleteComment={deleteComment}
             whereis="profile"
           />
         )}

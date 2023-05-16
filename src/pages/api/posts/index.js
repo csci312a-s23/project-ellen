@@ -13,9 +13,26 @@ const handler = nc({ onError })
     if (!!category) {
       postQuery.where({ category: category }).throwIfNotFound();
     }
-    const posts = await postQuery.withGraphFetched("comments");
+    let posts = await postQuery
+      .withGraphFetched("[comments,votes]")
+      .modifyGraph("votes", (builder) => {
+        builder.where("typeOf", "=", "post");
+        builder.select("value");
+      });
 
-    // console.log("posts:", posts);
+    posts = posts.map((post) => {
+      // https://stackoverflow.com/questions/1230233/how-to-find-the-sum-of-an-array-of-numbers
+      const num_votes = post["votes"].length;
+      const sum = post["votes"].reduce(
+        (partialSum, a) => partialSum + a.value,
+        0
+      );
+      return {
+        ...post,
+        score: sum,
+        num_votes: num_votes,
+      };
+    });
     res.status(200).json(posts);
   })
   .post(authenticated, async (req, res) => {

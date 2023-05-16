@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 // import MenuIcon from "@mui/icons-material/Menu";
-import LoginButton from "../LoginButon";
+import LoginButton from "../LoginButton";
 import styles from "./NavBar.module.css";
 
 export default function NavBar() {
