@@ -18,7 +18,7 @@ export default function PostCreator({
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [anonPost, setAnonPost] = useState(false);
   const [category, setCategory] = useState(" ");
 
   const { data: session } = useSession({ required: false });
@@ -36,7 +36,7 @@ export default function PostCreator({
 
   // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/
   const handleChange = (val) => {
-    setChecked(val);
+    setAnonPost(val);
   };
 
   const submitPost = async () => {
@@ -54,7 +54,7 @@ export default function PostCreator({
       body: JSON.stringify({
         title: title,
         content: description,
-        posterID: checked ? "0000" : session.user.id,
+        anonomous: anonPost,
         category: category,
       }),
     });
@@ -127,7 +127,7 @@ export default function PostCreator({
               <h3>Anonymous</h3>
 
               <ReactSwitch
-                checked={checked}
+                checked={anonPost}
                 onChange={handleChange}
                 data-testid="anon-input"
               />
