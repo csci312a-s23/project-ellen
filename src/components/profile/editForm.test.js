@@ -190,10 +190,12 @@ describe("EditForm tests", () => {
       },
       body: JSON.stringify({
         classYear: 2024,
+        department: "",
         email: "test1@test.com",
         firstName: "New Name",
         lastName: "test1",
         major: "New Major",
+        title: "",
         username: "test1",
       }),
     });
