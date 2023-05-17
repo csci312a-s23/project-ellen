@@ -87,7 +87,7 @@ for i in range(len(users)*2):
     else:
         postID =  random.randint(0, len(posts)-1)
         commentID = None
-        posts[postID]['created_at']
+        time = posts[postID]['created_at']
     
     votes.append({
         'id': i+426,
