@@ -290,6 +290,7 @@ describe("General Tests", () => {
       await waitFor(() => {
         render(<Profile />);
       });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(await screen.queryByText("Edit")).not.toBeInTheDocument();
     });
 
