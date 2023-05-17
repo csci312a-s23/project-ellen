@@ -1,5 +1,5 @@
 import Link from "next/link";
-//import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 // import MenuIcon from "@mui/icons-material/Menu";
 
 //import LoginButton from "../LoginButon";
@@ -10,7 +10,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import styles from "./NavBar.module.css";
 
 export default function NavBar() {
-  //const { data: session } = useSession();
+  const { data: session } = useSession();
 
   return (
     <div className={styles.navBarContainer}>
@@ -20,13 +20,16 @@ export default function NavBar() {
         </Link>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <ProfileIcon />
-
-          <Link
-            href="/analytics"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <BarChartIcon sx={{ fontSize: 48 }} />
-          </Link>
+          {!!session && session.user.isAdmin ? (
+            <Link
+              href="/analytics"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <BarChartIcon sx={{ fontSize: 48 }} />
+            </Link>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
