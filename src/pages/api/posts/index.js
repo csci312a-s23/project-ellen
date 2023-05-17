@@ -45,13 +45,14 @@ const handler = nc({ onError })
 
     const newPost = await Post.query().insertAndFetch({
       posterID: !!body.anonomous
-        ? "fddbf3bd-155c-458e-97bc-567ae93d9b47"
+        ? "51e2c13b-dfd5-4ed4-8805-f03357a3083b"
         : req.user.id,
       title: body?.title,
       content: body?.content,
       category: body?.category,
       created_at: new Date().toISOString(),
     });
+    console.log(newPost);
 
     res.status(200).json(newPost);
   });
