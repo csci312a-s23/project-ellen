@@ -22,7 +22,7 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
         return true; //returns all posts
       } else if (sortingFilter === "hot") {
         //sort by date
-        return parseInt(post.num_votes) > 5; //need to implement this once we start scoring posts
+        return parseInt(post.score) > 5; //need to implement this once we start scoring posts
       } else {
         return post.category === sortingFilter;
       }
