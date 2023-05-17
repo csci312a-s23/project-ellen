@@ -5,6 +5,8 @@ import Link from "next/link";
 //import LoginButton from "../LoginButon";
 import ProfileIcon from "../ProfileIcon";
 
+import BarChartIcon from "@mui/icons-material/BarChart";
+
 import styles from "./NavBar.module.css";
 
 export default function NavBar() {
@@ -16,8 +18,16 @@ export default function NavBar() {
         <Link href="/" style={{ textDecoration: "none", color: "black" }}>
           <h1 className={styles.title}>StudentDirect</h1>
         </Link>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <ProfileIcon />
 
-        <ProfileIcon />
+          <Link
+            href="/analytics"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <BarChartIcon sx={{ fontSize: 48 }} />
+          </Link>
+        </div>
       </div>
     </div>
   );
