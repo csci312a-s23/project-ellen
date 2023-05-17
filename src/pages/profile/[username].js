@@ -77,6 +77,8 @@ export default function Profile() {
         setAllow(true);
       }
     }
+    //alternative is to use useCallback on getComments but it's messing up testing and functionality
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, router.pathname, session]);
 
   const vote = async (action, commentID, postID) => {
