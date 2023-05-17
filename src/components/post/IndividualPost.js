@@ -52,7 +52,7 @@ export default function IndividualPost({ post, setUnauthorized }) {
           {post.category}
         </div>
       </h1>
-      <Link href={`/profile/${post.poster.username}`}>
+      <Link href={`/profile/${post?.poster?.username}`}>
         <div>by: {post?.poster?.username}</div>
       </Link>
 
