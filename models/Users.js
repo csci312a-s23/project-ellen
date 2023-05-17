@@ -20,10 +20,13 @@ export default class User extends BaseModel {
         lastName: { type: "string" },
         type: { type: "string" },
         created_at: { type: "string" },
+
         classYear: { type: "integer" },
         major: { type: "string" },
+
         department: { type: "string" },
         title: { type: "string" },
+        isAdmin: { type: "boolean", default: false },
       },
     };
   }

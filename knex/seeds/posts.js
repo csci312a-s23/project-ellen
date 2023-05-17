@@ -3,12 +3,13 @@
  * @returns { Promise<void> }
  */
 const fs = require("fs");
-const contents = fs.readFileSync("./data/SeedData.json");
+//const contents = fs.readFileSync("./data/SeedData.json");
+const contents = fs.readFileSync("./data/newGenSeedData.json");
 const data = JSON.parse(contents);
 
 exports.seed = async function (knex) {
   const postData = data.PostSeedData.map((entry) => {
-    return { ...entry, created_at: new Date().toISOString() };
+    return { ...entry };
   });
 
   await knex("posts").del();

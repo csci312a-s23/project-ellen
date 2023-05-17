@@ -62,13 +62,23 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
 
             <Button
               {...buttonStyle}
+              onClick={() => setCurrentSortFilter("controversial")}
+              disabled={currentSortFilter === "controversial"}
+            >
+              Controversial
+            </Button>
+
+            <Button
+              {...buttonStyle}
               id="basic-button"
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
             >
-              {currentSortFilter === "new" || currentSortFilter === "hot" ? (
+              {currentSortFilter === "new" ||
+              currentSortFilter === "hot" ||
+              currentSortFilter === "controversial" ? (
                 <div className={styles.filterButtonDropdown}>
                   <span>All</span>
                   <KeyboardArrowDownIcon />
@@ -110,6 +120,7 @@ export default FilterBar;
 FilterBar.propTypes = {
   currentSortFilter: PropTypes.oneOf([
     "new",
+    "controversial",
     "hot",
     "All",
     "Academics",

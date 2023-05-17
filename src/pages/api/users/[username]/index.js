@@ -2,8 +2,6 @@ import nc from "next-connect";
 import User from "../../../../../models/Users";
 import { onError } from "../../../../lib/middleware";
 import { authenticated } from "../../../../lib/middleware";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]";
 import { getUserIdFromUsername } from "../../../../lib/middleware";
 
 const handler = nc({ onError })
@@ -21,8 +19,8 @@ const handler = nc({ onError })
     const { body } = req;
 
     //only the user is allowed to update their own profile
-    const session = await getServerSession(req, res, authOptions);
-    const requestingUser = session.user;
+
+    const requestingUser = req.user;
     const changedUser = await User.query().findById(id).throwIfNotFound();
     if (requestingUser.id !== changedUser.id) {
       res.status(401).end("Unauthorized");

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "../../../../models/Users";
-import { Scraper } from "directory.js";
+import { getDirectoryInfo, getDepartmentList } from "@/lib/middscrapers";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -26,14 +26,19 @@ export const authOptions = {
         if (!localUser) {
           // Create new user record in the database
           //gather user info from midd directory
-          const S = new Scraper(user.email);
-          await S.init();
-          const info = S.person;
-          if (!info) {
-            throw new Error("User not found in directory");
-          }
+          const info = await getDirectoryInfo({ email: user.email });
           //get username from email
           const username = user.email.split("@")[0]; //This doesn't have any safety checks, but we're relying on Midd not putting any funky emails in the directory
+
+          //if the user type if 'Faculty' check if their department is in the department list
+          if (info.type === "Faculty") {
+            const departmentList = await getDepartmentList({ season: "S23" });
+            if (!departmentList.includes(info.department)) {
+              info.type = "Administration";
+              info.isAdmin = true;
+            }
+          }
+
           localUser = await User.query().insertAndFetch({
             id: info.id,
             googleID: user.id,
@@ -44,11 +49,13 @@ export const authOptions = {
             type: info.type,
             classYear: info.gradYear,
             department: info.department,
+            isAdmin: info.isAdmin ? info.isAdmin : false,
           });
         }
         // Add user id to the token
         token.name = localUser.username;
         token.id = localUser.id;
+        token.isAdmin = localUser.isAdmin;
       }
       return token;
     },
@@ -56,6 +63,7 @@ export const authOptions = {
       // Add user id to the session
       session.user.name = token.name;
       session.user.id = token.id;
+      session.user.isAdmin = token.isAdmin;
       return session;
     },
   },

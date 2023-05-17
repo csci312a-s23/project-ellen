@@ -2,11 +2,12 @@ import Home from "@/pages/index";
 import PostCreator from "@/components/post/PostCreator";
 import Profile from "@/pages/profile/[username]";
 import Post from "@/components/post/post.js";
+// import PostPage from "@/components/post/IndividualPost.js";
 // import App from "../pages/_app.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
-import fetchMock from "fetch-mock-jest";
+// import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
@@ -14,7 +15,6 @@ import { useSession } from "next-auth/react";
 // import { SessionProvider } from "next-auth/react";
 import { waitFor } from "@testing-library/react";
 import { within } from "@testing-library/dom";
-
 const fs = require("fs");
 const contents = fs.readFileSync("./data/SeedData.json");
 const data = JSON.parse(contents);
@@ -24,6 +24,7 @@ jest.mock("next/router", () => require("next-router-mock"));
 jest.mock("next-auth/react", () => ({
   useSession: jest.fn(),
 }));
+jest.mock("next-auth/react");
 
 mockRouter.useParser(
   createDynamicRouteParser([
@@ -34,6 +35,12 @@ mockRouter.useParser(
     "/",
   ])
 );
+
+jest.mock("next/dist/compiled/node-fetch", () =>
+  require("fetch-mock-jest").sandbox()
+);
+//jest.mock("node-fetch", () => require("fetch-mock-jest").sandbox());
+const fetchMock = require("next/dist/compiled/node-fetch");
 
 describe("General Tests", () => {
   beforeAll(() => {
@@ -48,6 +55,7 @@ describe("General Tests", () => {
     fetchMock.get("/api/posts/1", data.PostSeedData[0]);
     fetchMock.get("/api/posts", data.PostSeedData);
     fetchMock.get("/api/users/test1", data.UserSeedData[0]);
+    fetchMock.get("/api/users/test2", data.UserSeedData[1]);
     fetchMock.get(
       "/api/users/test1/posts",
       data.PostSeedData.filter((post) => parseInt(post.posterID) === 1)
@@ -56,6 +64,16 @@ describe("General Tests", () => {
       "/api/users/test1/comments",
       data.CommentSeedData.filter(
         (comment) => parseInt(comment.commenterID) === 1
+      )
+    );
+    fetchMock.get(
+      "/api/users/test2/posts",
+      data.PostSeedData.filter((post) => parseInt(post.posterID) === 2)
+    );
+    fetchMock.get(
+      "/api/users/test2/comments",
+      data.CommentSeedData.filter(
+        (comment) => parseInt(comment.commenterID) === 2
       )
     );
     mockRouter.setCurrentUrl("/");
@@ -71,6 +89,7 @@ describe("General Tests", () => {
         data: {
           user: {
             name: "test1",
+            isAdmin: true,
           },
         },
       };
@@ -223,13 +242,13 @@ describe("General Tests", () => {
       expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
 
-    test("a signed in user can't view another user's profile", async () => {
+    test("a signed in user can view another user's profile", async () => {
       mockRouter.setCurrentUrl(`/profile/test2`);
       render(<Profile />);
-      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
     });
 
-    test("a user who isn't signed in can't view another user's profile", async () => {
+    test("a user who isn't signed in can view another user's profile", async () => {
       useSession.mockImplementation(() => {
         return {
           data: undefined,
@@ -238,7 +257,64 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test1`);
       render(<Profile />);
-      expect(await screen.queryAllByTestId("profile")).toHaveLength(0);
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
+    });
+
+    test("Edit button renders when user is on their own page", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      await waitFor(() => {
+        render(<Profile />);
+      });
+
+      expect(await screen.queryByText("Edit")).toBeInTheDocument();
+    });
+
+    test("Edit button won't render when user is on different page", async () => {
+      useSession.mockImplementation(() => {
+        return {
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
+        };
+      });
+
+      mockRouter.setCurrentUrl(`/profile/test2`);
+
+      await waitFor(() => {
+        render(<Profile />);
+      });
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
+      expect(await screen.queryByText("Edit")).not.toBeInTheDocument();
+    });
+
+    test("Edit button routes to new page", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      await waitFor(() => {
+        render(<Profile />);
+      });
+
+      const editButton = await screen.queryByText("Edit");
+      expect(editButton).toBeInTheDocument();
+
+      fireEvent.click(editButton);
+
+      await waitFor(() => {
+        expect(mockRouter.asPath).toEqual(`/profile/test1/edit`);
+      });
+    });
+
+    test("Don't see who made comments on a profile page", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      expect(screen.queryByText("by:")).not.toBeInTheDocument();
     });
   });
 
@@ -251,24 +327,64 @@ describe("General Tests", () => {
         id: 6,
         myVote: 0,
         num_votes: 1,
-        num_comments: 10,
         posterID: "11111",
         title: "new post 2",
+        comments: [{}, {}, {}],
       };
       render(<Post postInfo={examplePost} />);
       // const find = screen.getByTestId("num_votes")
       // const find2 = within(find).getByText("1")
-      const {getByText} = within(screen.getByTestId("num_votes"));
+      const { getByText } = within(screen.getByTestId("num_votes"));
       expect(getByText("1")).toBeInTheDocument();
 
       const getByText2 = within(screen.getByTestId("num_comments")).getByText;
-      expect(getByText2("10")).toBeInTheDocument();
-
-      // const find = await screen.findByText("# votes: 1")
-      // console.log("find", find)
-      // console.log("find2", find2)
-      // expect(screen.findByText("# votes: 1")).toBeInTheDocument()
-      // expect(screen.findByText("# comments: 10")).toBeInTheDocument()
+      expect(getByText2("3")).toBeInTheDocument();
+    });
+  });
+  describe("admin features", () => {
+    test("admin can see 'delete post' on all posts", async () => {
+      // useSession.mockImplementation(() => {
+      // 	return {
+      // 		data: {
+      // 			user: {
+      // 				name: "test1",
+      // 				username: "test1",
+      // 				isAdmin: 1
+      // 			},
+      // 		},
+      // 	}
+      // })
+      useSession.mockImplementation(() => {
+        return {
+          data: { user: { name: "test1", isAdmin: 1 } },
+          status: "authenticated",
+        };
+      });
+      const examplePost = {
+        category: "Academics",
+        content:
+          "I got 0/4 courses for fall course registration. It is outrageous that as a junior I cannot get classes to fuffil my major!",
+        created_at: "2023-05-09T13:04:18.913Z",
+        id: 1,
+        myVote: 0,
+        num_votes: 8,
+        poster: null,
+        posterID: "3",
+        title: "O for Registration",
+        voteSum: 0,
+      };
+      mockRouter.setCurrentUrl(`/posts/1`);
+      await waitFor(() => {
+        render(
+          <ShowPost
+            currentPost={examplePost}
+            setUnauthorized={jest.fn()}
+            setAuthMessage={jest.fn()}
+          />
+        );
+      });
+      // screen.getByText()
+      expect(screen.getByText("Delete Post")).toBeInTheDocument();
     });
   });
 });

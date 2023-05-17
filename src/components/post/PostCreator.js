@@ -8,13 +8,17 @@ import AddIcon from "@mui/icons-material/Add";
 
 import { useSession } from "next-auth/react";
 
-export default function PostCreator({ refresh }) {
+export default function PostCreator({
+  refresh,
+  setUnauthorized,
+  setAuthMessage,
+}) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [anonPost, setAnonPost] = useState(false);
   const [category, setCategory] = useState(" ");
 
   const { data: session } = useSession({ required: false });
@@ -32,12 +36,17 @@ export default function PostCreator({ refresh }) {
 
   // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/
   const handleChange = (val) => {
-    setChecked(val);
+    setAnonPost(val);
   };
 
   const submitPost = async () => {
     closeModal();
-    await fetch("/api/posts", {
+    if (!session) {
+      setUnauthorized(true);
+      setAuthMessage("You must be logged in to create a post.");
+      return;
+    }
+    const res = await fetch("/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,10 +54,16 @@ export default function PostCreator({ refresh }) {
       body: JSON.stringify({
         title: title,
         content: description,
-        posterID: checked ? "0000" : session.user.id,
+        anonomous: anonPost,
         category: category,
       }),
     });
+
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+      setAuthMessage(res.statusText);
+    }
+
     setCategory(" ");
     setDescription(" ");
     setTitle(" ");
@@ -112,7 +127,7 @@ export default function PostCreator({ refresh }) {
               <h3>Anonymous</h3>
 
               <ReactSwitch
-                checked={checked}
+                checked={anonPost}
                 onChange={handleChange}
                 data-testid="anon-input"
               />

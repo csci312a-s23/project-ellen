@@ -10,6 +10,9 @@ import individualPost_endpoint from "../pages/api/posts/[id]/index.js";
 import postComments_endpoint from "../pages/api/posts/[id]/comments.js";
 import newPost_endpoint from "../pages/api/posts/index.js";
 import vote_endpoint from "../pages/api/posts/[id]/vote.js";
+import analytics_post_endpoint from "../pages/api/analytics/posts.js";
+import analytics_comm_endpoint from "../pages/api/analytics/comments.js";
+import analytics_votes_endpoint from "../pages/api/analytics/comments.js";
 // import newUser_endpoint from "../pages/api/user/new.js";
 import users_endpoint from "../pages/api/users/index.js";
 import individualUser_endpoint from "../pages/api/users/[username]/index.js";
@@ -33,6 +36,24 @@ jest.mock("directory.js", () => {
           gradYear: 2021,
           department: "Computer Science",
         },
+      };
+    }),
+  };
+});
+
+jest.mock("departments.js", () => {
+  return {
+    Scraper: jest.fn().mockImplementation(() => {
+      return {
+        init: jest.fn().mockResolvedValue(),
+        departments: [
+          {
+            name: "Computer Science",
+          },
+          {
+            name: "Mathematics",
+          },
+        ],
       };
     }),
   };
@@ -388,6 +409,30 @@ describe("API tests", () => {
         },
       });
     });
+    test("DELETE /api/posts/[id]/comments should delete comment", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: postComments_endpoint, // NextJS API function to test
+        url: "/api/posts/1/comments",
+        paramsPatcher: (params) => (params.id = 1), // Testing dynamic routes requires patcher
+        test: async ({ fetch }) => {
+          // Test endpoint with mock fetch
+          const res = await fetch({
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              commentID: 1,
+            }),
+          });
+          // console.log(res);
+          const response = await res.json();
+          expect(response.message).toBe("Comment deleted");
+        },
+      });
+    });
+
     test("POST new to /api/posts/[id]/comments", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
@@ -536,6 +581,7 @@ describe("API tests", () => {
       });
     });
   });
+
   describe("Voting tests", () => {
     beforeEach(() => {
       // Ensure test database is initialized before an tests
@@ -548,8 +594,11 @@ describe("API tests", () => {
     });
 
     test("initial vote increments total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: vote_endpoint, // NextJS API function to test
@@ -568,15 +617,22 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+
+          expect(final.length).toBe(1);
         },
       });
     });
 
     test("duplicate vote increments does not increase total votes", async () => {
-      const initial = await knex("posts").where({ id: "1" }).first();
-      expect(initial.num_votes).toBe(10);
+      const initial = await knex("votes").where({
+        postID: "1",
+        typeOf: "post",
+      });
+      expect(initial.length).toBe(0);
 
       // vote 1
       await testApiHandler({
@@ -597,8 +653,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
 
@@ -621,8 +680,11 @@ describe("API tests", () => {
             }),
           });
 
-          const final = await knex("posts").where({ id: "1" }).first();
-          expect(final.num_votes).toBe(11);
+          const final = await knex("votes").where({
+            postID: "1",
+            typeOf: "post",
+          });
+          expect(final.length).toBe(1);
         },
       });
     });
@@ -664,7 +726,6 @@ describe("API tests", () => {
             }),
           });
 
-          // console.log("initresponse", res)
           const finalComment = await knex("comments")
             .where({ postID: "1", id: "1" })
             .first();
@@ -726,6 +787,92 @@ describe("API tests", () => {
             .where({ postID: "1", id: "1" })
             .first();
           expect(finalComment.likes).toEqual(1);
+        },
+      });
+    });
+  });
+
+  describe("Analytics API endpoints", () => {
+    beforeAll(() => {
+      // Ensure test database is initialized before an tests
+      return knex.migrate.rollback().then(() => knex.migrate.latest());
+    });
+
+    beforeEach(() => {
+      // Reset contents of the test database
+      return knex.seed.run();
+    });
+
+    test("GET /api/analytics/posts should return all posts linked with related users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true,
+        handler: analytics_post_endpoint,
+        url: "/api/analytics/posts",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          const response = await res.json();
+          expect(response).toHaveLength(data["PostSeedData"].length);
+          expect(response[0]).toEqual(
+            expect.objectContaining({
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              }),
+            })
+          );
+        },
+      });
+    });
+    test("GET /api/analytics/comments should return all comments linked with related posts and users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true, // Make sure to catch any errors
+        handler: analytics_comm_endpoint,
+        url: "/api/analytics/comments",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          const response = await res.json();
+          expect(response).toHaveLength(data["CommentSeedData"].length);
+          /*expect(response[0]).toEqual(expect.objectContaining(
+            {
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              }),
+              post: expect.objectContaining(
+                {
+                  id: 1,
+                  poster: expect.objectContaining({
+                    id: "1",
+                    username: "test1",
+                  })
+                }
+              )
+            }
+        ));*/
+        },
+      });
+    });
+    test.skip("GET /api/analytics/votes should return all votes linked with related posts and users", async () => {
+      await testApiHandler({
+        rejectOnHandlerError: true,
+        handler: analytics_votes_endpoint,
+        url: "/api/analytics/votes",
+        test: async ({ fetch }) => {
+          const res = await fetch();
+          console.log(res);
+          const response = await res.json();
+          expect(response).toHaveLength(data["VoteSeedData"].length);
+          /*expect(response[0]).toEqual(expect.objectContaining(
+            {
+              id: 1,
+              poster: expect.objectContaining({
+                id: "1",
+                username: "test1",
+              })
+            }
+        ));*/
         },
       });
     });

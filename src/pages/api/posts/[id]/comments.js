@@ -1,10 +1,11 @@
 import nc from "next-connect";
 import Comments from "../../../../../models/Comments";
 import Posts from "../../../../../models/Posts";
+import Users from "../../../../../models/Users";
 import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
-import { authOptions } from "../../auth/[...nextauth]";
+import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth";
 
 const handler = nc({ onError })
@@ -39,7 +40,6 @@ const handler = nc({ onError })
   })
   .post(authenticated, async (req, res) => {
     // post a new comment to a given post
-    const session = await getServerSession(req, res, authOptions);
     const { id } = req.query;
     const newComment = req.body;
     // we want to automatically assign a new comment ID
@@ -48,7 +48,7 @@ const handler = nc({ onError })
     const comment = await Comments.query().insertAndFetch({
       // id: parseInt(maxId[0]["max(`id`)"]) + 1,
       postID: parseInt(id),
-      commenterID: session.user.id,
+      commenterID: req.user.id,
       content: newComment.content,
 
       likes: 0,
@@ -57,8 +57,6 @@ const handler = nc({ onError })
     res.status(200).json(comment);
   })
   .patch(authenticated, async (req, res) => {
-    // const { id } = req.query;
-
     const { postID } = req.body;
     const { commentID } = req.body;
     const { vote } = req.body;
@@ -112,6 +110,33 @@ const handler = nc({ onError })
     });
 
     res.status(200).end(JSON.stringify({ newVoteSum: comment.likes }));
+  })
+  .delete(authenticated, async (req, res) => {
+    // const { postID } = req.body;
+    const { commentID } = req.body;
+
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!!commentID) {
+      const comment = await Comments.query()
+        .findById(parseInt(commentID))
+        .throwIfNotFound();
+
+      const user = await Users.query()
+        .findById(session.user.id)
+        .select("isAdmin");
+
+      if (comment.commenterID === req.user.id || user.isAdmin === 1) {
+        await Comments.query()
+          .deleteById(parseInt(commentID))
+          .throwIfNotFound();
+        res.status(200).json({ message: "Comment deleted" });
+      } else {
+        res
+          .status(403)
+          .json({ message: "Not authorized to delete this comment" });
+      }
+    }
   });
 
 export default handler;

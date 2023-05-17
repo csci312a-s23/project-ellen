@@ -23,6 +23,8 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
       } else if (sortingFilter === "hot") {
         //sort by date
         return parseInt(post.score) > 5; //need to implement this once we start scoring posts
+      } else if (sortingFilter === "controversial") {
+        return parseInt(post.score) < 2;
       } else {
         return post.category === sortingFilter;
       }
@@ -30,7 +32,6 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
   } else {
     filteredPosts = [];
   }
-
   filteredPosts.sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at);
   });
@@ -59,6 +60,7 @@ PostList.propTypes = {
   posts: PropTypes.array,
   sortingFilter: PropTypes.oneOf([
     "new",
+    "controversial",
     "hot",
     "All",
     "Academics",

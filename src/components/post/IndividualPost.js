@@ -3,44 +3,44 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { categoryColors } from "../../../data/CategoryColorData.js";
 import styles from "./IndividualPost.module.css";
+import Link from "next/link";
 
-export default function IndividualPost({ post }) {
+export default function IndividualPost({ post, setUnauthorized }) {
   const [voteVal, setVoteVal] = useState(0);
   const [voteSum, setVoteSum] = useState(0);
-  const [stateTimeout, setStateTimeout] = useState();
+  const [numVotes, setNumVotes] = useState(0);
 
   useEffect(() => {
-    setVoteSum(post.voteSum);
+    setVoteSum(post.score);
     setVoteVal(post.myVote);
-  }, []);
+    setNumVotes(post.num_votes);
+  }, [post]);
 
-  const setVote = (vote) => {
-    console.log("vote", vote);
+  const setVote = async (vote) => {
     setVoteVal(vote);
-    clearTimeout(stateTimeout);
-    setStateTimeout(
-      setTimeout(() => {
-        fetch(`/api/posts/${post.id}/vote`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            value: vote,
-          }),
-        })
-          .then((res) => res.json())
-          .then((response) => {
-            console.log("response", response);
-            setVoteSum(response.newVoteSum);
-          });
-      }, 2000)
-    );
+    const res = await fetch(`/api/posts/${post.id}/vote`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        value: vote,
+      }),
+    });
+    if (res.status === 200) {
+      const response = await res.json();
+      setVoteSum(response.newVoteSum);
+      if (!!response.isNew) {
+        setNumVotes(post.num_votes + 1);
+      }
+    }
+    if (res.status === 401 || res.status === 403) {
+      setUnauthorized(true);
+    }
   };
 
   return (
     <Box className={styles.postContainer}>
-      {/* <div data-testid="post"> */}
       <h1 className={styles.title}>
         <div style={{ paddingRight: "20px" }}>{post.title}</div>
         <div
@@ -52,14 +52,17 @@ export default function IndividualPost({ post }) {
           {post.category}
         </div>
       </h1>
-      <div>by: {post?.poster?.username}</div>
+      <Link href={`/profile/${post?.poster?.username}`}>
+        <div>by: {post?.poster?.username}</div>
+      </Link>
+
       <div>at: {new Date(post.created_at).toISOString().substring(0, 10)}</div>
       <p>{post.content}</p>
       <Box sx={{ width: 200 }}>
         <VoteSlider voteVal={voteVal} setVote={setVote} />
       </Box>
       <span>score: {voteSum}</span>
-      <span>number of votes: {post.num_votes}</span>
+      <span>number of votes: {numVotes} </span>
       {/* </div> */}
     </Box>
   );
