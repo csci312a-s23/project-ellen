@@ -69,7 +69,7 @@ for i in range(150):
 
 comments = []
 for i in range(100):
-    postID = random.randint(0, len(posts)-1)
+    postID = random.randint(34, len(posts)-1)
     comments.append({
         'id': i+6,
         'commenterID': users[random.randint(0, len(users)-1)]['id'],
@@ -83,13 +83,13 @@ votes = []
 for i in range(200):
     if(random.randint(0, 4)==0): # its a vote on a comment
 
-        commentID = random.randint(0, len(comments)-1)
+        commentID = random.randint(6, len(comments)-1)
         for c in comments:
             if c['id'] == commentID: # found the comment
                 postID = c['postID']
                 time = c['created_at']
     else:
-        postID =  random.randint(0, len(posts)-1)
+        postID =  random.randint(34, len(posts)-1)
         commentID = None
         time = posts[postID]['created_at']
     
