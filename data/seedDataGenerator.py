@@ -56,7 +56,7 @@ topics = [
     'General'
 ]
 
-for i in range(len(users)*3):
+for i in range(150):
     posts.append({
         'id': i+34,
         'posterID': users[random.randint(0, len(users)-1)]['id'],
@@ -68,7 +68,7 @@ for i in range(len(users)*3):
 
 
 comments = []
-for i in range(len(users)*4):
+for i in range(100):
     postID = random.randint(0, len(posts)-1)
     comments.append({
         'id': i+6,
@@ -79,11 +79,14 @@ for i in range(len(users)*4):
 
 
 votes = []
-for i in range(len(users)*2):
-    if(random.randint(0, 4)==0):
-        postID = None
+for i in range(200):
+    if(random.randint(0, 4)==0): # its a vote on a comment
+
         commentID = random.randint(0, len(comments)-1)
-        time = comments[commentID]['created_at']
+        for c in comments:
+            if c['id'] == commentID: # found the comment
+                postID = c['postID']
+                time = c['created_at']
     else:
         postID =  random.randint(0, len(posts)-1)
         commentID = None
