@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { categoryColors } from "../../../data/CategoryColorData.js";
 import styles from "./IndividualPost.module.css";
+import Link from "next/link";
 
 export default function IndividualPost({ post, setUnauthorized }) {
   const [voteVal, setVoteVal] = useState(0);
@@ -40,7 +41,6 @@ export default function IndividualPost({ post, setUnauthorized }) {
 
   return (
     <Box className={styles.postContainer}>
-      {/* <div data-testid="post"> */}
       <h1 className={styles.title}>
         <div style={{ paddingRight: "20px" }}>{post.title}</div>
         <div
@@ -52,7 +52,10 @@ export default function IndividualPost({ post, setUnauthorized }) {
           {post.category}
         </div>
       </h1>
-      <div>by: {post?.poster?.username}</div>
+      <Link href={`/profile/${post?.poster?.username}`}>
+        <div>by: {post?.poster?.username}</div>
+      </Link>
+
       <div>at: {new Date(post.created_at).toISOString().substring(0, 10)}</div>
       <p>{post.content}</p>
       <Box sx={{ width: 200 }}>
