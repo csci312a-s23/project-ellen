@@ -93,7 +93,7 @@ for i in range(len(users)*2):
         'id': i+426,
         'voterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
-        'commendID': commentID,
+        'commentID': commentID,
         'value': random.randint(-3,4),
         'created_at': time,
     })
