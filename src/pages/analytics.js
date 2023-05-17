@@ -47,6 +47,7 @@ import { useSession } from "next-auth/react";
 
 export default function AnalyticsDisplay({ renderChart = true }) {
   const { data: session } = useSession();
+
   const controlPanelWidth = 25; // UI mod
   // stores the current issue to be analyzed
   const [compare, setCompare] = useState("Housing");
