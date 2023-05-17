@@ -1,9 +1,17 @@
 import AnalyticsDisplay from "../pages/analytics";
 import LineChart from "../components/analytics/LineChart";
-import MakeGroup from "../pages/analytics";
+import { MakeGroup } from "../pages/analytics";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { knex } from "../../knex/knex";
 import { ResizeObserver } from "resize-observer";
+import { useSession } from "next-auth/react";
+
+jest.mock("next/router", () => require("next-router-mock"));
+// https://github.com/nextauthjs/next-auth/discussions/4185 for help on mocking useSession
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(),
+}));
+jest.mock("next-auth/react");
 
 describe("Analytics Page Tests", () => {
   window.ResizeObserver = ResizeObserver;
@@ -11,9 +19,14 @@ describe("Analytics Page Tests", () => {
     return knex.migrate.rollback().then(() => knex.migrate.latest());
   });
   beforeAll(() => {
+    useSession.mockImplementation(() => {
+      return {
+        data: { user: { name: "test1", isAdmin: 1 } },
+        status: "authenticated",
+      };
+    });
     return knex.seed.run();
   });
-
   describe("Smoke Test Renderings", () => {
     test("Analytics page renders without the chart", async () => {
       render(<AnalyticsDisplay renderChart={false} />);

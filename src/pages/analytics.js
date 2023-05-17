@@ -43,7 +43,11 @@ ChartJS.register(
 import LineChart from "@/components/analytics/LineChart";
 import styles from "../styles/AnalyticsDisplay.module.css";
 
+import { useSession } from "next-auth/react";
+
 export default function AnalyticsDisplay({ renderChart = true }) {
+  const { data: session } = useSession();
+
   const controlPanelWidth = 25; // UI mod
   // stores the current issue to be analyzed
   const [compare, setCompare] = useState("Housing");
@@ -67,6 +71,9 @@ export default function AnalyticsDisplay({ renderChart = true }) {
   ]);
 
   let key = 0;
+  if (!!session && !session.user.isAdmin) {
+    return <p>You need to be an admin to view this page.</p>;
+  }
   return (
     <div data-testid="wholepage" className={styles.pagewrapper}>
       <Paper className={styles.outerpaper} elevation={10}>
