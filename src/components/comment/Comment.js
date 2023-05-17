@@ -5,10 +5,13 @@ import styles from "./Comment.module.css";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Comment({ data, vote, deleteComment }) {
   const [canDelete, setCanDelete] = useState(false);
   const { data: session, status } = useSession({ required: false });
+
+  const router = useRouter();
 
   //additionally confirms in the backend
   //for conditionally rendering the delete comment button
@@ -29,8 +32,13 @@ export default function Comment({ data, vote, deleteComment }) {
     <div data-testid="comment">
       <Box className={styles.indivCommentContainer}>
         <Box className={styles.leftSide}>
+          <Link href={`/profile/${data?.poster?.username}`}>
+            {/* dont show the by: thing if on a profile page. we already know who's comment it is! */}
+            {!router.pathname.includes("profile") && (
+              <h3>by: {data?.poster?.username}</h3>
+            )}
+          </Link>
           <Link href={`/posts/${data.postID}`}>
-            <h3>by: {data?.poster?.username}</h3>
             <div>{data.content}</div>
           </Link>
         </Box>
