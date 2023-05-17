@@ -6,7 +6,26 @@ import uuid
 
 daterange = pd.date_range(start="2022-09-01",end="2023-04-01")
 
-users = []
+users = [
+    {
+        'id': "cac181a9-e1e2-f2de-a699-2a73a2265208"
+    },
+    {
+        'id': "41acd879-40be-bb4e-b0bf-95e2ddbd321a"
+    },
+    {
+        'id': "a776c2db-5b8a-4b2d-ab11-1d73ec66ddcc"
+    },
+    {
+        'id': "9d676bdc-495d-6985-a621-8785203e5eaf"
+    },
+    {
+        'id': "c1aef312-f87d-a3c0-49e6-c5e9f3164e0f"
+    },
+    {
+        'id': "517807da-0273-2c41-5128-f13ea5cbcdde"
+    }
+]
 majors = [
     'ECON',
     'CSCI',
@@ -15,6 +34,7 @@ majors = [
     'ENVS'
 ]
 
+'''
 for i in range(50):
     users.append({
         'username':'TESTUSER_'+str(i),
@@ -25,7 +45,7 @@ for i in range(50):
         'classYear': 2023 + random.randint(0, 3),
         'major': majors[random.randint(0,len(majors)-1)],
     })
-
+'''
 
 posts = []
 topics = [
@@ -70,7 +90,7 @@ for i in range(len(users)*2):
     })
 
 jsonExport = {
-    "UserSeedData": users,
+    #"UserSeedData": users,
     "PostSeedData": posts,
     "CommentSeedData": comments,
     "VoteSeedData": votes
