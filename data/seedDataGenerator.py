@@ -74,6 +74,7 @@ for i in range(100):
         'id': i+6,
         'commenterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
+        'content': 'seeded comment',
         'created_at': posts[postID]['created_at'],
     })
 
