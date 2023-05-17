@@ -1,11 +1,14 @@
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+//import { useSession } from "next-auth/react";
 // import MenuIcon from "@mui/icons-material/Menu";
-import LoginButton from "../LoginButton";
+
+//import LoginButton from "../LoginButon";
+import ProfileIcon from "../ProfileIcon";
+
 import styles from "./NavBar.module.css";
 
 export default function NavBar() {
-  const { data: session } = useSession();
+  //const { data: session } = useSession();
 
   return (
     <div className={styles.navBarContainer}>
@@ -14,20 +17,7 @@ export default function NavBar() {
           <h1 className={styles.title}>StudentDirect</h1>
         </Link>
 
-        {session && (
-          <Link
-            href={`/profile/${session.user.name}`}
-            style={{ textDecoration: "none" }}
-          >
-            <h2 className={styles.subTitle}>profile</h2>
-          </Link>
-        )}
-
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <h2 className={styles.subTitle}>make post</h2>
-        </Link>
-
-        <LoginButton />
+        <ProfileIcon />
       </div>
     </div>
   );

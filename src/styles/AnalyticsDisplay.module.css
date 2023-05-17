@@ -1,0 +1,31 @@
+.pagewrapper {
+  width: auto;
+  height: 90vh;
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.outerpaper {
+  width: 70%;
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+}
+.innerpaper {
+  height: 100%;
+  background-color: #333333;
+  overflow: auto;
+}
+.group {
+  margin: 5% 5% 0% 5%;
+}
+.categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3vh;
+}
+.whitebgnd {
+  background-color: white;
+}
