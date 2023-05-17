@@ -44,7 +44,7 @@ const handler = nc({ onError })
     }
 
     const newPost = await Post.query().insertAndFetch({
-      posterID: !!body.anonomous
+      posterID: !!body.anonymous
         ? "51e2c13b-dfd5-4ed4-8805-f03357a3083b"
         : req.user.id,
       title: body?.title,
