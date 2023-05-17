@@ -80,13 +80,22 @@ for i in range(len(users)*4):
 
 votes = []
 for i in range(len(users)*2):
-    postID =  random.randint(0, len(posts)-1)
+    if(random.randint(0, 4)==0):
+        postID = None
+        commentID = random.randint(0, len(comments)-1)
+        time = comments[commentID]['created_at']
+    else:
+        postID =  random.randint(0, len(posts)-1)
+        commentID = None
+        time = posts[postID]['created_at']
+    
     votes.append({
         'id': i+426,
         'voterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
+        'commentID': commentID,
         'value': random.randint(-3,4),
-        'created_at': posts[postID]['created_at'],
+        'created_at': time,
     })
 
 jsonExport = {
