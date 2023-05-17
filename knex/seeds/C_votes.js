@@ -9,6 +9,6 @@ const data = JSON.parse(contents);
 
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
-  await knex("votes").del();
+  //await knex("votes").del();
   await knex("votes").insert(data.VoteSeedData);
 };
