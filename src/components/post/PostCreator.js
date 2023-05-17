@@ -54,7 +54,7 @@ export default function PostCreator({
       body: JSON.stringify({
         title: title,
         content: description,
-        anonomous: anonPost,
+        anonymous: anonPost,
         category: category,
       }),
     });
