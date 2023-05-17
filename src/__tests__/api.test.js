@@ -222,7 +222,7 @@ describe("API tests", () => {
           });
 
           const response = await res.json();
-          expect(response).toBe("Post deleted");
+          expect(response.message).toBe("Post deleted");
           //check the post is deleted from the database
           await expect(
             knex("posts").where({ id: 1 }).select("*")
