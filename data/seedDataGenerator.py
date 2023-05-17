@@ -80,8 +80,8 @@ for i in range(len(users)*4):
 
 votes = []
 for i in range(len(users)*2):
-    if(random.randint(0, 4)==0):
-        postID = None
+    if(random.randint(0, 4)==0): # its a vote on a comment
+        postID = random.randint(0, len(posts)-1)
         commentID = random.randint(0, len(comments)-1)
         time = comments[commentID]['created_at']
     else:
