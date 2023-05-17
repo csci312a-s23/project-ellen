@@ -34,6 +34,7 @@ export default function ShowPost({
         setUnauthorized(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, currentPost]);
 
   const getComments = useCallback(() => {

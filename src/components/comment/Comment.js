@@ -21,6 +21,7 @@ export default function Comment({ data, vote, deleteComment }) {
         setCanDelete(true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data]);
 
   const handleDelete = () => {
