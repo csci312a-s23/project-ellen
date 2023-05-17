@@ -51,12 +51,12 @@ export default function EditForm({ username }) {
         },
         body: JSON.stringify({
           classYear: classYear ? parseInt(classYear) : 0,
-          department: department,
+          department: department ? department : "",
           email: email,
-          firstName: firstName,
-          lastName: lastName,
-          major: major,
-          title: title,
+          firstName: firstName ? firstName : "",
+          lastName: lastName ? lastName : "",
+          major: major ? major : "",
+          title: title ? title : "",
           username: username,
         }),
       })
