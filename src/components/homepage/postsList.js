@@ -24,7 +24,9 @@ function PostList({ posts, sortingFilter, refreshPosts }) {
         //sort by date
         return parseInt(post.score) > 5; //need to implement this once we start scoring posts
       } else if (sortingFilter === "controversial") {
-        return abs(parseInt(post.score)) < 2 && parseInt(post.num_votes) > 5;
+        return (
+          Math.abs(parseInt(post.score)) <= 2 && parseInt(post.num_votes) > 5
+        );
       } else {
         return post.category === sortingFilter;
       }
