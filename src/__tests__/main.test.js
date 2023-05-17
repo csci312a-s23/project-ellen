@@ -310,6 +310,12 @@ describe("General Tests", () => {
         expect(mockRouter.asPath).toEqual(`/profile/test1/edit`);
       });
     });
+
+    test("Don't see who made comments on a profile page", async () => {
+      mockRouter.setCurrentUrl(`/profile/test1`);
+
+      expect(screen.queryByText("by:")).not.toBeInTheDocument();
+    });
   });
 
   describe("view counts", () => {
