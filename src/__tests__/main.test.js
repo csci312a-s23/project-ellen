@@ -7,7 +7,7 @@ import Post from "@/components/post/post.js";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
-import fetchMock from "fetch-mock-jest";
+// import fetchMock from "fetch-mock-jest";
 import { knex } from "../../knex/knex";
 import ShowPost from "../pages/posts/[id].js";
 import { act } from "react-dom/test-utils";
@@ -35,6 +35,12 @@ mockRouter.useParser(
     "/",
   ])
 );
+
+jest.mock("next/dist/compiled/node-fetch", () =>
+  require("fetch-mock-jest").sandbox()
+);
+//jest.mock("node-fetch", () => require("fetch-mock-jest").sandbox());
+const fetchMock = require("next/dist/compiled/node-fetch");
 
 describe("General Tests", () => {
   beforeAll(() => {
@@ -264,10 +270,11 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test1`);
 
-      await waitFor(() => render(<Profile />));
+      await waitFor(() => {
+        render(<Profile />);
+      });
 
-      const editButton = screen.queryByText("Edit");
-      await waitFor(() => expect(editButton).toBeInTheDocument());
+      expect(await screen.queryByText("Edit")).toBeInTheDocument();
     });
 
     test("Edit button won't render when user is on different page", async () => {
@@ -280,23 +287,28 @@ describe("General Tests", () => {
 
       mockRouter.setCurrentUrl(`/profile/test2`);
 
-      await waitFor(() => render(<Profile />));
-      const editButton = screen.queryByText("Edit");
-      await waitFor(() => expect(editButton).not.toBeInTheDocument());
+      await waitFor(() => {
+        render(<Profile />);
+      });
+      expect(await screen.findAllByTestId("profile")).not.toHaveLength(0);
+      expect(await screen.queryByText("Edit")).not.toBeInTheDocument();
     });
 
     test("Edit button routes to new page", async () => {
       mockRouter.setCurrentUrl(`/profile/test1`);
 
-      await waitFor(() => render(<Profile />));
-      const editButton = screen.queryByText("Edit");
-      await waitFor(() => expect(editButton).toBeInTheDocument());
+      await waitFor(() => {
+        render(<Profile />);
+      });
+
+      const editButton = await screen.queryByText("Edit");
+      expect(editButton).toBeInTheDocument();
 
       fireEvent.click(editButton);
 
-      await waitFor(() =>
-        expect(mockRouter.asPath).toEqual(`/profile/test1/edit`)
-      );
+      await waitFor(() => {
+        expect(mockRouter.asPath).toEqual(`/profile/test1/edit`);
+      });
     });
 
     test("Don't see who made comments on a profile page", async () => {

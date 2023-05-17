@@ -52,9 +52,13 @@ export default function IndividualPost({ post, setUnauthorized }) {
           {post.category}
         </div>
       </h1>
-      <Link href={`/profile/${post?.poster?.username}`}>
-        <div>by: {post?.poster?.username}</div>
-      </Link>
+      {post.poster?.username !== "anonymous" ? (
+        <Link href={`/profile/${post?.poster?.username}`}>
+          <div>by: {post.poster?.username}</div>
+        </Link>
+      ) : (
+        <div>by: anonymous</div>
+      )}
 
       <div>at: {new Date(post.created_at).toISOString().substring(0, 10)}</div>
       <p>{post.content}</p>

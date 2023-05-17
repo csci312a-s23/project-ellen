@@ -2,6 +2,7 @@ import nc from "next-connect";
 import Posts from "../../../../../models/Posts.js";
 import Votes from "../../../../../models/Votes.js";
 import Users from "../../../../../models/Users.js";
+import Comments from "../../../../../models/Comments.js";
 import { onError } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth/next";
@@ -75,7 +76,11 @@ const handler = nc({ onError })
         .select("isAdmin");
 
       if ((!!session && session.user.id === post.posterID) || !!user.isAdmin) {
-        await Posts.query().deleteById(parseInt(id)).first().throwIfNotFound();
+        //delete post and all associated votes and comments
+        await Votes.query().delete().where("postID", parseInt(id));
+        await Comments.query().delete().where("postID", parseInt(id));
+        await Posts.query().deleteById(parseInt(id)).throwIfNotFound();
+
         res.status(200).json({ message: "Post deleted" });
       } else {
         res.status(403).json({ message: "Not authorized to delete this post" });

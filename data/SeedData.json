@@ -87,6 +87,17 @@
       "type": "Administration",
       "title": "Dean1",
       "department": "Dean of Students"
+    },
+    {
+      "id": 6,
+      "googleID": "fddbf3bd-155c-458e-97bc-567ae93d9b47",
+      "username": "test5",
+      "email": "test5@test.com",
+      "firstName": "test5",
+      "lastName": "test5",
+      "type": "Administration",
+      "title": "Dean1",
+      "department": "Dean of Students"
     }
   ],
   "CommentSeedData": [
