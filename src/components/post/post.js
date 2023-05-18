@@ -13,7 +13,12 @@ export default function Post({
 }) {
   return (
     <div data-testid="post">
-      <div className={styles.container}>
+      <div
+        className={styles.container}
+        style={{
+          boxShadow: `0px 6px 0.4px -1px ${categoryColors[postInfo.category]}`,
+        }}
+      >
         <div className={styles.content}>
           <div
             style={{

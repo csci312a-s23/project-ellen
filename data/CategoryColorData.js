@@ -1,7 +1,7 @@
 export const categoryColors = {
-  Housing: "lightorange",
-  Dining: "yellow",
-  Parking: "lightblue",
-  Registration: "purple",
-  General: "lightgrey",
+  Housing: "AntiqueWhite",
+  Dining: "#FAD5D5",
+  Parking: "LightCyan",
+  Registration: "LightGreen",
+  General: "LightGrey",
 };
