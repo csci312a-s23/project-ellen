@@ -17,7 +17,7 @@ export default function Comment({ data, vote, deleteComment }) {
 
   useEffect(() => {
     setCommentLikeVal(data.likes);
-    setMyVote(data?.votes[0]?.myVote ? data.votes[0].myVote : 0);
+    setMyVote(data?.votes?.length > 0 ? data.votes[0].myVote : 0);
   }, []);
   //additionally confirms in the backend
   //for conditionally rendering the delete comment button
