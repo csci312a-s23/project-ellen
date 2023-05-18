@@ -6,15 +6,15 @@ import Votes from "../../../../../models/Votes";
 import { onError } from "../../../../lib/middleware.js";
 import { authenticated } from "../../../../lib/middleware.js";
 import { authOptions } from "../../../api/auth/[...nextauth].js";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 
 const handler = nc({ onError })
   .get(async (req, res) => {
+    const session = await getServerSession(req, res, authOptions);
     // get all comments associated with a given post
 
     const { id, commentID } = req.query;
 
-    console.log("comemnt id", commentID);
     if (!!commentID) {
       const comments = await Comments.query()
         .where({
@@ -40,13 +40,32 @@ const handler = nc({ onError })
 
       // if the post exists- fetch the comments
 
-      const comments = await Comments.query()
-        .where({ postID: parseInt(id) })
-        .withGraphFetched("poster")
-        .modifyGraph("poster", (builder) => {
-          builder.select("username");
-        })
-        .throwIfNotFound({ message: "No comments associated with this post" });
+      let comments;
+
+      if (!!session?.user) {
+        comments = await Comments.query()
+          .where({ postID: parseInt(id) })
+          .withGraphFetched("[poster,votes]")
+          .modifyGraph("poster", (builder) => {
+            builder.select("username");
+          })
+          .modifyGraph("votes", (builder) => {
+            builder.where("voterID", session.user.id).select("value as myVote");
+          })
+          .throwIfNotFound({
+            message: "No comments associated with this post",
+          });
+      } else {
+        comments = await Comments.query()
+          .where({ postID: parseInt(id) })
+          .withGraphFetched("poster")
+          .modifyGraph("poster", (builder) => {
+            builder.select("username");
+          })
+          .throwIfNotFound({
+            message: "No comments associated with this post",
+          });
+      }
 
       res.status(200).json(comments);
     } else {
@@ -94,8 +113,6 @@ const handler = nc({ onError })
       .first();
 
     let commentSum = 0;
-
-    // console.log("votes", votes);
 
     //if they have voted before
     if (!!votes) {

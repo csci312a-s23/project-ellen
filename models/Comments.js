@@ -2,6 +2,7 @@ import { Model } from "objection";
 import BaseModel from "./BaseModel";
 import User from "./Users.js";
 import Post from "./Posts.js";
+import Vote from "./Votes.js";
 
 export default class Comment extends BaseModel {
   static get tableName() {
@@ -42,6 +43,14 @@ export default class Comment extends BaseModel {
         join: {
           from: "comments.postID",
           to: "posts.id",
+        },
+      },
+      votes: {
+        relation: Model.HasManyRelation,
+        modelClass: Vote,
+        join: {
+          from: "comments.id",
+          to: "votes.commentID",
         },
       },
     };

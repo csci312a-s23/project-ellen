@@ -9,13 +9,15 @@ import { useRouter } from "next/router";
 
 export default function Comment({ data, vote, deleteComment }) {
   const [canDelete, setCanDelete] = useState(false);
-  const [commentLikeVal, setCommentLikeVal] = useState(false);
+  const [commentLikeVal, setCommentLikeVal] = useState(0);
+  const [myVote, setMyVote] = useState(0);
   const { data: session, status } = useSession({ required: false });
 
   const router = useRouter();
 
   useEffect(() => {
     setCommentLikeVal(data.likes);
+    setMyVote(data?.votes[0]?.myVote ? data.votes[0].myVote : 0);
   }, []);
   //additionally confirms in the backend
   //for conditionally rendering the delete comment button
@@ -29,13 +31,23 @@ export default function Comment({ data, vote, deleteComment }) {
   }, [status, data]);
 
   const handleDelete = () => {
-    // console.log(data);
     deleteComment(data.id, data.postID);
   };
 
   const voteHandler = async (voteVal) => {
-    const newVote = await vote(voteVal, data.id, data.postID);
-    setCommentLikeVal(newVote);
+    vote(voteVal, data.id, data.postID);
+    let value = 0;
+    if (voteVal === "upvote") {
+      value = 1;
+    }
+    if (voteVal === "downvote") {
+      value = -1;
+    }
+    if (!!data?.votes) {
+      const newVotes = commentLikeVal - myVote + value;
+      setCommentLikeVal(newVotes);
+      setMyVote(value);
+    }
   };
 
   return (

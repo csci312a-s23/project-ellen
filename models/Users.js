@@ -34,6 +34,7 @@ export default class User extends BaseModel {
   static get relationMappings() {
     const Post = require("./Posts");
     const Comment = require("./Comments");
+    const Vote = require("./Votes");
 
     return {
       posts: {
@@ -50,6 +51,14 @@ export default class User extends BaseModel {
         join: {
           from: "users.id",
           to: "comments.commenterID",
+        },
+      },
+      votes: {
+        relation: Model.HasManyRelation,
+        modelClass: Vote,
+        join: {
+          from: "users.id",
+          to: "votes.voterID",
         },
       },
     };
