@@ -114,7 +114,6 @@ export default function ShowPost({
       setAuthMessage(res.statusText);
     }
     const newCommentVote = await getSingleComment(commentID);
-    console.log("new comment vote", newCommentVote[0].likes);
     return newCommentVote[0].likes;
   };
 

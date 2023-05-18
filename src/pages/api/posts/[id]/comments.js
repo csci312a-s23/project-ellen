@@ -147,7 +147,8 @@ const handler = nc({ onError })
         .findById(session.user.id)
         .select("isAdmin");
 
-      if (comment.commenterID === req.user.id || user.isAdmin === 1) {
+      if (comment.commenterID === req.user.id || !!user.isAdmin) {
+        await Votes.query().delete().where("commentID", "=", commentID);
         await Comments.query()
           .deleteById(parseInt(commentID))
           .throwIfNotFound();
