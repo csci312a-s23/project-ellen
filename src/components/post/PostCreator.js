@@ -24,14 +24,11 @@ export default function PostCreator({
   const { data: session } = useSession({ required: false });
 
   const options = [
-    { label: "None" },
-    { label: "Academics" },
-    { label: "Athletics" },
-    { label: "Social" },
-    { label: "Professors" },
+    { label: "General" },
+    { label: "Registration" },
     { label: "Housing" },
     { label: "Dining" },
-    { label: "Other" },
+    { label: "Parking" },
   ];
 
   // https://www.c-sharpcorner.com/article/how-to-create-a-toggle-switch-in-react/

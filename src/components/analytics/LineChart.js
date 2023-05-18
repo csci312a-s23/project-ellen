@@ -262,17 +262,7 @@ export default function LineChart({
     },
   };
 
-  const issues = [
-    "Registration",
-    "Housing",
-    "Dining",
-    "Parking",
-    //"Facilities",
-    //"Student Life",
-    //"Academics",
-    //"MCAB",
-    "General",
-  ];
+  const issues = ["General", "Registration", "Housing", "Dining", "Parking"];
 
   const metrics = ["Post Engagement"];
   let key = 0;

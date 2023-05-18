@@ -50,7 +50,7 @@ export default function AnalyticsDisplay({ renderChart = true }) {
 
   const controlPanelWidth = 25; // UI mod
   // stores the current issue to be analyzed
-  const [compare, setCompare] = useState("Housing");
+  const [compare, setCompare] = useState("General");
 
   // stores the current categories (of students) being graphed, default is all students
   const [categories, setCategories] = useState([
