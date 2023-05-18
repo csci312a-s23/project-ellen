@@ -58,23 +58,25 @@ topics = [
 
 for i in range(150):
     posts.append({
-        'id': i+34,
+        'id': i,
         'posterID': users[random.randint(0, len(users)-1)]['id'],
         'title': "SEED DATA POST",
         'content': "seed data post ~~ content",
         'category': topics[random.randint(0, len(topics)-1)],
+        'num_votes': 0,
         'created_at': daterange[random.randint(0, len(daterange)-1)].strftime("%m/%d/%Y")
     })
 
 
 comments = []
 for i in range(100):
-    postID = random.randint(0, len(posts)-1)
+    postID = random.randint(34, len(posts)-1)
     comments.append({
-        'id': i+6,
+        'id': i,
         'commenterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'content': 'seeded comment',
+        'likes': 0,
         'created_at': posts[postID]['created_at'],
     })
 
@@ -83,22 +85,23 @@ votes = []
 for i in range(200):
     if(random.randint(0, 4)==0): # its a vote on a comment
 
-        commentID = random.randint(0, len(comments)-1)
+        commentID = random.randint(6, len(comments)-1)
         for c in comments:
             if c['id'] == commentID: # found the comment
                 postID = c['postID']
                 time = c['created_at']
     else:
-        postID =  random.randint(0, len(posts)-1)
+        postID =  random.randint(34, len(posts)-1)
         commentID = None
         time = posts[postID]['created_at']
     
     votes.append({
-        'id': i+426,
+        'id': i,
         'voterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'commentID': commentID,
-        'value': random.randint(-3,4),
+        'typeOf': "post" if (commentID == None) else "comment",
+        'value': random.randint(-3,3) if (commentID == None) else random.randint(-1,1),
         'created_at': time,
     })
 

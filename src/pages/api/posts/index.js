@@ -55,7 +55,6 @@ const handler = nc({ onError })
       category: body?.category,
       created_at: new Date().toISOString(),
     });
-    console.log(newPost);
 
     res.status(200).json(newPost);
   });
