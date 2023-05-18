@@ -12,8 +12,23 @@ const handler = nc({ onError })
   .get(async (req, res) => {
     // get all comments associated with a given post
 
-    const { id } = req.query;
-    if (!!id) {
+    const { id, commentID } = req.query;
+
+    console.log("comemnt id", commentID);
+    if (!!commentID) {
+      const comments = await Comments.query()
+        .where({
+          postID: parseInt(id),
+          id: commentID,
+        })
+        .withGraphFetched("poster")
+        .modifyGraph("poster", (builder) => {
+          builder.select("username");
+        })
+        .throwIfNotFound({ message: "No comments associated with this post" });
+
+      res.status(200).json(comments);
+    } else if (!!id) {
       // check if the post exists:
       await Posts.query()
         .findById(parseInt(id))
@@ -71,7 +86,6 @@ const handler = nc({ onError })
 
     // get previous vote
 
-    console.log("votes");
     const votes = await Votes.query()
       .where("postID", parseInt(postID))
       .where("commentID", parseInt(commentID))
@@ -81,7 +95,7 @@ const handler = nc({ onError })
 
     let commentSum = 0;
 
-    console.log("votes", votes);
+    // console.log("votes", votes);
 
     //if they have voted before
     if (!!votes) {
