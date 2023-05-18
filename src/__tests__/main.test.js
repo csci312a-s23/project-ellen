@@ -167,7 +167,7 @@ describe("General Tests", () => {
       const newPostButton = screen.getByRole("button", { name: "add" });
       fireEvent.click(newPostButton);
       const catInput = screen.getByTestId("cat-input");
-      const test = "Academics";
+      const test = "General";
       fireEvent.change(catInput, { target: { value: test } });
       expect(catInput.value).toBe(test);
     });
