@@ -47,6 +47,18 @@ export default function ShowPost({
     }
   }, [currentPost]);
 
+  const getSingleComment = (commentID) => {
+    if (!!currentPost) {
+      return fetch(
+        `/api/posts/${currentPost.id}/comments?commentID=${commentID}`
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          return response;
+        });
+    }
+  };
+
   const deletePost = async () => {
     if (!!currentPost) {
       // await fetch(`/api/posts/${currentPost.id}`, {
@@ -84,7 +96,7 @@ export default function ShowPost({
   };
 
   const vote = async (action, commentID) => {
-    console.log(currentPost.id, commentID);
+    console.log(currentPost, commentID);
     const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {
@@ -101,7 +113,9 @@ export default function ShowPost({
       setUnauthorized(true);
       setAuthMessage(res.statusText);
     }
-    getComments();
+    const newCommentVote = await getSingleComment(commentID);
+    console.log("new comment vote", newCommentVote[0].likes);
+    return newCommentVote[0].likes;
   };
 
   useEffect(() => {

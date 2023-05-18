@@ -9,10 +9,14 @@ import { useRouter } from "next/router";
 
 export default function Comment({ data, vote, deleteComment }) {
   const [canDelete, setCanDelete] = useState(false);
+  const [commentLikeVal, setCommentLikeVal] = useState(false);
   const { data: session, status } = useSession({ required: false });
 
   const router = useRouter();
 
+  useEffect(() => {
+    setCommentLikeVal(data.likes);
+  }, []);
   //additionally confirms in the backend
   //for conditionally rendering the delete comment button
   useEffect(() => {
@@ -27,6 +31,11 @@ export default function Comment({ data, vote, deleteComment }) {
   const handleDelete = () => {
     // console.log(data);
     deleteComment(data.id, data.postID);
+  };
+
+  const voteHandler = async (voteVal) => {
+    const newVote = await vote(voteVal, data.id, data.postID);
+    setCommentLikeVal(newVote);
   };
 
   return (
@@ -47,15 +56,15 @@ export default function Comment({ data, vote, deleteComment }) {
         <Box className={styles.rightSide}>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("upvote", data.id, data.postID)}
+            onClick={() => voteHandler("upvote")}
           >
             {" "}
             <KeyboardArrowUpIcon />{" "}
           </div>
-          <p>likes: {data.likes}</p>
+          <p>likes: {commentLikeVal}</p>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => vote("downvote", data.id, data.postID)}
+            onClick={() => voteHandler("downvote")}
           >
             {" "}
             <KeyboardArrowDownIcon />{" "}
