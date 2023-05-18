@@ -1,10 +1,7 @@
 export const categoryColors = {
-  professors: "lightorange",
-  Academics: "yellow",
-  Athletics: "lightblue",
-  Social: "purple",
-  Professors: "lightgrey",
-  Housing: "maroon",
-  Dining: "pink",
-  Other: "blue",
+  Housing: "lightorange",
+  Dining: "yellow",
+  Parking: "lightblue",
+  Registration: "purple",
+  General: "lightgrey",
 };
