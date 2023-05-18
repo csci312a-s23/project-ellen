@@ -41,7 +41,6 @@ const handler = nc({ onError }).patch(authenticated, async (req, res) => {
 
   const max = await Votes.query().max("id as maxId");
 
-  // console.log("max:", max[0]["maxId"] )
   await Votes.query().insert({
     id: max[0]["maxId"] + 1,
     postID: postID,
