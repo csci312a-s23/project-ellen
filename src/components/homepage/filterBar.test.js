@@ -54,8 +54,8 @@ describe("filterBar: filterBar tests", () => {
 
     const categoryButton = getByText("All");
     fireEvent.click(categoryButton);
-    const academicsOption = getByText("Academics");
+    const academicsOption = getByText("Housing");
     fireEvent.click(academicsOption);
-    expect(setCurrentSortFilter).toHaveBeenCalledWith("Academics");
+    expect(setCurrentSortFilter).toHaveBeenCalledWith("Housing");
   });
 });

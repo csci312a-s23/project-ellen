@@ -100,13 +100,11 @@ function FilterBar({ currentSortFilter, setCurrentSortFilter, currentPost }) {
               }}
             >
               <MenuItem onClick={changeCategory}>All</MenuItem>
-              <MenuItem onClick={changeCategory}>Academics</MenuItem>
-              <MenuItem onClick={changeCategory}>Athletics</MenuItem>
-              <MenuItem onClick={changeCategory}>Social</MenuItem>
-              <MenuItem onClick={changeCategory}>Professors</MenuItem>
               <MenuItem onClick={changeCategory}>Housing</MenuItem>
               <MenuItem onClick={changeCategory}>Dining</MenuItem>
-              <MenuItem onClick={changeCategory}>Other</MenuItem>
+              <MenuItem onClick={changeCategory}>Parking</MenuItem>
+              <MenuItem onClick={changeCategory}>Registration</MenuItem>
+              <MenuItem onClick={changeCategory}>General</MenuItem>
             </Menu>
           </div>
         )}
