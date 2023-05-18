@@ -209,35 +209,7 @@ describe("API tests", () => {
       });
     });
 
-    // test("PATCH /api/posts/[id]/vote should return downvoted post on downvote", async () => {
-    //   const downvote = {
-    //     vote: "downvote",
-    //     userID: 1,
-    //   };
-    //   const post = data.PostSeedData[1];
-
-    //   await testApiHandler({
-    //     rejectOnHandlerError: true, // Make sure to catch any errors
-    //     handler: vote_endpoint, // NextJS API function to test
-    //     url: "/api/posts/2/vote",
-    //     paramsPatcher: (params) => (params.id = 2), // Testing dynamic routes requires patcher
-    //     test: async ({ fetch }) => {
-    //       // Test endpoint with mock fetch
-    //       const res = await fetch({
-    //         method: "PATCH",
-    //         headers: {
-    //           "content-type": "application/json", // Must use correct content type
-    //         },
-    //         body: JSON.stringify(downvote),
-    //       });
-
-    //       const response = await res.json();
-    //       expect(response.votes).toBe(post.votes - 1);
-    //     },
-    //   });
-    // });
-
-    test("DELETE /api/posts/[id] should delete post", async () => {
+    test("DELETE /api/posts/[id] should delete post and associated votes and comments", async () => {
       await testApiHandler({
         rejectOnHandlerError: true, // Make sure to catch any errors
         handler: individualPost_endpoint, // NextJS API function to test
@@ -251,6 +223,18 @@ describe("API tests", () => {
 
           const response = await res.json();
           expect(response.message).toBe("Post deleted");
+          //check the post is deleted from the database
+          await expect(
+            knex("posts").where({ id: 1 }).select("*")
+          ).resolves.toHaveLength(0);
+          //check the comments are deleted from the database
+          await expect(
+            knex("comments").where({ postID: 1 }).select("*")
+          ).resolves.toHaveLength(0);
+          //check the votes are deleted from the database
+          await expect(
+            knex("votes").where({ postID: 1 }).select("*")
+          ).resolves.toHaveLength(0);
         },
       });
     });
@@ -292,34 +276,6 @@ describe("API tests", () => {
         },
       });
     });
-
-    //removing this test because feature has be deprecated and supplanted by auth
-    // test("POST /api/users/new should return create a new user", async () => {
-    //   const newUser = {
-    //     username: "new user",
-    //     email: "new@email.com",
-    //     created_at: new Date().toISOString(),
-    //   };
-
-    //   await testApiHandler({
-    //     rejectOnHandlerError: true, // Make sure to catch any errors
-    //     handler: newUser_endpoint, // NextJS API function to test
-    //     url: "/api/users/new",
-    //     test: async ({ fetch }) => {
-    //       // Test endpoint with mock fetch
-    //       const res = await fetch({
-    //         method: "POST",
-    //         headers: {
-    //           "content-type": "application/json", // Must use correct content type
-    //         },
-    //         body: JSON.stringify(newUser),
-    //       });
-
-    //       const response = await res.json();
-    //       expect(typeof response.id).toBe("number");
-    //     },
-    //   });
-    // });
 
     test("PUT /api/userss/[username] should return updated user", async () => {
       const updatedUser = {
