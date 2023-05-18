@@ -34,6 +34,7 @@ export default function ShowPost({
         setUnauthorized(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, currentPost]);
 
   const getComments = useCallback(() => {
@@ -83,6 +84,7 @@ export default function ShowPost({
   };
 
   const vote = async (action, commentID) => {
+    console.log(currentPost.id, commentID);
     const res = await fetch(`/api/posts/${currentPost.id}/comments`, {
       method: "PATCH",
       headers: {

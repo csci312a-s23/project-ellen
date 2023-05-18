@@ -229,6 +229,7 @@ export default function LineChart({
         setLineData(updated);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categories, compare, posts, comments, votes]);
 
   const chartData = {
