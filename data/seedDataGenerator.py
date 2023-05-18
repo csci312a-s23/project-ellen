@@ -101,7 +101,7 @@ for i in range(200):
         'postID': postID,
         'commentID': commentID,
         'typeOf': "post" if (commentID == None) else "comment",
-        'value': random.randint(-3,4),
+        'value': random.randint(-3,3) if (commentID == None) else random.randint(-1,1),
         'created_at': time,
     })
 
