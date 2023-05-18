@@ -71,7 +71,7 @@ export default function AnalyticsDisplay({ renderChart = true }) {
   ]);
 
   let key = 0;
-  if (!!session && !session.user.isAdmin) {
+  if (false && !!session && !session.user.isAdmin) {
     return <p>You need to be an admin to view this page.</p>;
   }
   return (

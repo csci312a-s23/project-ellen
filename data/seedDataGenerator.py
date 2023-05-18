@@ -63,6 +63,7 @@ for i in range(150):
         'title': "SEED DATA POST",
         'content': "seed data post ~~ content",
         'category': topics[random.randint(0, len(topics)-1)],
+        'num_votes': 0,
         'created_at': daterange[random.randint(0, len(daterange)-1)].strftime("%m/%d/%Y")
     })
 
@@ -75,6 +76,7 @@ for i in range(100):
         'commenterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'content': 'seeded comment',
+        'likes': 0,
         'created_at': posts[postID]['created_at'],
     })
 
@@ -98,6 +100,7 @@ for i in range(200):
         'voterID': users[random.randint(0, len(users)-1)]['id'],
         'postID': postID,
         'commentID': commentID,
+        'typeOf': "post" if (commentID == None) else "comment",
         'value': random.randint(-3,4),
         'created_at': time,
     })

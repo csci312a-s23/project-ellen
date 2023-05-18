@@ -12,6 +12,6 @@ exports.seed = async function (knex) {
     return { ...entry };
   });
 
-  //await knex("posts").del();
+  await knex("posts").del();
   await knex("posts").insert(postData);
 };

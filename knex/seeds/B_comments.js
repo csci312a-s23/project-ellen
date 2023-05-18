@@ -8,6 +8,6 @@ exports.seed = async function (knex) {
     return { ...entry };
   });
 
-  //await knex("comments").del();
+  await knex("comments").del();
   await knex("comments").insert(commentData);
 };
