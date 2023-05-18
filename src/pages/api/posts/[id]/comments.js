@@ -71,6 +71,7 @@ const handler = nc({ onError })
 
     // get previous vote
 
+    console.log("votes");
     const votes = await Votes.query()
       .where("postID", parseInt(postID))
       .where("commentID", parseInt(commentID))
