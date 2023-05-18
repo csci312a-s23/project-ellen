@@ -66,7 +66,7 @@ describe("Analytics Page Tests", () => {
     test("Selecting a new topic issue works", async () => {
       render(<AnalyticsDisplay renderChart={false} />);
       expect(screen.getByTestId("labelselect")).toBeInTheDocument();
-      const topicSelector = screen.getByRole("button", { name: "Housing" });
+      const topicSelector = screen.getByRole("button", { name: "General" });
       fireEvent.mouseDown(topicSelector);
       expect(
         screen.getByTestId("labelselect-Registration")

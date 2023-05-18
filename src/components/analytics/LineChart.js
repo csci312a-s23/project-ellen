@@ -100,6 +100,7 @@ async function formatData(filters, categoryFilter, posts, comments, votes) {
             post.category === categoryFilter)
         );
       }, 0);
+
       //^ get activity for comments on that day
       countPassing += comments.reduce((count, comment) => {
         return (
@@ -190,6 +191,7 @@ export default function LineChart({
     fetch(`/api/analytics/posts`)
       .then((res) => res.json())
       .then((response) => {
+        console.log(response[0]);
         setPosts(response);
       })
       .catch(() => {});
@@ -197,6 +199,7 @@ export default function LineChart({
     fetch(`/api/analytics/comments`)
       .then((res) => res.json())
       .then((response) => {
+        console.log(response[0]);
         setComments(response);
       })
       .catch(() => {});
@@ -260,17 +263,7 @@ export default function LineChart({
     },
   };
 
-  const issues = [
-    "Registration",
-    "Housing",
-    "Dining",
-    "Parking",
-    "Facilities",
-    "Student Life",
-    "Academics",
-    "MCAB",
-    "Misc",
-  ];
+  const issues = ["General", "Registration", "Housing", "Dining", "Parking"];
 
   const metrics = ["Post Engagement"];
   let key = 0;
