@@ -45,8 +45,9 @@ const handler = nc({ onError })
     // we want to automatically assign a new comment ID
     // const maxId = await Comments.query().max("id");
 
+    const max = await Comments.query().max("id as maxId");
     const comment = await Comments.query().insertAndFetch({
-      // id: parseInt(maxId[0]["max(`id`)"]) + 1,
+      id: max[0]["maxId"] + 1,
       postID: parseInt(id),
       commenterID: req.user.id,
       content: newComment.content,
@@ -79,6 +80,8 @@ const handler = nc({ onError })
 
     let commentSum = 0;
 
+    console.log("votes", votes);
+
     //if they have voted before
     if (!!votes) {
       commentSum -= votes.value;
@@ -101,7 +104,10 @@ const handler = nc({ onError })
       likes: comment.likes,
     });
     //then insert new vote
+    const max = await Votes.query().max("id as maxId");
+
     await Votes.query().insert({
+      id: max[0]["maxId"] + 1,
       postID: postID,
       voterID: req.user.id,
       commentID: commentID,

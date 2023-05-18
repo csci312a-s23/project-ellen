@@ -43,7 +43,10 @@ const handler = nc({ onError })
       return;
     }
 
+    const max = await Post.query().max("id as maxId");
+
     const newPost = await Post.query().insertAndFetch({
+      id: max[0]["maxId"] + 1,
       posterID: !!body.anonymous
         ? "51e2c13b-dfd5-4ed4-8805-f03357a3083b"
         : req.user.id,
