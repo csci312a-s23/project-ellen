@@ -1,5 +1,5 @@
 import { Scraper as directoryScraper } from "directory.js";
-import { Scraper as departmentScraper } from "departments.js";
+import departmentScraper from "departments.js";
 
 export async function getDirectoryInfo({ email }) {
   const S = new directoryScraper(email);
@@ -12,7 +12,7 @@ export async function getDirectoryInfo({ email }) {
 }
 
 export async function getDepartmentList({ season }) {
-  const prefixChar = " ";
+  const prefixChar = "";
 
   const S = new departmentScraper(season, prefixChar);
 
