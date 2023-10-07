@@ -34,7 +34,7 @@
     "departments.js": "^1.1.1",
     "directory.js": "^1.0.6",
     "knex": "^2.4.2",
-    "next": "13.2.4",
+    "next": "13.5.4",
     "next-auth": "^4.22.1",
     "next-connect": "^0.13.0",
     "next-router-mock": "^0.9.3",
